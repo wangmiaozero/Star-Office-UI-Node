@@ -828,7 +828,7 @@
         }
 
         function getAreaRect(area) {
-            // 区域坐标（海辛提供，左上-右下；这里的 x/y 作为 sprite 底部锚点坐标来用）
+            // 区域坐标（wangmiaozero提供，左上-右下；这里的 x/y 作为 sprite 底部锚点坐标来用）
             // 休息区域范围（511,262）（841,621）
             // 工作区域范围（190,526）（380,683）
             // error 区域范围（932,275）（1109,327）
@@ -1079,7 +1079,7 @@
             if (!DEMO_MODE) return;
             ensureDemoVisitors();
 
-            // 按海辛需求：每 8 秒切换一次状态
+            // 按wangmiaozero需求：每 8 秒切换一次状态
             window.__demoNextAt = window.__demoNextAt || 0;
             const now = Date.now();
             if (now < window.__demoNextAt) return;
@@ -1380,12 +1380,12 @@
                 sofa.anims.play('sofa_busy', true);
             }
 
-            // 加像素风小牌匾：海辛小龙虾的办公室
+            // 加像素风小牌匾：wangmiaozero小龙虾的办公室
             const plaqueX = config.width / 2;
             const plaqueY = config.height - 36;
             const plaqueBg = game.add.rectangle(plaqueX, plaqueY, 420, 44, 0x5d4037);
             plaqueBg.setStrokeStyle(3, 0x3e2723);
-            const plaqueText = game.add.text(plaqueX, plaqueY, '海辛小龙虾的办公室', {
+            const plaqueText = game.add.text(plaqueX, plaqueY, 'wangmiaozero小龙虾的办公室', {
                 fontFamily: 'ArkPixel, monospace',
                 fontSize: '18px',
                 fill: '#ffd700',
