@@ -3,6 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "description": "Node.js remake of Star Office UI backend",
+  "author": "wangmiaozero (https://github.com/wangmiaozero)",
+  "homepage": "https://github.com/wangmiaozero/Star-Office-UI-Node",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wangmiaozero/Star-Office-UI-Node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wangmiaozero/Star-Office-UI-Node/issues"
+  },
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
