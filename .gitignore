@@ -1,0 +1,33 @@
+# dependencies
+node_modules/
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# env
+.env
+.env.*
+!.env.example
+
+# runtime state files (keep samples in repo)
+state.json
+agents-state.json
+join-keys.json
+office-agent-state.json
+
+# build/cache
+dist/
+build/
+.cache/
+.temp/
+tmp/
+
+# editor / os
+.DS_Store
+.idea/
+.vscode/
+

@@ -1,0 +1,16 @@
+{
+  "name": "star-office-ui-node",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Node.js remake of Star Office UI backend",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js",
+    "set-state": "node set_state.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}
