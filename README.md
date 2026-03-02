@@ -13,7 +13,7 @@
 This repository is a Node.js remake of the original **Star-Office-UI** project.
 It keeps the same visual experience and API behavior so existing clients (including OpenClaw / lobster agents) can integrate with minimal changes.
 
-![Star Office UI Preview](./frontend/office_bg_small.png)
+![Star Office UI Preview](https://raw.githubusercontent.com/ringhyacinth/Star-Office-UI/main/docs/screenshots/office-preview-20260301.jpg)
 
 ## Credits
 

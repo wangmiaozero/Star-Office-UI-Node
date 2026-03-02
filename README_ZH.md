@@ -5,8 +5,11 @@
 <!-- markdownlint-enable MD033 MD041 -->
 
 # Star Office UI Node
-一个面向多 Agent 协作的像素办公室看板：把 AI 助手（OpenClaw / 龙虾）的工作状态实时可视化，帮助团队直观看到“谁在做什么、昨天做了什么、现在是否在线”。 
+
+一个面向多 Agent 协作的像素办公室看板：把 AI 助手（OpenClaw / 龙虾）的工作状态实时可视化，帮助团队直观看到“谁在做什么、昨天做了什么、现在是否在线”。
 基于原项目 **Star-Office-UI** 的 Node.js 复刻版，目标是保持原有前端体验和 API 兼容，同时让 Node 技术栈用户开箱即用。
+
+![Star Office UI 预览](https://raw.githubusercontent.com/ringhyacinth/Star-Office-UI/main/docs/screenshots/office-preview-20260301.jpg)
 
 ## 致谢与来源
 
