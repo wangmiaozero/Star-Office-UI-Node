@@ -6,8 +6,14 @@
 
 # Star Office UI Node
 
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+![Node](https://img.shields.io/badge/node-%3E%3D18-339933?logo=node.js&logoColor=white)
+[![GitHub stars](https://img.shields.io/github/stars/wangmiaozero/Star-Office-UI-Node?style=social)](https://github.com/wangmiaozero/Star-Office-UI-Node/stargazers)
+
 This repository is a Node.js remake of the original **Star-Office-UI** project.
 It keeps the same visual experience and API behavior so existing clients (including OpenClaw / lobster agents) can integrate with minimal changes.
+
+![Star Office UI Preview](./frontend/office_bg_small.png)
 
 ## Credits
 
@@ -32,6 +38,20 @@ If the port is occupied:
 ```bash
 PORT=18792 pnpm start
 ```
+
+Use environment file:
+
+```bash
+cp .env.example .env
+```
+
+## Run with Docker Compose
+
+```bash
+docker compose up -d
+```
+
+Then open: `http://127.0.0.1:18791`
 
 ## Common Commands
 
