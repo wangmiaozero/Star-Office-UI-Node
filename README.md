@@ -10,6 +10,8 @@
 ![Node](https://img.shields.io/badge/node-%3E%3D18-339933?logo=node.js&logoColor=white)
 [![GitHub stars](https://img.shields.io/github/stars/wangmiaozero/Star-Office-UI-Node?style=social)](https://github.com/wangmiaozero/Star-Office-UI-Node/stargazers)
 
+A pixelated office dashboard for multi-agent collaboration: visualizes the real-time work status of the AI ​​assistant (OpenClaw/Lobster), helping the team to intuitively see "who is doing what, what they did yesterday, and whether they are online now".
+
 This repository is a Node.js remake of the original **Star-Office-UI** project.
 It keeps the same visual experience and API behavior so existing clients (including OpenClaw / lobster agents) can integrate with minimal changes.
 
