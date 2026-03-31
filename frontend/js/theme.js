@@ -43,9 +43,18 @@
   function syncButton() {
     var btn = document.getElementById("style-toggle");
     if (!btn) return;
-    var t = current();
-    btn.textContent = "风格 · " + LABELS[t];
-    btn.title = "点击切换界面风格（共 " + ORDER.length + " 种）";
+    var th = current();
+    var themeLabel = LABELS[th];
+    var I = global.StarOfficeI18n;
+    if (I && typeof I.t === "function" && I.getBundle && I.getBundle()) {
+      var lt = I.t("theme." + th);
+      if (lt && typeof lt === "string") themeLabel = lt;
+      btn.textContent = I.t("control.styleLabel", { theme: themeLabel });
+      btn.title = I.t("control.styleCycleTitle", { count: ORDER.length });
+    } else {
+      btn.textContent = "风格 · " + themeLabel;
+      btn.title = "点击切换界面风格（共 " + ORDER.length + " 种）";
+    }
   }
 
   function init() {
@@ -57,6 +66,11 @@
       });
     }
     syncButton();
+    if (global.StarOfficeI18n && typeof global.StarOfficeI18n.onChange === "function") {
+      global.StarOfficeI18n.onChange(function () {
+        syncButton();
+      });
+    }
   }
 
   global.StarOfficeTheme = {

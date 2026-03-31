@@ -1,0 +1,216 @@
+{
+  "page": { "title": "Star's Pixel Office" },
+  "loading": {
+    "text": "Loading Star's pixel office...",
+    "progress": "Loading Star's pixel office... {{pct}}%"
+  },
+  "memo": {
+    "title": "— Y E S T E R D A Y —",
+    "placeholder": "Loading...",
+    "empty": "No diary for yesterday",
+    "loadFail": "Failed to load"
+  },
+  "control": {
+    "starStatus": "Star status",
+    "styleTitle": "Switch UI style",
+    "styleLabel": "Style · {{theme}}",
+    "styleCycleTitle": "Click to cycle UI styles ({{count}} total)",
+    "guestTitle": "— V I S I T O R S —",
+    "guestLoading": "Loading visitors...",
+    "guestEmpty": "No visitors"
+  },
+  "btn": { "idle": "Idle", "writing": "Work", "syncing": "Sync", "error": "Alert" },
+  "states": {
+    "idle": "Idle",
+    "writing": "Writing docs",
+    "researching": "Researching",
+    "executing": "Executing",
+    "syncing": "Syncing backup",
+    "error": "Error"
+  },
+  "theme": { "pixel": "Pixel", "soft": "Soft", "midnight": "Midnight", "paper": "Paper" },
+  "guest": {
+    "unnamed": "Unnamed visitor",
+    "auth": {
+      "approved": "Approved",
+      "pending": "Pending",
+      "rejected": "Rejected",
+      "offline": "Offline"
+    },
+    "stateShort": {
+      "idle": "Idle",
+      "writing": "Work",
+      "researching": "Research",
+      "executing": "Run",
+      "syncing": "Sync",
+      "error": "Alert"
+    },
+    "swapSkill": "Swap skill",
+    "leaveRoom": "Leave",
+    "leaveDone": "{{name}} left the room",
+    "leaveDoneDemo": "{{name}} left the room (demo)",
+    "leaveFail": "Leave failed: {{msg}}",
+    "approveOk": "Visitor approved",
+    "approveFail": "Approve failed: {{msg}}",
+    "rejectOk": "Visitor rejected",
+    "rejectFail": "Reject failed: {{msg}}",
+    "requestFail": "Request failed: {{msg}}",
+    "unknownError": "Unknown error",
+    "swapTodo": "Swap skill is not implemented yet"
+  },
+  "hud": {
+    "showCoords": "Show coordinates",
+    "hideCoords": "Hide coordinates",
+    "panOn": "Lock view",
+    "panOff": "Pan view",
+    "fullscreen": "Fullscreen",
+    "exitFullscreen": "Exit fullscreen"
+  },
+  "status": {
+    "loading": "Loading...",
+    "connectFail": "Connection failed, retrying...",
+    "detailFallback": "...",
+    "lineFormat": "[{{state}}] {{detail}}"
+  },
+  "game": { "plaque": "wangmiaozero's crayfish office", "guestDefault": "Guest" },
+  "welcome": {
+    "lines": [
+      "Welcome {{name}} to the office~",
+      "Hi {{name}}, let's build together",
+      "{{name}} joined — welcome!"
+    ]
+  },
+  "bubbles": {
+    "idle": [
+      "On standby: ears up",
+      "I'm here, ready when you are",
+      "Tidy the desk first",
+      "Let the brain breathe",
+      "Efficient, but gracefully",
+      "Waiting for the right moment",
+      "Coffee's hot, ideas too",
+      "Buffing you from backstage",
+      "Mode: calm / recharge",
+      "The cat says: slow is fine"
+    ],
+    "writing": [
+      "Focus mode: do not disturb",
+      "Ship the critical path first",
+      "I'll make the complex simple",
+      "Cage the bugs",
+      "Halfway through — save first",
+      "Make every step reversible",
+      "Today's progress is tomorrow's base",
+      "Converge first, then diverge",
+      "Make the system explainable",
+      "Steady — we've got this"
+    ],
+    "researching": [
+      "Tracing the evidence chain",
+      "Turning info into conclusions",
+      "Found it: the key is here",
+      "Control the variables first",
+      "Investigating: why it happens",
+      "Turn intuition into tests",
+      "Locate before optimizing",
+      "Hold on — map the causality"
+    ],
+    "executing": [
+      "Executing — don't blink",
+      "Slice tasks, ship pieces",
+      "Pipeline starting",
+      "Go — one click ahead",
+      "Let the result speak",
+      "MVP first, polish later"
+    ],
+    "syncing": [
+      "Syncing: locking today in the cloud",
+      "Backups are peace of mind",
+      "Writing… don't pull the plug",
+      "Hand changes to timestamps",
+      "Cloud aligned — click",
+      "Don't move until sync completes",
+      "Save future-you from disaster",
+      "One more backup, one less regret"
+    ],
+    "error": [
+      "Alarm — stay calm",
+      "Smells like a bug",
+      "Reproduce before fixing",
+      "Give me logs — plain words",
+      "Errors are clues",
+      "Contain the blast radius",
+      "Stop the bleeding, then operate",
+      "On it — finding root cause",
+      "Seen worse — we'll fix it",
+      "Alerting: make the bug show itself"
+    ],
+    "cat": [
+      "Meow~",
+      "Purr purr…",
+      "Tail swish",
+      "Sunbathing is best",
+      "Someone's watching",
+      "Office mascot here",
+      "Big stretch",
+      "Treats ready?",
+      "Purr purr",
+      "Best view spot"
+    ]
+  },
+  "guestBubbleThoughts": {
+    "idle": [
+      "On standby in the lounge",
+      "Resting before the next task",
+      "Recharging in the break room"
+    ],
+    "writing": [
+      "Working at the desk",
+      "Docs and execution in progress",
+      "Deep work mode"
+    ],
+    "researching": [
+      "Research mode: gathering info",
+      "Searching sources and clues",
+      "Researching — will sync soon"
+    ],
+    "executing": [
+      "Executing the pipeline",
+      "Pushing tasks at the desk",
+      "Turning plans into action"
+    ],
+    "syncing": [
+      "Syncing — updating status",
+      "Syncing progress to the system",
+      "Data sync in progress"
+    ],
+    "error": [
+      "In the bug zone — debugging",
+      "Anomaly detected — fixing",
+      "Alert — locate then fix"
+    ]
+  },
+  "demo": {
+    "bubble": {
+      "idle": "Lounging in the break room",
+      "writing": "Working hard",
+      "researching": "Researching",
+      "executing": "Executing tasks",
+      "syncing": "Syncing status",
+      "error": "Error! Heading to the alert zone"
+    }
+  },
+  "lang": {
+    "label": "Language",
+    "names": {
+      "zh-CN": "中文",
+      "ko": "한국어",
+      "en": "English",
+      "fr": "Français",
+      "de": "Deutsch",
+      "ja": "日本語",
+      "zh-TW": "繁體中文",
+      "ru": "Русский"
+    }
+  }
+}

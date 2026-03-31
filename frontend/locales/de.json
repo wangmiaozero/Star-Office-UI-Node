@@ -1,0 +1,91 @@
+{
+  "page": { "title": "Stars Pixel-Büro" },
+  "loading": { "text": "Lade Stars Pixel-Büro...", "progress": "Lade Stars Pixel-Büro... {{pct}}%" },
+  "memo": { "title": "— G E S T E R N —", "placeholder": "Lädt...", "empty": "Kein Tagebuch für gestern", "loadFail": "Laden fehlgeschlagen" },
+  "control": {
+    "starStatus": "Star-Status",
+    "styleTitle": "UI-Stil wechseln",
+    "styleLabel": "Stil · {{theme}}",
+    "styleCycleTitle": "Klicken zum Wechseln ({{count}} Stile)",
+    "guestTitle": "— B E S U C H E R —",
+    "guestLoading": "Besucher werden geladen...",
+    "guestEmpty": "Keine Besucher"
+  },
+  "btn": { "idle": "Bereit", "writing": "Arbeit", "syncing": "Sync", "error": "Alarm" },
+  "states": {
+    "idle": "Bereit",
+    "writing": "Dokumente",
+    "researching": "Recherche",
+    "executing": "Ausführung",
+    "syncing": "Sync-Backup",
+    "error": "Fehler"
+  },
+  "theme": { "pixel": "Pixel", "soft": "Weich", "midnight": "Mitternacht", "paper": "Papier" },
+  "guest": {
+    "unnamed": "Unbenannter Besucher",
+    "auth": { "approved": "Genehmigt", "pending": "Ausstehend", "rejected": "Abgelehnt", "offline": "Offline" },
+    "stateShort": { "idle": "Bereit", "writing": "Arbeit", "researching": "Forschung", "executing": "Run", "syncing": "Sync", "error": "Alarm" },
+    "swapSkill": "Skill tauschen",
+    "leaveRoom": "Verlassen",
+    "leaveDone": "{{name}} hat den Raum verlassen",
+    "leaveDoneDemo": "{{name}} hat verlassen (Demo)",
+    "leaveFail": "Verlassen fehlgeschlagen: {{msg}}",
+    "approveOk": "Besucher genehmigt",
+    "approveFail": "Genehmigung fehlgeschlagen: {{msg}}",
+    "rejectOk": "Besucher abgelehnt",
+    "rejectFail": "Ablehnung fehlgeschlagen: {{msg}}",
+    "requestFail": "Anfrage fehlgeschlagen: {{msg}}",
+    "unknownError": "Unbekannter Fehler",
+    "swapTodo": "Skill-Tausch noch nicht implementiert"
+  },
+  "hud": { "showCoords": "Koordinaten anzeigen", "hideCoords": "Koordinaten ausblenden", "panOn": "Ansicht sperren", "panOff": "Ansicht schwenken", "fullscreen": "Vollbild", "exitFullscreen": "Vollbild beenden" },
+  "status": { "loading": "Lädt...", "connectFail": "Verbindung fehlgeschlagen, erneuter Versuch...", "detailFallback": "...", "lineFormat": "[{{state}}] {{detail}}" },
+  "game": { "plaque": "wangmiaozeros Flusskrebs-Büro", "guestDefault": "Besucher" },
+  "welcome": {
+    "lines": [
+      "Willkommen {{name}} im Büro~",
+      "Hi {{name}}, legen wir los",
+      "{{name}} ist beigetreten — willkommen!"
+    ]
+  },
+  "bubbles": {
+    "idle": ["Bereit: Ohren gespitzt", "Ich bin da, startklar", "Erst den Schreibtisch räumen", "Dem Kopf Luft machen", "Heute wieder effizient", "Warten auf den richtigen Moment", "Kaffee heiß, Ideen auch", "Buff von hinten", "Modus: Ruhe / laden", "Die Katze sagt: langsam ist ok"],
+    "writing": ["Fokus: nicht stören", "Erst den kritischen Pfad", "Komplexes vereinfachen", "Bugs einsperren", "Halb fertig — speichern", "Jeder Schritt rückgängig", "Heutiger Fortschritt", "Zuerst konvergieren", "System erklärbar machen", "Ruhig — wir schaffen das"],
+    "researching": ["Beweiskette", "Info zu Schlüssen", "Gefunden: hier", "Variablen kontrollieren", "Warum passiert das", "Intuition testen", "Erst lokalisieren", "Kausalität zuerst"],
+    "executing": ["Läuft — nicht blinzeln", "Tasks zerteilen", "Pipeline start", "Los — vorwärts", "Ergebnis soll sprechen", "Erst MVP, dann Polish"],
+    "syncing": ["Sync: heute in die Cloud", "Backups geben Ruhe", "Schreibt… Strom an", "Änderungen mit Zeitstempel", "Cloud aligned", "Nicht bewegen bis fertig", "Zukunfts-Ich retten", "Ein Backup mehr"],
+    "error": ["Alarm — Ruhe bewahren", "Riecht nach Bug", "Erst reproduzieren", "Logs her", "Fehler sind Hinweise", "Schaden begrenzen", "Erst stoppen, dann fixen", "Root cause suchen", "Schlimmeres gesehen", "Alarm: Bug zeigt sich"],
+    "cat": ["Miau~", "Schnurr…", "Schwanz wedelt", "Sonnenbaden", "Jemand schaut", "Maskottchen", "Großer Stretch", "Leckerlis bereit?", "Schnurr", "Beste Aussicht"]
+  },
+  "guestBubbleThoughts": {
+    "idle": ["In der Lounge bereit", "Pause vor der nächsten Aufgabe", "In der Lounge laden"],
+    "writing": ["Am Schreibtisch", "Docs und Ausführung", "Tiefe Arbeit"],
+    "researching": ["Recherche-Modus", "Quellen und Hinweise", "Recherche — gleich Sync"],
+    "executing": ["Pipeline läuft", "Aufgaben am Schreibtisch", "Pläne in die Tat"],
+    "syncing": ["Sync — Status aktualisieren", "Fortschritt ins System", "Daten-Sync läuft"],
+    "error": ["Bug-Zone — debuggen", "Anomalie — Fix", "Alarm — erst finden"]
+  },
+  "demo": {
+    "bubble": {
+      "idle": "In der Lounge ausruhen",
+      "writing": "Arbeite fleißig",
+      "researching": "Recherchiere",
+      "executing": "Führe aus",
+      "syncing": "Status synchronisieren",
+      "error": "Fehler! Zur Alarmzone"
+    }
+  },
+  "lang": {
+    "label": "Sprache",
+    "names": {
+      "zh-CN": "中文",
+      "ko": "한국어",
+      "en": "English",
+      "fr": "Français",
+      "de": "Deutsch",
+      "ja": "日本語",
+      "zh-TW": "繁體中文",
+      "ru": "Русский"
+    }
+  }
+}

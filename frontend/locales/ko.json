@@ -1,0 +1,91 @@
+{
+  "page": { "title": "Star의 픽셀 사무실" },
+  "loading": { "text": "Star의 픽셀 사무실을 불러오는 중...", "progress": "Star의 픽셀 사무실을 불러오는 중... {{pct}}%" },
+  "memo": { "title": "— 어 제 일 기 —", "placeholder": "불러오는 중...", "empty": "어제 일기가 없습니다", "loadFail": "불러오기 실패" },
+  "control": {
+    "starStatus": "Star 상태",
+    "styleTitle": "UI 스타일 전환",
+    "styleLabel": "스타일 · {{theme}}",
+    "styleCycleTitle": "클릭하여 UI 스타일 전환 (총 {{count}}가지)",
+    "guestTitle": "— 방 문 목 록 —",
+    "guestLoading": "방문자 불러오는 중...",
+    "guestEmpty": "방문자 없음"
+  },
+  "btn": { "idle": "대기", "writing": "작업", "syncing": "동기화", "error": "경보" },
+  "states": {
+    "idle": "대기",
+    "writing": "문서 작성",
+    "researching": "조사",
+    "executing": "실행",
+    "syncing": "백업 동기화",
+    "error": "오류"
+  },
+  "theme": { "pixel": "픽셀", "soft": "부드러움", "midnight": "미드나잇", "paper": "종이" },
+  "guest": {
+    "unnamed": "이름 없는 방문자",
+    "auth": { "approved": "승인됨", "pending": "대기", "rejected": "거절됨", "offline": "오프라인" },
+    "stateShort": { "idle": "대기", "writing": "작업", "researching": "조사", "executing": "실행", "syncing": "동기화", "error": "경보" },
+    "swapSkill": "스킬 교환",
+    "leaveRoom": "퇴장",
+    "leaveDone": "{{name}}님이 방을 나갔습니다",
+    "leaveDoneDemo": "{{name}}님이 방을 나갔습니다 (데모)",
+    "leaveFail": "퇴장 실패: {{msg}}",
+    "approveOk": "방문자를 승인했습니다",
+    "approveFail": "승인 실패: {{msg}}",
+    "rejectOk": "방문자를 거절했습니다",
+    "rejectFail": "거절 실패: {{msg}}",
+    "requestFail": "요청 실패: {{msg}}",
+    "unknownError": "알 수 없는 오류",
+    "swapTodo": "스킬 교환 기능은 개발 중입니다"
+  },
+  "hud": { "showCoords": "좌표 표시", "hideCoords": "좌표 숨기기", "panOn": "시야 고정", "panOff": "시야 이동", "fullscreen": "전체 화면", "exitFullscreen": "전체 화면 종료" },
+  "status": { "loading": "불러오는 중...", "connectFail": "연결 실패, 재시도 중...", "detailFallback": "...", "lineFormat": "[{{state}}] {{detail}}" },
+  "game": { "plaque": "wangmiaozero의 가재 사무실", "guestDefault": "방문자" },
+  "welcome": {
+    "lines": [
+      "{{name}}님, 사무실에 오신 걸 환영합니다~",
+      "안녕 {{name}}, 함께해요",
+      "{{name}}님이 참가했습니다 — 환영합니다!"
+    ]
+  },
+  "bubbles": {
+    "idle": ["대기 중: 귀 쫑긋", "여기 있어요, 언제든 시작 가능", "책상부터 정리해요", "머리 식히기", "오늘도 우아하게 효율적으로", "정확한 한 방을 위해 기다림", "커피는 뜨겁고 아이디어도", "뒤에서 버프 중", "상태: 정온 / 충전", "고양이: 천천히 해도 돼"],
+    "writing": ["집중 모드: 방해 금지", "핵심 경로부터", "복잡한 걸 단순하게", "버그는 우리에 가두고", "중간 저장", "모든 단계를 되돌릴 수 있게", "오늘의 진행이 내일의 자산", "먼저 수렴, 그다음 발산", "시스템을 설명 가능하게", "침착하게 — 할 수 있어요"],
+    "researching": ["증거 사슬 추적 중", "정보를 결론으로", "찾았어요: 핵심은 여기", "변수부터 통제", "왜 그런지 조사 중", "직관을 검증으로", "먼저 위치, 그다음 최적화", "인과 그림부터"],
+    "executing": ["실행 중 — 깜빡이지 마세요", "작업을 잘게 나눠", "파이프라인 시작", "한 번에 전진", "결과가 말하게", "먼저 MVP, 그다음 광택"],
+    "syncing": ["동기화: 오늘을 클라우드에", "백업은 안심", "쓰는 중… 전원 끄지 마세요", "변경을 타임스탬프에", "클라우드 정렬", "동기 끝날 때까지", "미래의 나를 구해", "백업 하나 더, 후회 하나 덜"],
+    "error": ["알람 — 침착하게", "버그 냄새", "재현 후 수정", "로그 주세요", "오류는 단서", "영향 범위 묶기", "먼저 지혈", "원인 추적 중", "더 심한 것도 봤어요", "경보: 버그를 드러내게"],
+    "cat": ["야옹~", "그르릉…", "꼬리 흔들기", "햇살이 최고", "누가 보네요", "마스코트입니다", "하품", "간식 준비됐나요", "그르릉", "뷰 최고 자리"]
+  },
+  "guestBubbleThoughts": {
+    "idle": ["휴게실에서 대기", "다음 작업 전 휴식", "휴게실에서 충전"],
+    "writing": ["책상에서 작업", "문서와 실행 중", "집중 작업 모드"],
+    "researching": ["조사 모드: 정보 수집", "자료와 단서 검색", "조사 중 — 곧 동기화"],
+    "executing": ["파이프라인 실행", "책상에서 작업 추진", "계획을 실행으로"],
+    "syncing": ["동기화 — 상태 업데이트", "시스템에 진행 동기화", "데이터 동기화 중"],
+    "error": ["버그 구역 — 디버깅", "이상 감지 — 수정 중", "경보 — 먼저 위치 파악"]
+  },
+  "demo": {
+    "bubble": {
+      "idle": "휴게실에서 쉬는 중",
+      "writing": "열심히 일하는 중",
+      "researching": "조사 중",
+      "executing": "작업 실행 중",
+      "syncing": "상태 동기화 중",
+      "error": "오류! 경보 구역으로"
+    }
+  },
+  "lang": {
+    "label": "언어",
+    "names": {
+      "zh-CN": "中文",
+      "ko": "한국어",
+      "en": "English",
+      "fr": "Français",
+      "de": "Deutsch",
+      "ja": "日本語",
+      "zh-TW": "繁體中文",
+      "ru": "Русский"
+    }
+  }
+}

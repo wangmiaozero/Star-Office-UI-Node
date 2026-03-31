@@ -11,6 +11,8 @@ html {
 }
 :root {
     --bottom-row-h: clamp(168px, 26vh, 300px);
+    /* 与 .hud-toolbar 实际高度大致一致，供 #status-text 固定定位避让 */
+    --hud-toolbar-est: 56px;
     --page-pad: 6px;
     --bg: #1a1a2e;
     --bg-grid: #161628;
@@ -84,12 +86,11 @@ body {
     box-shadow: var(--pixel-shadow), 0 0 0 2px #0f0f18;
     overflow: hidden;
 }
+/* 禁止用 CSS 强改 canvas 宽高：会覆盖 Phaser Scale 的内联尺寸，导致 pointer 与画面错位（点击偏移、精灵热区错乱） */
 #game-container canvas {
-    width: 100% !important;
-    height: 100% !important;
+    display: block;
     image-rendering: pixelated;
-    /* 再兜底一次：即使外层高度变化，也不要拉伸变形 */
-    object-fit: contain;
+    image-rendering: crisp-edges;
 }
 #loading-overlay {
     position: fixed;
@@ -144,7 +145,7 @@ body {
 }
 #status-text {
     position: fixed;
-    bottom: max(8px, calc(var(--bottom-row-h) + var(--page-pad) + 6px));
+    bottom: max(8px, calc(var(--bottom-row-h) + var(--page-pad) + 6px + var(--hud-toolbar-est)));
     left: 50%;
     transform: translateX(-50%);
     color: var(--text);
@@ -402,11 +403,99 @@ body {
     letter-spacing: 0.2em;
 }
 
-/* 浮动 HUD 按钮 — 像素块 */
+/* HUD 工具条：夹在画布与底部面板之间（文档流），不遮挡游戏画面 */
+.hud-toolbar {
+    width: 100%;
+    max-width: min(1280px, 100%);
+    flex-shrink: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+}
+.hud-toolbar-inner {
+    pointer-events: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    row-gap: 10px;
+    width: 100%;
+    max-width: 100%;
+    padding: 6px 10px;
+    background: #252536;
+    border: 3px solid var(--border-strong);
+    border-radius: var(--r);
+    box-shadow: var(--pixel-shadow-sm);
+}
+/* 语言块：嵌入工具条，不再单独一层描边 */
+.lang-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'ArkPixel', monospace;
+    font-size: 11px;
+    color: var(--text);
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    max-width: min(56vw, 220px);
+    flex: 0 1 auto;
+    transition: none;
+}
+.hud-toolbar-item {
+    flex-shrink: 0;
+}
+.lang-bar-label {
+    flex-shrink: 0;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+    text-shadow: 2px 2px 0 #1a1020;
+}
+.lang-select {
+    min-width: 100px;
+    max-width: 160px;
+    flex: 1 1 auto;
+    font-family: inherit;
+    font-size: 11px;
+    padding: 5px 8px;
+    background: #1e1e2a;
+    color: var(--text);
+    border: 2px solid var(--border-strong);
+    border-radius: var(--r);
+    cursor: pointer;
+    transition: none;
+    box-shadow: 2px 2px 0 #0a0a12;
+}
+.lang-select:hover {
+    border-color: var(--accent);
+}
+.hud-toolbar-divider {
+    width: 3px;
+    align-self: stretch;
+    min-height: 32px;
+    background: var(--border-strong);
+    opacity: 0.55;
+    flex-shrink: 0;
+    border-radius: 1px;
+}
+/* 独立 HUD 按钮（在 .hud-toolbar 内由 .hud-toolbar-inner 排版，不再 fixed） */
+.hud-toolbar .hud-btn {
+    position: static;
+    margin: 0;
+}
+.hud-toolbar-btn {
+    min-height: 36px;
+    padding: 8px 12px;
+    white-space: nowrap;
+}
+
+/* 浮动 HUD 按钮 — 像素块（保留类名；默认用于工具条内） */
 .hud-btn {
-    position: fixed;
-    top: calc(env(safe-area-inset-top, 0px) + 12px);
-    z-index: 999999;
     padding: 8px 10px;
     font-family: 'ArkPixel', monospace;
     font-size: 12px;
@@ -440,8 +529,6 @@ body {
     border: 3px solid var(--accent);
     box-shadow: var(--pixel-shadow-sm);
 }
-#coords-toggle { right: 12px; }
-#pan-toggle { left: 12px; }
 .hud-btn.is-on {
     background: var(--accent) !important;
     border-color: #ff8a9a !important;
@@ -460,6 +547,8 @@ body {
 @media (max-width: 900px), (pointer: coarse) {
     :root {
         --bottom-row-h: clamp(200px, 28vh, 300px);
+        /* 工具条易换行，略增高以避让状态文案 */
+        --hud-toolbar-est: 72px;
     }
 
     body {
@@ -508,36 +597,112 @@ body {
     }
 
     #status-text {
-        bottom: max(6px, calc(var(--bottom-row-h) + 8px));
+        bottom: max(6px, calc(var(--bottom-row-h) + 8px + var(--hud-toolbar-est)));
         font-size: 11px;
         padding: 6px 10px;
     }
 
+    .hud-toolbar-inner {
+        gap: 8px;
+        padding: 5px 8px;
+    }
     #coords-toggle,
     #pan-toggle,
-    #style-toggle {
+    #fullscreen-toggle,
+    .hud-toolbar-btn {
+        font-size: 11px !important;
+        padding: 6px 8px !important;
+        min-height: auto;
+    }
+    .lang-select {
+        font-size: 11px;
+        padding: 4px 6px;
+    }
+    #style-toggle,
+    .hud-toolbar .style-toggle-btn {
         font-size: 11px !important;
         padding: 6px 8px !important;
     }
 }
 
-/* 风格切换按钮（像素默认）：紧跟标题，避免被四键挤出视区 */
-.style-toggle-btn {
-    margin-top: 0;
-    margin-bottom: 8px;
+/*
+ * 全屏：让 .game-stage / #hud-toolbar / #bottom-panels 与画布同宽铺满视口。
+ * 常态下 body 为 align-items:center + 子项 max-width:min(1280px,100%)，会在宽屏两侧留白；
+ * 全屏时用 body.staroffice-fs（由 JS 同步）与 :fullscreen 双保险拉满宽度。
+ */
+html:fullscreen,
+html:-webkit-full-screen,
+html:-moz-full-screen,
+html:-ms-fullscreen {
     width: 100%;
+    height: 100%;
+}
+body.staroffice-fs,
+html:fullscreen body,
+html:-webkit-full-screen body,
+html:-moz-full-screen body,
+html:-ms-fullscreen body {
+    padding: 0;
+    align-items: stretch;
+    width: 100%;
+    max-width: 100%;
+}
+body.staroffice-fs .game-stage,
+html:fullscreen .game-stage,
+html:-webkit-full-screen .game-stage,
+html:-moz-full-screen .game-stage,
+html:-ms-fullscreen .game-stage {
+    align-self: stretch;
+    width: 100%;
+    max-width: none;
+}
+body.staroffice-fs #hud-toolbar,
+html:fullscreen #hud-toolbar,
+html:-webkit-full-screen #hud-toolbar,
+html:-moz-full-screen #hud-toolbar,
+html:-ms-fullscreen #hud-toolbar {
+    align-self: stretch;
+    width: 100%;
+    max-width: none;
+}
+body.staroffice-fs #bottom-panels,
+html:fullscreen #bottom-panels,
+html:-webkit-full-screen #bottom-panels,
+html:-moz-full-screen #bottom-panels,
+html:-ms-fullscreen #bottom-panels {
+    align-self: stretch;
+    width: 100%;
+    max-width: none;
+}
+body.staroffice-fs #game-container,
+html:fullscreen #game-container,
+html:-webkit-full-screen #game-container,
+html:-moz-full-screen #game-container,
+html:-ms-fullscreen #game-container {
+    width: 100%;
+    max-width: none;
+}
+
+/* 风格切换（默认在 HUD 工具条内；与 .hud-toolbar-btn 同排） */
+.style-toggle-btn {
+    margin: 0;
+    width: auto;
     flex-shrink: 0;
     background: var(--surface2);
     color: var(--gold);
     border: 3px solid var(--border-strong);
     border-radius: var(--r);
-    padding: 8px 10px;
+    padding: 8px 12px;
     cursor: pointer;
     font-family: 'ArkPixel', monospace;
     font-size: 11px;
     letter-spacing: 0.06em;
     transition: none;
     box-shadow: var(--pixel-shadow-sm);
+    white-space: nowrap;
+}
+.hud-toolbar .style-toggle-btn {
+    min-height: 36px;
 }
 .style-toggle-btn:hover {
     border-color: var(--accent);

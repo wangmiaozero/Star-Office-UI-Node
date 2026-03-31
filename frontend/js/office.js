@@ -34,6 +34,19 @@
 
         const IS_TOUCH_DEVICE = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || window.matchMedia('(pointer: coarse)').matches;
 
+        function i18nT(key, vars) {
+            if (window.StarOfficeI18n && typeof window.StarOfficeI18n.t === 'function') {
+                return window.StarOfficeI18n.t(key, vars);
+            }
+            return key;
+        }
+        function i18nArr(path) {
+            if (window.StarOfficeI18n && typeof window.StarOfficeI18n.tArray === 'function') {
+                return window.StarOfficeI18n.tArray(path);
+            }
+            return [];
+        }
+
         const config = {
             type: Phaser.AUTO,
             width: 1280,
@@ -68,11 +81,11 @@
                     memoDate.textContent = data.date || '';
                     memoContent.innerHTML = data.memo.replace(/\n/g, '<br>');
                 } else {
-                    memoContent.innerHTML = '<div id="memo-placeholder">暂无昨日日记</div>';
+                    memoContent.innerHTML = '<div id="memo-placeholder">' + i18nT('memo.empty') + '</div>';
                 }
             } catch (e) {
                 console.error('加载 memo 失败:', e);
-                memoContent.innerHTML = '<div id="memo-placeholder">加载失败</div>';
+                memoContent.innerHTML = '<div id="memo-placeholder">' + i18nT('memo.loadFail') + '</div>';
             }
         }
 
@@ -84,7 +97,7 @@
                 loadingProgressBar.style.width = percent + '%';
             }
             if (loadingText) {
-                loadingText.textContent = `正在加载 Star 的像素办公室... ${percent}%`;
+                loadingText.textContent = i18nT('loading.progress', { pct: percent });
             }
         }
 
@@ -110,7 +123,7 @@
         
         // 懒加载逻辑已取消（体验优先：装饰首屏直接出现）
 
-        const STATES = {
+        const DEFAULT_STATES = {
             idle: { name: '待命', area: 'breakroom' },
             writing: { name: '整理文档', area: 'writing' },
             researching: { name: '搜索信息', area: 'researching' },
@@ -118,8 +131,25 @@
             syncing: { name: '同步备份', area: 'writing' },
             error: { name: '出错了', area: 'error' }
         };
+        let STATES = { ...DEFAULT_STATES };
+        function rebuildStatesFromI18n() {
+            const d = window.StarOfficeI18n && window.StarOfficeI18n.getBundle && window.StarOfficeI18n.getBundle();
+            const s = d && d.states;
+            if (s && s.idle) {
+                STATES = {
+                    idle: { name: s.idle, area: 'breakroom' },
+                    writing: { name: s.writing, area: 'writing' },
+                    researching: { name: s.researching, area: 'researching' },
+                    executing: { name: s.executing, area: 'writing' },
+                    syncing: { name: s.syncing, area: 'writing' },
+                    error: { name: s.error, area: 'error' }
+                };
+            } else {
+                STATES = { ...DEFAULT_STATES };
+            }
+        }
 
-        const BUBBLE_TEXTS = {
+        const DEFAULT_BUBBLE_TEXTS = {
             idle: [
                 '待命中：耳朵竖起来了',
                 '我在这儿，随时可以开工',
@@ -198,6 +228,24 @@
                 '这个位置视野最好'
             ]
         };
+        let BUBBLE_TEXTS = {};
+        function rebuildBubblesFromI18n() {
+            const d = window.StarOfficeI18n && window.StarOfficeI18n.getBundle && window.StarOfficeI18n.getBundle();
+            const b = d && d.bubbles;
+            if (!b || !b.idle || !Array.isArray(b.idle)) {
+                BUBBLE_TEXTS = JSON.parse(JSON.stringify(DEFAULT_BUBBLE_TEXTS));
+                return;
+            }
+            BUBBLE_TEXTS = {
+                idle: b.idle,
+                writing: b.writing,
+                researching: b.researching || DEFAULT_BUBBLE_TEXTS.researching,
+                executing: b.executing,
+                syncing: b.syncing,
+                error: b.error,
+                cat: b.cat || DEFAULT_BUBBLE_TEXTS.cat
+            };
+        }
 
         let game, star, sofa, serverroom, areas = {}, currentState = 'idle', pendingDesiredState = null, statusText, lastFetch = 0, lastBlink = 0, lastBubble = 0, targetX = 660, targetY = 170, bubble = null, typewriterText = '', typewriterTarget = '', typewriterIndex = 0, lastTypewriter = 0, syncAnimSprite = null, catBubble = null;
         let isMoving = false;
@@ -226,11 +274,12 @@
         let guestWelcomeInitialized = false;
 
         // 状态控制栏函数（用于测试）
-        function setState(state, detail) {
+        function setState(state) {
+            const info = STATES[state] || STATES.idle;
             fetch('/set_state', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ state, detail })
+                body: JSON.stringify({ state, detail: info.name })
             }).then(() => fetchStatus());
         }
 
@@ -266,20 +315,20 @@
                         delete guestBubbles[agentId];
                     }
                     fetchGuestAgents();
-                    alert((name || agentId) + ' 已离开房间');
+                    alert(i18nT('guest.leaveDone', { name: name || agentId }));
                 } else {
                     // demo agent 没在后端也允许本地隐藏
                     if (DEMO_MODE && (name === '尼卡' || name === '水星')) {
                         hiddenDemoNames.add(name);
                         removeGuestSpriteByName(name);
                         renderGuestAgentList();
-                        alert(name + ' 已离开房间（demo）');
+                        alert(i18nT('guest.leaveDoneDemo', { name: name }));
                         return;
                     }
-                    alert('离开失败：' + (data.msg || '未知错误'));
+                    alert(i18nT('guest.leaveFail', { msg: data.msg || i18nT('guest.unknownError') }));
                 }
             }).catch(error => {
-                alert('请求失败：' + error);
+                alert(i18nT('guest.requestFail', { msg: String(error) }));
             });
         }
 
@@ -291,12 +340,12 @@
             }).then(response => response.json()).then(data => {
                 if (data.ok) {
                     fetchGuestAgents();
-                    alert('已批准该访客接入');
+                    alert(i18nT('guest.approveOk'));
                 } else {
-                    alert('批准失败：' + (data.msg || '未知错误'));
+                    alert(i18nT('guest.approveFail', { msg: data.msg || i18nT('guest.unknownError') }));
                 }
             }).catch(error => {
-                alert('请求失败：' + error);
+                alert(i18nT('guest.requestFail', { msg: String(error) }));
             });
         }
 
@@ -308,12 +357,12 @@
             }).then(response => response.json()).then(data => {
                 if (data.ok) {
                     fetchGuestAgents();
-                    alert('已拒绝该访客');
+                    alert(i18nT('guest.rejectOk'));
                 } else {
-                    alert('拒绝失败：' + (data.msg || '未知错误'));
+                    alert(i18nT('guest.rejectFail', { msg: data.msg || i18nT('guest.unknownError') }));
                 }
             }).catch(error => {
-                alert('请求失败：' + error);
+                alert(i18nT('guest.requestFail', { msg: String(error) }));
             });
         }
 
@@ -342,34 +391,34 @@
 
             const visitors = getMergedVisitors();
             if (visitors.length === 0) {
-                list.innerHTML = '<div style="color:#9ca3af;font-size:12px;text-align:center;padding:20px 0;">暂无访客</div>';
+                list.innerHTML = '<div style="color:#9ca3af;font-size:12px;text-align:center;padding:20px 0;">' + i18nT('control.guestEmpty') + '</div>';
                 return;
             }
 
             list.innerHTML = visitors.map(agent => {
-                const name = agent.name || '未命名访客';
+                const name = agent.name || i18nT('guest.unnamed');
                 const authStatus = agent.authStatus || 'pending';
                 const state = agent.state || 'idle';
                 const statusMap = {
-                    approved: '已授权',
-                    pending: '待授权',
-                    rejected: '已拒绝',
-                    offline: '离线'
+                    approved: i18nT('guest.auth.approved'),
+                    pending: i18nT('guest.auth.pending'),
+                    rejected: i18nT('guest.auth.rejected'),
+                    offline: i18nT('guest.auth.offline')
                 };
                 const stateMap = {
-                    idle: '待命',
-                    writing: '工作',
-                    researching: '调研',
-                    executing: '执行',
-                    syncing: '同步',
-                    error: '报警'
+                    idle: i18nT('guest.stateShort.idle'),
+                    writing: i18nT('guest.stateShort.writing'),
+                    researching: i18nT('guest.stateShort.researching'),
+                    executing: i18nT('guest.stateShort.executing'),
+                    syncing: i18nT('guest.stateShort.syncing'),
+                    error: i18nT('guest.stateShort.error')
                 };
 
                 const statusText = statusMap[authStatus] || authStatus;
                 const stateText = stateMap[state] || state;
                 const subtitle = `${statusText} · ${stateText}`;
 
-                const pendingActions = `<button onclick="alert('交换 skill 功能开发中')">交换skill</button><button class="leave-btn" onclick="leaveGuestAgent('${agent.agentId}','${name}')">离开房间</button>`;
+                const pendingActions = `<button type="button" onclick="alert(${JSON.stringify(i18nT('guest.swapTodo'))})">${i18nT('guest.swapSkill')}</button><button class="leave-btn" onclick="leaveGuestAgent(${JSON.stringify(agent.agentId)},${JSON.stringify(name)})">${i18nT('guest.leaveRoom')}</button>`;
 
                 return `
                   <div class="guest-agent-item" data-name="${name}">
@@ -507,7 +556,7 @@
                     const yOffset = (DEMO_MODE && (agent.agentId === 'demo_mercury' || agent.name === '水星')) ? 10 : 0;
 
                     const nameTextY = isDemo ? ((p.y + yOffset) - 80) : ((p.y + yOffset) - 120);
-                    const nameText = game.add.text(p.x, nameTextY, agent.name || '访客', {
+                    const nameText = game.add.text(p.x, nameTextY, agent.name || i18nT('game.guestDefault'), {
                         fontFamily: 'ArkPixel, monospace',
                         fontSize: isDemo ? '16px' : '15px',
                         fill: '#ffffff',
@@ -556,7 +605,7 @@
                         g.nameText.y = (p.y + yOffset) - 120;
                     }
 
-                    g.nameText.setText(agent.name || '访客');
+                    g.nameText.setText(agent.name || i18nT('game.guestDefault'));
                 }
             });
 
@@ -592,16 +641,9 @@
                 ? (window.__demoVisitors.find(v => v.agentId === id) || window.__demoVisitors.find(v => v.name === (g.nameText && g.nameText.text)))
                 : null;
 
-            const statusThoughtsMap = {
-                idle: ['我在休息区待命', '先放松一下，等下一步任务', '我在休息充电中'],
-                writing: ['我在工作区处理任务', '正在整理文档与执行中', '工作区专注推进中'],
-                researching: ['我在调研模式，搜集信息', '正在查资料和验证线索', '研究中，稍后同步结论'],
-                executing: ['执行中，正在跑流程', '我在工作区推进任务', '正在把计划落地执行'],
-                syncing: ['同步中，马上更新状态', '正在同步进度到系统', '数据同步中请稍候'],
-                error: ['我在 bug 区排查问题', '检测到异常，正在修复', '报警中，先定位再处理']
-            };
             const agentState = (guestAgents.find(a => a.agentId === id) || {}).state || 'idle';
-            const thoughts = statusThoughtsMap[agentState] || statusThoughtsMap.idle;
+            let thoughts = i18nArr('guestBubbleThoughts.' + agentState);
+            if (!thoughts.length) thoughts = i18nArr('guestBubbleThoughts.idle');
             const text = (demoVisitor && demoVisitor.bubbleText) ? demoVisitor.bubbleText : thoughts[Math.floor(Math.random() * thoughts.length)];
 
             if (guestBubbles[id]) {
@@ -645,12 +687,12 @@
 
             const states = ['idle', 'writing', 'researching', 'executing', 'syncing', 'error'];
             const bubbleTextMap = {
-                idle: '我去休息区躺一下',
-                writing: '我在工作中',
-                researching: '我在调研中',
-                executing: '我在执行任务',
-                syncing: '我在同步状态',
-                error: '出错了！我去报警区'
+                idle: i18nT('demo.bubble.idle'),
+                writing: i18nT('demo.bubble.writing'),
+                researching: i18nT('demo.bubble.researching'),
+                executing: i18nT('demo.bubble.executing'),
+                syncing: i18nT('demo.bubble.syncing'),
+                error: i18nT('demo.bubble.error')
             };
 
             // 确保两位 demo 角色不会总是同一个状态（增加可观测性）
@@ -756,11 +798,10 @@
                                     currentState = 'writing';
                                     // 临时更换 bubble 文案
                                     const oldTexts = BUBBLE_TEXTS.writing;
-                                    BUBBLE_TEXTS.writing = [
-                                        `欢迎 ${newAgent.name} 来到办公室～`,
-                                        `Hi ${newAgent.name}，一起开工吧`,
-                                        `${newAgent.name} 已加入，欢迎！`
-                                    ];
+                                    const welcomeLines = i18nArr('welcome.lines');
+                                    BUBBLE_TEXTS.writing = welcomeLines.map((tpl) =>
+                                        tpl.replace(/\{\{name\}\}/g, newAgent.name)
+                                    );
                                     showBubble();
                                     // 还原
                                     BUBBLE_TEXTS.writing = oldTexts;
@@ -943,7 +984,7 @@
             const plaqueY = config.height - 36;
             const plaqueBg = game.add.rectangle(plaqueX, plaqueY, 420, 44, 0x5d4037);
             plaqueBg.setStrokeStyle(3, 0x3e2723);
-            const plaqueText = game.add.text(plaqueX, plaqueY, 'wangmiaozero小龙虾的办公室', {
+            const plaqueText = game.add.text(plaqueX, plaqueY, i18nT('game.plaque'), {
                 fontFamily: 'ArkPixel, monospace',
                 fontSize: '18px',
                 fill: '#ffd700',
@@ -951,6 +992,7 @@
                 stroke: '#000',
                 strokeThickness: 2
             }).setOrigin(0.5);
+            window.__plaqueTextObj = plaqueText;
             // 牌匾两边加个小装饰（跟随牌匾居中）
             game.add.text(plaqueX - 190, plaqueY, '⭐', { fontFamily: 'ArkPixel, monospace', fontSize: '20px' }).setOrigin(0.5);
             game.add.text(plaqueX + 190, plaqueY, '⭐', { fontFamily: 'ArkPixel, monospace', fontSize: '20px' }).setOrigin(0.5);
@@ -1118,10 +1160,46 @@
             coordsToggle.addEventListener('click', () => {
                 showCoords = !showCoords;
                 coordsOverlay.style.display = showCoords ? 'block' : 'none';
-                coordsToggle.textContent = showCoords ? '隐藏坐标' : '显示坐标';
+                coordsToggle.textContent = showCoords ? i18nT('hud.hideCoords') : i18nT('hud.showCoords');
                 coordsToggle.classList.toggle('is-on', showCoords);
                 coordsToggle.setAttribute('aria-pressed', showCoords ? 'true' : 'false');
             });
+
+            (function initFullscreen() {
+                const fsToggle = document.getElementById('fullscreen-toggle');
+                if (!fsToggle) return;
+                const root = document.documentElement;
+                function reqFs() {
+                    if (root.requestFullscreen) return root.requestFullscreen();
+                    if (root.webkitRequestFullscreen) return root.webkitRequestFullscreen();
+                    if (root.msRequestFullscreen) return root.msRequestFullscreen();
+                    return Promise.reject(new Error('no fullscreen'));
+                }
+                function exitFs() {
+                    if (document.exitFullscreen) return document.exitFullscreen();
+                    if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
+                    if (document.msExitFullscreen) return document.msExitFullscreen();
+                    return Promise.reject(new Error('no exit'));
+                }
+                fsToggle.addEventListener('click', function () {
+                    const el = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+                    if (el) {
+                        exitFs().catch(function () {});
+                    } else {
+                        reqFs().catch(function () {});
+                    }
+                });
+                function onFullscreenLayout() {
+                    syncFullscreenBtn();
+                    requestAnimationFrame(function () {
+                        window.dispatchEvent(new Event('resize'));
+                    });
+                }
+                document.addEventListener('fullscreenchange', onFullscreenLayout);
+                document.addEventListener('webkitfullscreenchange', onFullscreenLayout);
+                document.addEventListener('MSFullscreenChange', onFullscreenLayout);
+                syncFullscreenBtn();
+            })();
 
             // 允许手机端“拖动/滑动”来移动视野（本质：移动 Phaser Camera）
             // iPhone 等触屏设备默认开启；桌面端默认关闭（可手动开）。
@@ -1192,7 +1270,7 @@
             function setPanEnabled(on) {
                 panEnabled = on;
                 if (panToggle) {
-                    panToggle.textContent = on ? '锁定视野' : '移动视野';
+                    panToggle.textContent = on ? i18nT('hud.panOn') : i18nT('hud.panOff');
                     panToggle.classList.toggle('is-on', on);
                     panToggle.setAttribute('aria-pressed', on ? 'true' : 'false');
                 }
@@ -1287,13 +1365,16 @@
             // Mouse move handler for coordinate display
             game.input.on('pointermove', (pointer) => {
                 if (!showCoords) return;
-                // Clamp to map size (0..width-1 / 0..height-1)
-                const x = Math.max(0, Math.min(config.width - 1, Math.round(pointer.x)));
-                const y = Math.max(0, Math.min(config.height - 1, Math.round(pointer.y)));
+                // 世界坐标用 worldX/Y；浮层用 client 坐标（与 Phaser 画布映射一致，且 fixed 定位应对视口）
+                const wx = typeof pointer.worldX === 'number' ? pointer.worldX : pointer.x;
+                const wy = typeof pointer.worldY === 'number' ? pointer.worldY : pointer.y;
+                const x = Math.max(0, Math.min(config.width - 1, Math.round(wx)));
+                const y = Math.max(0, Math.min(config.height - 1, Math.round(wy)));
                 coordsDisplay.textContent = `${x}, ${y}`;
-                // Position overlay next to mouse
-                coordsOverlay.style.left = (pointer.x + 18) + 'px';
-                coordsOverlay.style.top = (pointer.y + 18) + 'px';
+                const cx = typeof pointer.clientX === 'number' ? pointer.clientX : pointer.x;
+                const cy = typeof pointer.clientY === 'number' ? pointer.clientY : pointer.y;
+                coordsOverlay.style.left = (cx + 18) + 'px';
+                coordsOverlay.style.top = (cy + 18) + 'px';
             });
 
             // 加载昨日 memo
@@ -1425,7 +1506,10 @@
                     const stateInfo = STATES[nextState] || STATES.idle;
                     // If we're mid-transition, don't restart the path every poll
                     const changed = (pendingDesiredState === null) && (nextState !== currentState);
-                    const nextLine = '[' + stateInfo.name + '] ' + (data.detail || '...');
+                    const nextLine = i18nT('status.lineFormat', {
+                        state: stateInfo.name,
+                        detail: data.detail || i18nT('status.detailFallback')
+                    });
                     if (changed) {
                         typewriterTarget = nextLine;
                         typewriterText = '';
@@ -1514,7 +1598,7 @@
                     }
                 })
                 .catch(error => {
-                    typewriterTarget = '连接失败，正在重试...';
+                    typewriterTarget = i18nT('status.connectFail');
                     typewriterText = '';
                     typewriterIndex = 0;
                 });
@@ -1622,7 +1706,8 @@
 
         function showBubble() {
             if (bubble) { bubble.destroy(); bubble = null; }
-            const texts = BUBBLE_TEXTS[currentState] || BUBBLE_TEXTS.idle;
+            let texts = BUBBLE_TEXTS[currentState] || BUBBLE_TEXTS.idle;
+            if (!texts || !texts.length) texts = DEFAULT_BUBBLE_TEXTS[currentState] || DEFAULT_BUBBLE_TEXTS.idle;
             if (currentState === 'idle') return; // no bubble while sitting on sofa
 
             // Bubble anchor should follow current visible character:
@@ -1660,7 +1745,7 @@
         function showCatBubble() {
             if (!window.catSprite) return;
             if (window.catBubble) { window.catBubble.destroy(); window.catBubble = null; }
-            const texts = BUBBLE_TEXTS.cat || ['喵~', '咕噜咕噜…'];
+            const texts = (BUBBLE_TEXTS.cat && BUBBLE_TEXTS.cat.length) ? BUBBLE_TEXTS.cat : DEFAULT_BUBBLE_TEXTS.cat;
             const text = texts[Math.floor(Math.random() * texts.length)];
             const anchorX = window.catSprite.x;
             const anchorY = window.catSprite.y - 60;
@@ -1674,4 +1759,64 @@
 
         // 假 Agent 气泡逻辑已移除，统一以真实 /agents 数据为准
 
-initGame();
+        function syncFullscreenBtn() {
+            const fsToggle = document.getElementById('fullscreen-toggle');
+            const el = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+            const on = !!el;
+            if (document.body) document.body.classList.toggle('staroffice-fs', on);
+            if (!fsToggle) return;
+            fsToggle.textContent = on ? i18nT('hud.exitFullscreen') : i18nT('hud.fullscreen');
+            fsToggle.classList.toggle('is-on', on);
+            fsToggle.setAttribute('aria-pressed', on ? 'true' : 'false');
+        }
+
+        function refreshHudButtons() {
+            const ct = document.getElementById('coords-toggle');
+            const pt = document.getElementById('pan-toggle');
+            if (ct) {
+                const show = ct.classList.contains('is-on');
+                ct.textContent = show ? i18nT('hud.hideCoords') : i18nT('hud.showCoords');
+            }
+            if (pt) {
+                const on = pt.getAttribute('aria-pressed') === 'true';
+                pt.textContent = on ? i18nT('hud.panOn') : i18nT('hud.panOff');
+            }
+            syncFullscreenBtn();
+        }
+
+        function refreshOfficeUiStrings() {
+            rebuildStatesFromI18n();
+            rebuildBubblesFromI18n();
+            if (window.StarOfficeTheme && window.StarOfficeTheme.syncButton) window.StarOfficeTheme.syncButton();
+            refreshHudButtons();
+            renderGuestAgentList();
+            if (window.__plaqueTextObj && typeof window.__plaqueTextObj.setText === 'function') {
+                window.__plaqueTextObj.setText(i18nT('game.plaque'));
+            }
+        }
+
+        document.addEventListener('staroffice-locale-change', function () {
+            refreshOfficeUiStrings();
+        });
+
+        function bootstrapOffice() {
+            if (window.StarOfficeI18n) {
+                window.StarOfficeI18n.init()
+                    .then(function () {
+                        rebuildStatesFromI18n();
+                        rebuildBubblesFromI18n();
+                        if (window.StarOfficeTheme && window.StarOfficeTheme.syncButton) window.StarOfficeTheme.syncButton();
+                        initGame();
+                    })
+                    .catch(function () {
+                        rebuildStatesFromI18n();
+                        rebuildBubblesFromI18n();
+                        initGame();
+                    });
+            } else {
+                rebuildStatesFromI18n();
+                rebuildBubblesFromI18n();
+                initGame();
+            }
+        }
+        bootstrapOffice();

@@ -1,6 +1,13 @@
 <!-- markdownlint-disable MD033 MD041 -->
 <p align="center">
-  <a href="./README_ZH.md">简体中文</a> | <strong>English</strong>
+  <a href="./README_ZH.md">简体中文</a> |
+  <strong>English</strong> |
+  <a href="./README_ko.md">한국어</a> |
+  <a href="./README_fr.md">Français</a> |
+  <a href="./README_de.md">Deutsch</a> |
+  <a href="./README_ja.md">日本語</a> |
+  <a href="./README_zh-TW.md">繁體中文</a> |
+  <a href="./README_ru.md">Русский</a>
 </p>
 <!-- markdownlint-enable MD033 MD041 -->
 
@@ -16,7 +23,7 @@ A **pixel-office dashboard** for multi-agent collaboration: it visualizes what y
 This repo is a **Node.js / Express** take on the upstream **Star-Office-UI** idea. It keeps the same look-and-feel and HTTP contract so existing agents and scripts need little or no change, while the backend is structured for **long-running service** use—not a single giant script.
 
 
-This project supports 4 styles: pixel, soft, 夜青, paper, default pixel style.
+This project supports four styles: Pixel, Soft, Night Blue, and Paper, with Pixel style as the default.
 
 ![像素风格](./docs/screenshots/office-preview-1.png)
 ![柔和风格](./docs/screenshots/office-preview-2.png)

@@ -1,0 +1,91 @@
+{
+  "page": { "title": "Le bureau pixel de Star" },
+  "loading": { "text": "Chargement du bureau pixel...", "progress": "Chargement du bureau pixel... {{pct}}%" },
+  "memo": { "title": "— H I E R —", "placeholder": "Chargement...", "empty": "Pas de journal pour hier", "loadFail": "Échec du chargement" },
+  "control": {
+    "starStatus": "État Star",
+    "styleTitle": "Changer le style d'interface",
+    "styleLabel": "Style · {{theme}}",
+    "styleCycleTitle": "Cliquer pour changer de style ({{count}} au total)",
+    "guestTitle": "— V I S I T E U R S —",
+    "guestLoading": "Chargement des visiteurs...",
+    "guestEmpty": "Aucun visiteur"
+  },
+  "btn": { "idle": "Repos", "writing": "Travail", "syncing": "Sync", "error": "Alerte" },
+  "states": {
+    "idle": "En attente",
+    "writing": "Rédaction",
+    "researching": "Recherche",
+    "executing": "Exécution",
+    "syncing": "Sauvegarde sync",
+    "error": "Erreur"
+  },
+  "theme": { "pixel": "Pixel", "soft": "Doux", "midnight": "Minuit", "paper": "Papier" },
+  "guest": {
+    "unnamed": "Visiteur sans nom",
+    "auth": { "approved": "Approuvé", "pending": "En attente", "rejected": "Refusé", "offline": "Hors ligne" },
+    "stateShort": { "idle": "Repos", "writing": "Travail", "researching": "Étude", "executing": "Exec", "syncing": "Sync", "error": "Alerte" },
+    "swapSkill": "Échanger compétence",
+    "leaveRoom": "Quitter",
+    "leaveDone": "{{name}} a quitté la salle",
+    "leaveDoneDemo": "{{name}} a quitté (démo)",
+    "leaveFail": "Échec de sortie : {{msg}}",
+    "approveOk": "Visiteur approuvé",
+    "approveFail": "Échec d'approbation : {{msg}}",
+    "rejectOk": "Visiteur refusé",
+    "rejectFail": "Échec du refus : {{msg}}",
+    "requestFail": "Échec de la requête : {{msg}}",
+    "unknownError": "Erreur inconnue",
+    "swapTodo": "Échange de compétence à venir"
+  },
+  "hud": { "showCoords": "Afficher coordonnées", "hideCoords": "Masquer coordonnées", "panOn": "Verrouiller vue", "panOff": "Déplacer vue", "fullscreen": "Plein écran", "exitFullscreen": "Quitter plein écran" },
+  "status": { "loading": "Chargement...", "connectFail": "Connexion échouée, nouvel essai...", "detailFallback": "...", "lineFormat": "[{{state}}] {{detail}}" },
+  "game": { "plaque": "Bureau écrevisse de wangmiaozero", "guestDefault": "Visiteur" },
+  "welcome": {
+    "lines": [
+      "Bienvenue {{name}} au bureau~",
+      "Salut {{name}}, travaillons ensemble",
+      "{{name}} a rejoint — bienvenue !"
+    ]
+  },
+  "bubbles": {
+    "idle": ["En veille : oreilles dressées", "Je suis là, prêt", "Range le bureau d'abord", "Souffle pour le cerveau", "Efficace avec élégance", "Attendre le bon moment", "Café chaud, idées aussi", "Buff en coulisses", "Mode : calme / recharge", "Le chat dit : lentement ça va"],
+    "writing": ["Mode focus : ne pas déranger", "Le chemin critique d'abord", "Je simplifie le complexe", "Mettre les bugs en cage", "À mi-chemin — sauvegarder", "Chaque étape réversible", "Le progrès d'aujourd'hui", "Converger puis diverger", "Rendre le système explicable", "Calme — on y arrivera"],
+    "researching": ["Chaîne de preuves", "Info en conclusions", "Trouvé : la clé est ici", "Contrôler les variables", "Pourquoi ça arrive", "Intuition en tests", "Localiser puis optimiser", "Carte de causalité d'abord"],
+    "executing": ["Exécution — ne clignez pas", "Découper les tâches", "Pipeline lancé", "Go — en avant", "Que le résultat parle", "MVP d'abord, polish ensuite"],
+    "syncing": ["Sync : aujourd'hui dans le cloud", "Les sauvegardes rassurent", "Écriture… ne pas couper", "Horodatage des changements", "Cloud aligné", "Ne pas bouger avant fin sync", "Sauver le futur vous", "Une sauvegarde de plus"],
+    "error": ["Alarme — restez calme", "Ça sent le bug", "Reproduire avant corriger", "Donnez les logs", "Les erreurs sont des indices", "Limiter le blast radius", "Stabiliser puis opérer", "Je trouve la cause", "Vu pire — on corrige", "Alerte : le bug se montre"],
+    "cat": ["Miaou~", "Ronron…", "Remue la queue", "Le soleil c'est le mieux", "On me regarde", "Mascotte du bureau", "Grand étirement", "Croquettes prêtes ?", "Ronron", "Meilleure vue"]
+  },
+  "guestBubbleThoughts": {
+    "idle": ["En attente au salon", "Pause avant la suite", "Recharge au salon"],
+    "writing": ["Au bureau en travail", "Docs et exécution", "Mode travail profond"],
+    "researching": ["Mode recherche", "Sources et indices", "Recherche — sync bientôt"],
+    "executing": ["Pipeline en cours", "Tâches au bureau", "Plans en action"],
+    "syncing": ["Sync — mise à jour", "Progression vers le système", "Sync données en cours"],
+    "error": ["Zone bug — debug", "Anomalie — correction", "Alerte — localiser puis corriger"]
+  },
+  "demo": {
+    "bubble": {
+      "idle": "Au salon se détendre",
+      "writing": "Au travail",
+      "researching": "En recherche",
+      "executing": "En exécution",
+      "syncing": "Sync du statut",
+      "error": "Erreur ! Vers la zone alerte"
+    }
+  },
+  "lang": {
+    "label": "Langue",
+    "names": {
+      "zh-CN": "中文",
+      "ko": "한국어",
+      "en": "English",
+      "fr": "Français",
+      "de": "Deutsch",
+      "ja": "日本語",
+      "zh-TW": "繁體中文",
+      "ru": "Русский"
+    }
+  }
+}

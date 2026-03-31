@@ -127,6 +127,35 @@ html[data-ui-theme="soft"] .style-toggle-btn {
 html[data-ui-theme="soft"] .style-toggle-btn:hover {
     transform: translateY(-1px);
 }
+html[data-ui-theme="soft"] .hud-toolbar-inner {
+    border-width: 1px;
+    border-color: rgba(233, 69, 96, 0.4);
+    border-radius: 999px;
+    background: rgba(18, 18, 28, 0.88);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+html[data-ui-theme="soft"] .hud-toolbar-divider {
+    background: rgba(233, 69, 96, 0.4);
+    opacity: 0.85;
+}
+html[data-ui-theme="soft"] .lang-bar-label {
+    color: rgba(244, 208, 63, 0.95);
+    text-shadow: 0 0 14px rgba(244, 208, 63, 0.2);
+}
+html[data-ui-theme="soft"] .lang-select {
+    border-width: 1px;
+    border-color: rgba(233, 69, 96, 0.35);
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.35);
+    color: var(--text);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+html[data-ui-theme="soft"] .lang-select:hover {
+    border-color: rgba(233, 69, 96, 0.55);
+    box-shadow: 0 0 16px rgba(233, 69, 96, 0.15);
+}
 
 /* ========== 风格：夜青（终端 / 冷色） ========== */
 html[data-ui-theme="midnight"] {
@@ -227,6 +256,29 @@ html[data-ui-theme="midnight"] .style-toggle-btn {
     background: var(--surface2);
     color: var(--gold);
     border-color: var(--border-strong);
+}
+html[data-ui-theme="midnight"] .hud-toolbar-inner {
+    background: #161b22;
+    border-color: var(--border-strong);
+    color: var(--text);
+    box-shadow: var(--pixel-shadow-sm);
+}
+html[data-ui-theme="midnight"] .hud-toolbar-divider {
+    background: var(--border-strong);
+    opacity: 0.6;
+}
+html[data-ui-theme="midnight"] .lang-bar-label {
+    color: var(--gold);
+    text-shadow: 0 0 12px rgba(34, 211, 238, 0.35);
+}
+html[data-ui-theme="midnight"] .lang-select {
+    background: #21262d;
+    border-color: var(--border-strong);
+    color: var(--text);
+    box-shadow: var(--pixel-shadow-sm);
+}
+html[data-ui-theme="midnight"] .lang-select:hover {
+    border-color: var(--accent);
 }
 
 /* ========== 风格：纸本（浅色便签） ========== */
@@ -357,4 +409,30 @@ html[data-ui-theme="paper"] .style-toggle-btn {
     color: var(--gold);
     border-color: #d6d3d1;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+html[data-ui-theme="paper"] .hud-toolbar-inner {
+    background: rgba(255, 254, 248, 0.95);
+    border-width: 2px;
+    border-color: #d6d3d1;
+    color: var(--text);
+    box-shadow: var(--pixel-shadow-sm);
+}
+html[data-ui-theme="paper"] .hud-toolbar-divider {
+    background: #d6d3d1;
+    opacity: 0.9;
+}
+html[data-ui-theme="paper"] .lang-bar-label {
+    color: var(--gold);
+    text-shadow: none;
+}
+html[data-ui-theme="paper"] .lang-select {
+    background: #fafaf9;
+    border-width: 1px;
+    border-color: #d6d3d1;
+    color: var(--text);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    color-scheme: light;
+}
+html[data-ui-theme="paper"] .lang-select:hover {
+    border-color: var(--accent);
 }

@@ -1,0 +1,91 @@
+{
+  "page": { "title": "Star 的像素辦公室" },
+  "loading": { "text": "正在載入 Star 的像素辦公室...", "progress": "正在載入 Star 的像素辦公室... {{pct}}%" },
+  "memo": { "title": "— 昨 日 小 記 —", "placeholder": "載入中...", "empty": "暫無昨日日記", "loadFail": "載入失敗" },
+  "control": {
+    "starStatus": "Star 狀態",
+    "styleTitle": "切換介面風格",
+    "styleLabel": "風格 · {{theme}}",
+    "styleCycleTitle": "點擊切換介面風格（共 {{count}} 種）",
+    "guestTitle": "— 訪 客 列 表 —",
+    "guestLoading": "正在載入訪客...",
+    "guestEmpty": "暫無訪客"
+  },
+  "btn": { "idle": "待命", "writing": "工作", "syncing": "同步", "error": "報警" },
+  "states": {
+    "idle": "待命",
+    "writing": "整理文件",
+    "researching": "搜尋資訊",
+    "executing": "執行任務",
+    "syncing": "同步備份",
+    "error": "出錯了"
+  },
+  "theme": { "pixel": "像素", "soft": "柔和", "midnight": "夜青", "paper": "紙本" },
+  "guest": {
+    "unnamed": "未命名訪客",
+    "auth": { "approved": "已授權", "pending": "待授權", "rejected": "已拒絕", "offline": "離線" },
+    "stateShort": { "idle": "待命", "writing": "工作", "researching": "調研", "executing": "執行", "syncing": "同步", "error": "報警" },
+    "swapSkill": "交換 skill",
+    "leaveRoom": "離開房間",
+    "leaveDone": "{{name}} 已離開房間",
+    "leaveDoneDemo": "{{name}} 已離開房間（demo）",
+    "leaveFail": "離開失敗：{{msg}}",
+    "approveOk": "已核准該訪客接入",
+    "approveFail": "核准失敗：{{msg}}",
+    "rejectOk": "已拒絕該訪客",
+    "rejectFail": "拒絕失敗：{{msg}}",
+    "requestFail": "請求失敗：{{msg}}",
+    "unknownError": "未知錯誤",
+    "swapTodo": "交換 skill 功能開發中"
+  },
+  "hud": { "showCoords": "顯示座標", "hideCoords": "隱藏座標", "panOn": "鎖定視野", "panOff": "移動視野", "fullscreen": "全螢幕", "exitFullscreen": "離開全螢幕" },
+  "status": { "loading": "載入中...", "connectFail": "連線失敗，正在重試...", "detailFallback": "...", "lineFormat": "[{{state}}] {{detail}}" },
+  "game": { "plaque": "wangmiaozero小龍蝦的辦公室", "guestDefault": "訪客" },
+  "welcome": {
+    "lines": [
+      "歡迎 {{name}} 來到辦公室～",
+      "Hi {{name}}，一起開工吧",
+      "{{name}} 已加入，歡迎！"
+    ]
+  },
+  "bubbles": {
+    "idle": ["待命中：耳朵豎起來了", "我在這兒，隨時可以開工", "先把桌面收拾乾淨再說", "呼——給大腦放個風", "今天也要優雅地高效", "等待，是為了更準確的一擊", "咖啡還熱，靈感也還在", "我在後台給你加 Buff", "狀態：靜心／充電", "小貓說：慢一點也沒關係"],
+    "writing": ["進入專注模式：勿擾", "先把關鍵路徑跑通", "我來把複雜變簡單", "把 bug 關進籠子裡", "寫到一半，先儲存", "把每一步都做成可回滾", "今天的進度，明天的底氣", "先收斂，再發散", "讓系統變得更可解釋", "穩住，我們能贏"],
+    "researching": ["我在挖證據鏈", "讓我把資訊熬成結論", "找到了：關鍵在這裡", "先把變數控制住", "我在查：它為什麼會這樣", "把直覺寫成驗證", "先定位，再最佳化", "別急，先畫因果圖"],
+    "executing": ["執行中：不要眨眼", "把任務切成小塊逐個擊破", "開始跑 pipeline", "一鍵推進：走你", "讓結果自己說話", "先做最小可行，再做最美版本"],
+    "syncing": ["同步中：把今天鎖進雲裡", "備份不是儀式，是安全感", "寫入中…別斷電", "把變更交給時間戳", "雲端對齊：咔噠", "同步完成前先別亂動", "把未來的自己從災難裡救出來", "多一份備份，少一份後悔"],
+    "error": ["警報響了：先別慌", "我聞到 bug 的味道了", "先復現，再談修復", "把日誌給我，我會說人話", "錯誤不是敵人，是線索", "把影響面圈起來", "先止血，再手術", "我在：馬上定位根因", "別怕，這種我見多了", "報警中：讓問題自己現形"],
+    "cat": ["喵～", "咕嚕咕嚕…", "尾巴搖一搖", "曬太陽最開心", "有人來看我啦", "我是這個辦公室的吉祥物", "伸個懶腰", "今天的罐罐準備好了嗎", "呼嚕呼嚕", "這個位置視野最好"]
+  },
+  "guestBubbleThoughts": {
+    "idle": ["我在休息區待命", "先放鬆一下，等下一步任務", "我在休息充電中"],
+    "writing": ["我在工作區處理任務", "正在整理文件與執行中", "工作區專注推進中"],
+    "researching": ["我在調研模式，蒐集資訊", "正在查資料和驗證線索", "研究中，稍後同步結論"],
+    "executing": ["執行中，正在跑流程", "我在工作區推進任務", "正在把計畫落地執行"],
+    "syncing": ["同步中，馬上更新狀態", "正在同步進度到系統", "資料同步中請稍候"],
+    "error": ["我在 bug 區排查問題", "偵測到異常，正在修復", "報警中，先定位再處理"]
+  },
+  "demo": {
+    "bubble": {
+      "idle": "我去休息區躺一下",
+      "writing": "我在工作中",
+      "researching": "我在調研中",
+      "executing": "我在執行任務",
+      "syncing": "我在同步狀態",
+      "error": "出錯了！我去報警區"
+    }
+  },
+  "lang": {
+    "label": "語言",
+    "names": {
+      "zh-CN": "中文",
+      "ko": "한국어",
+      "en": "English",
+      "fr": "Français",
+      "de": "Deutsch",
+      "ja": "日本語",
+      "zh-TW": "繁體中文",
+      "ru": "Русский"
+    }
+  }
+}
