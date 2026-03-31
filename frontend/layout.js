@@ -43,9 +43,10 @@ const LAYOUT = {
     // 桌上花盆
     flower: {
       x: 310,
-      y: 405,
+      y: 390,
       origin: { x: 0.5, y: 0.5 },
-      depth: 1100
+      depth: 1100,
+      scale: 0.8
     },
 
     // Star 在桌前工作（在 desk 下面）

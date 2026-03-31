@@ -14,7 +14,7 @@
 ## 致谢与来源
 
 - 原项目：`https://github.com/ringhyacinth/Star-Office-UI`
-- 原作者：Ring Hyacinth（以及贡献者）
+- 上游维护者与贡献者
 - 本仓库基于原项目实现 Node 版本（后端从 Flask 改为 Express）
 
 感谢原作者开源这套像素办公室看板的设计与实现，给了这个 Node 版本落地基础。
@@ -25,7 +25,27 @@
 - 保留原前端资源与页面路由
 - API 尽量对齐原版，便于 OpenClaw / 龙虾及已有脚本无痛接入
 
+## 代码结构与规范
+
+- 入口文件：`app.js`（只负责装配和启动）
+- 路由模块：`src/routes/agents.js`、`src/routes/assets.js`
+- 架构说明：`docs/ARCHITECTURE_ZH.md`
+- 持久化：核心状态统一 JSON 落盘，写入采用原子替换（tmp + rename）
+
 ## 快速开始
+
+### 运行环境要求（强制）
+
+- Node.js `>=18.18.0`
+- pnpm `>=9`（`packageManager` 固定为 `pnpm@10.7.0`）
+- 本项目强制使用 `pnpm`，使用 `npm install` / `yarn install` 会直接失败。
+
+约束层级：
+
+- `package.json` 的 `engines` + 根目录 `.npmrc` 的 `engine-strict=true` 与 `package-manager-strict=true`
+- `preinstall` / `prestart` / `predev` 执行 `scripts/enforce-runtime.js`（校验 Node + pnpm 来源 + pnpm 版本）
+- `app.js` / `set_state.js` 首行加载 `scripts/enforce-runtime.js`（禁止绕过 pnpm：直接 `node app.js` / `node set_state.js` 会失败）
+- CI：每次 push/PR 执行 `pnpm install --frozen-lockfile`
 
 ```bash
 cd /Users/hfy/wm-code/Star-Office-UI-Node
@@ -33,7 +53,7 @@ pnpm install
 pnpm start
 ```
 
-默认地址：`http://127.0.0.1:18791`
+默认地址：`http://127.0.0.1:19000`
 
 若端口占用：
 
@@ -57,7 +77,7 @@ node set_state.js idle "待命中"
 健康检查：
 
 ```bash
-curl -s http://127.0.0.1:18791/health
+curl -s http://127.0.0.1:19000/health
 ```
 
 ## API 概览
@@ -99,7 +119,7 @@ curl -s http://127.0.0.1:18791/health
 先调用 `join-agent`，拿到 `agentId`（后续 push 必带）：
 
 ```bash
-curl -s -X POST http://127.0.0.1:18791/join-agent \
+curl -s -X POST http://127.0.0.1:19000/join-agent \
   -H "Content-Type: application/json" \
   -d '{
     "name": "openclaw-agent-01",
@@ -114,7 +134,7 @@ curl -s -X POST http://127.0.0.1:18791/join-agent \
 建议每 10~30 秒推送一次：
 
 ```bash
-curl -s -X POST http://127.0.0.1:18791/agent-push \
+curl -s -X POST http://127.0.0.1:19000/agent-push \
   -H "Content-Type: application/json" \
   -d '{
     "agentId": "agent_xxx",
@@ -128,7 +148,7 @@ curl -s -X POST http://127.0.0.1:18791/agent-push \
 ### 4) 离开房间
 
 ```bash
-curl -s -X POST http://127.0.0.1:18791/leave-agent \
+curl -s -X POST http://127.0.0.1:19000/leave-agent \
   -H "Content-Type: application/json" \
   -d '{"agentId":"agent_xxx"}'
 ```

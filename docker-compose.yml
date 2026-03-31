@@ -1,13 +1,13 @@
 services:
   star-office-ui-node:
-    image: node:24-alpine
+    image: node:20-alpine
     container_name: star-office-ui-node
     working_dir: /app
-    command: sh -c "corepack enable && pnpm install && pnpm start"
+    command: sh -c "corepack enable && corepack prepare pnpm@10.7.0 --activate && pnpm install --frozen-lockfile && pnpm start"
     ports:
-      - "18791:18791"
+      - "19000:19000"
     environment:
-      - PORT=18791
+      - PORT=19000
       - NODE_ENV=production
     volumes:
       - ./:/app

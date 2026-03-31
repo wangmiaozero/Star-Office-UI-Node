@@ -12,14 +12,23 @@
   "bugs": {
     "url": "https://github.com/wangmiaozero/Star-Office-UI-Node/issues"
   },
+  "packageManager": "pnpm@10.7.0",
+  "engines": {
+    "node": ">=18.18.0",
+    "pnpm": ">=9.0.0"
+  },
   "main": "app.js",
   "scripts": {
+    "preinstall": "node scripts/enforce-runtime.js",
+    "prestart": "node scripts/enforce-runtime.js",
+    "predev": "node scripts/enforce-runtime.js",
     "start": "node app.js",
     "dev": "node --watch app.js",
     "set-state": "node set_state.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "multer": "^2.1.1"
   }
 }

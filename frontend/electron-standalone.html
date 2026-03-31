@@ -24,16 +24,391 @@
             gap: 10px;
             overflow-x: hidden;
         }
+        body.asset-window-mode {
+            background: transparent !important;
+            padding: 0 !important;
+            gap: 0 !important;
+            min-height: 0 !important;
+            height: auto !important;
+            overflow: hidden !important;
+        }
+        body.asset-window-mode #window-controls,
+        body.asset-window-mode #status-fab,
+        body.asset-window-mode #loading-overlay,
+        body.asset-window-mode #main-stage,
+        body.asset-window-mode #bottom-panels,
+        body.asset-window-mode #asset-highlight,
+        body.asset-window-mode #room-loading-overlay,
+        body.asset-window-mode #coords-overlay,
+        body.asset-window-mode #coords-toggle,
+        body.asset-window-mode #pan-toggle,
+        body.asset-window-mode #lang-toggle-group {
+            display: none !important;
+        }
+        body.asset-window-mode #asset-drawer-backdrop {
+            display: none !important;
+        }
+        body.asset-window-mode #asset-drawer {
+            position: fixed !important;
+            inset: 0 !important;
+            width: auto !important;
+            height: 100vh !important;
+            max-width: none !important;
+            border-radius: 10px !important;
+            border: 0 !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.45) !important;
+            background: rgba(17, 24, 39, 0.96) !important;
+            transform: none !important;
+            display: flex !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
+        body.asset-window-mode #asset-drawer-body {
+            flex: 1 1 auto !important;
+            min-height: 0 !important;
+            padding-bottom: 10px !important;
+        }
+        body.asset-window-mode #asset-drawer-header {
+            cursor: move !important;
+        }
+        button {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        /* Electron standalone overrides: replicate desktop-shell styles from pre-upstream version */
+        body.desktop-shell {
+            background: transparent !important;
+            --desktop-game-width: 684px;
+            --desktop-game-height: 384px;
+            padding: 6px 0 8px !important;
+            gap: 8px !important;
+            justify-content: flex-start !important;
+            overflow: hidden !important;
+        }
+        body.desktop-shell #main-stage {
+            width: var(--desktop-game-width) !important;
+        }
+        body.desktop-shell #game-container {
+            width: var(--desktop-game-width) !important;
+            height: var(--desktop-game-height) !important;
+            max-width: var(--desktop-game-width) !important;
+            max-height: var(--desktop-game-height) !important;
+            min-height: var(--desktop-game-height) !important;
+            aspect-ratio: 16 / 9 !important;
+            border-radius: 8px !important;
+            overflow: hidden !important;
+        }
+        body.desktop-shell #game-container canvas {
+            box-shadow: none !important;
+        }
+        body.desktop-shell #bottom-panels {
+            width: var(--desktop-game-width) !important;
+            max-width: var(--desktop-game-width) !important;
+            flex-direction: row !important;
+            gap: 8px !important;
+            flex-wrap: nowrap !important;
+            align-items: flex-start !important;
+            margin-top: 5px !important;
+        }
+        body.desktop-shell #memo-panel {
+            flex: 1 1 0 !important;
+            width: auto !important;
+            height: 132px !important;
+            padding: 6px 8px 8px !important;
+        }
+        body.desktop-shell #control-bar {
+            flex: 1 1 0 !important;
+            width: auto !important;
+            height: 132px !important;
+            padding: 6px 8px 8px !important;
+            gap: 6px !important;
+        }
+        body.desktop-shell #guest-agent-panel {
+            flex: 1 1 0 !important;
+            width: auto !important;
+            height: 132px !important;
+            padding: 6px 8px 8px !important;
+            gap: 6px !important;
+        }
+        body.desktop-shell #control-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 6px !important;
+            align-items: stretch;
+            justify-items: stretch;
+        }
+        body.desktop-shell #control-buttons button {
+            height: 34px !important;
+            font-size: 11px !important;
+            padding: 4px 6px !important;
+        }
+        body.desktop-shell #control-bar-title,
+        body.desktop-shell #guest-agent-panel-title,
+        body.desktop-shell #memo-title {
+            font-size: 12px !important;
+        }
+        body.desktop-shell #guest-agent-list {
+            gap: 4px !important;
+        }
+        body.desktop-shell .guest-agent-item {
+            padding: 5px 6px !important;
+            gap: 4px !important;
+        }
+        body.desktop-shell .guest-agent-name {
+            font-size: 11px !important;
+        }
+        body.desktop-shell .guest-agent-buttons button {
+            font-size: 10px !important;
+            padding: 4px 6px !important;
+        }
+        body.desktop-shell #memo-date {
+            font-size: 9px !important;
+            left: -10px !important;
+        }
+        body.desktop-shell #memo-content {
+            font-size: 10px !important;
+            line-height: 1.55 !important;
+            left: 12px !important;
+        }
+        body.desktop-shell .panel-collapsible.collapsed {
+            height: 62px !important;
+            min-height: 62px !important;
+        }
+        body.desktop-shell .panel-collapsible:not(.collapsed) {
+            height: 220px !important;
+            min-height: 220px !important;
+        }
+        body.desktop-shell #status-text {
+            display: none !important;
+        }
+        #status-fab {
+            display: none;
+        }
+        body.desktop-shell #status-fab {
+            display: block;
+            position: fixed;
+            top: calc(env(safe-area-inset-top, 0px) + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000001;
+            max-width: min(62vw, 520px);
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.72);
+            color: #eee;
+            font-size: 12px;
+            line-height: 1.25;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            pointer-events: none;
+        }
+        body.desktop-shell #loading-overlay {
+            background: rgba(0, 0, 0, 0.18) !important;
+            backdrop-filter: blur(2px);
+        }
+        body.desktop-shell #pan-toggle,
+        body.desktop-shell #coords-toggle {
+            display: none !important;
+        }
+        #window-controls {
+            display: none;
+        }
+        body.desktop-shell #window-controls {
+            display: flex;
+            position: fixed;
+            top: calc(env(safe-area-inset-top, 0px) + 10px);
+            left: 12px;
+            z-index: 1000002;
+            gap: 8px;
+        }
+        .traffic-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.25) inset;
+            position: relative;
+            transition: transform 0.12s ease, filter 0.16s ease, box-shadow 0.16s ease;
+        }
+        .traffic-btn.close { background: #ff5f57; }
+        .traffic-btn.min { background: #febc2e; }
+        .traffic-btn.max { background: #28c840; opacity: 1; cursor: pointer; }
+        .traffic-btn:disabled { pointer-events: none; }
+        .traffic-btn::before,
+        .traffic-btn::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            background: rgba(53, 53, 53, 0.9);
+            opacity: 0;
+            transition: opacity 0.14s ease;
+            transform-origin: center;
+        }
+        .traffic-btn.close::before,
+        .traffic-btn.close::after {
+            width: 7px;
+            height: 1.4px;
+            margin-left: -3.5px;
+            margin-top: -0.7px;
+            border-radius: 999px;
+            background: rgba(95, 24, 23, 0.95);
+        }
+        .traffic-btn.close::before { transform: rotate(45deg); }
+        .traffic-btn.close::after { transform: rotate(-45deg); }
+        .traffic-btn.min::before {
+            width: 7px;
+            height: 1.4px;
+            margin-left: -3.5px;
+            margin-top: -0.7px;
+            border-radius: 999px;
+            background: rgba(116, 83, 11, 0.95);
+        }
+        .traffic-btn.min::after { display: none; }
+        .traffic-btn.max::before {
+            width: 4px;
+            height: 4px;
+            left: 50%;
+            top: 50%;
+            margin-left: -2.3px;
+            margin-top: -2.3px;
+            background: rgba(28, 86, 38, 0.96);
+            clip-path: polygon(0 0, 100% 0, 0 100%);
+            transform: none;
+        }
+        .traffic-btn.max::after {
+            width: 4px;
+            height: 4px;
+            left: 50%;
+            top: 50%;
+            margin-left: -0.8px;
+            margin-top: -0.8px;
+            background: rgba(28, 86, 38, 0.96);
+            clip-path: polygon(100% 100%, 0 100%, 100% 0);
+            transform: none;
+        }
+        body.desktop-shell #window-controls:hover .traffic-btn::before,
+        body.desktop-shell #window-controls:hover .traffic-btn::after,
+        .traffic-btn:hover::before,
+        .traffic-btn:hover::after {
+            opacity: 1;
+        }
+        .traffic-btn:hover {
+            transform: translateY(-0.5px);
+            filter: saturate(1.03) brightness(1.02);
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.28) inset, 0 0 0 0.5px rgba(255,255,255,0.18);
+        }
+        .traffic-btn:active {
+            transform: translateY(0);
+            filter: brightness(0.94);
+        }
+        body.electron-shell #window-controls {
+            display: flex !important;
+            gap: 7px;
+            top: calc(env(safe-area-inset-top, 0px) + 11px);
+            left: 13px;
+        }
+        body.electron-shell .traffic-btn {
+            width: 12px;
+            height: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.28);
+            box-shadow:
+                0 1px 0 rgba(255, 255, 255, 0.28) inset,
+                0 0 0 1px rgba(0, 0, 0, 0.06);
+            transform: none;
+        }
+        body.electron-shell .traffic-btn.close {
+            background: radial-gradient(circle at 35% 30%, #ff8a82 0%, #ff5f57 68%);
+        }
+        body.electron-shell .traffic-btn.min {
+            background: radial-gradient(circle at 35% 30%, #ffd76a 0%, #febc2e 68%);
+        }
+        body.electron-shell .traffic-btn.max {
+            background: radial-gradient(circle at 35% 30%, #61e26f 0%, #28c840 68%);
+        }
+        body.electron-shell .traffic-btn.close::before,
+        body.electron-shell .traffic-btn.close::after {
+            background: rgba(77, 18, 17, 0.92);
+            width: 6.5px;
+            height: 1.35px;
+            margin-left: -3.25px;
+            margin-top: -0.67px;
+        }
+        body.electron-shell .traffic-btn.min::before {
+            background: rgba(96, 66, 9, 0.94);
+            width: 6.5px;
+            height: 1.35px;
+            margin-left: -3.25px;
+            margin-top: -0.67px;
+        }
+        body.electron-shell .traffic-btn.max::before {
+            background: rgba(16, 93, 31, 0.95);
+            width: 6.6px;
+            height: 1.35px;
+            margin-left: -3.3px;
+            margin-top: -0.67px;
+            clip-path: none;
+        }
+        body.electron-shell .traffic-btn.max::after {
+            background: rgba(16, 93, 31, 0.95);
+            width: 1.35px;
+            height: 6.6px;
+            margin-left: -0.67px;
+            margin-top: -3.3px;
+            clip-path: none;
+        }
+        body.electron-shell #window-controls .traffic-btn::before,
+        body.electron-shell #window-controls .traffic-btn::after {
+            opacity: 0;
+        }
+        body.electron-shell #window-controls:hover .traffic-btn::before,
+        body.electron-shell #window-controls:hover .traffic-btn::after {
+            opacity: 1;
+        }
+        body.electron-shell .traffic-btn:hover {
+            transform: none;
+            filter: saturate(1.02) brightness(1.015);
+        }
+        body.desktop-shell #lang-toggle-group {
+            top: calc(env(safe-area-inset-top, 0px) + 10px) !important;
+            left: auto !important;
+            right: 24px !important;
+            gap: 6px !important;
+        }
+        body.desktop-shell #lang-toggle-group button {
+            min-height: 28px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(0, 0, 0, 0.72);
+            color: #eee;
+            font-family: 'ArkPixel', monospace;
+            font-size: 12px;
+            line-height: 1.25;
+        }
+        body.desktop-shell #lang-toggle-group button.lang-active {
+            background: #141722;
+            color: rgb(246, 208, 6);
+            border-color: rgb(246, 208, 6);
+            box-shadow: 0 0 0 1px rgba(246, 208, 6, 0.45) inset;
+        }
+        body.desktop-shell #asset-drawer {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45) !important;
+        }
         /* 底部面板容器 */
         #main-stage {
             position: relative;
             width: 1280px;
-            transition: transform .25s ease;
-            will-change: transform;
+            transition: margin-left .25s ease;
+            will-change: margin-left;
         }
         body.drawer-open #main-stage {
-            /* 与右侧抽屉并列：按视口动态左移，确保与抽屉至少保留 20px 间隔 */
-            transform: translateX(calc(-1 * max(0px, (min(320px, 92vw) + 20px) - ((100vw - 1280px) / 2))));
+            margin-left: 0 !important;
         }
         #bottom-panels {
             display: flex;
@@ -64,37 +439,6 @@
             box-shadow: inset 0 0 0 4px #64477d;
             position: relative;
             z-index: 10;
-        }
-        /* 首屏骨架：避免 Phaser 未就绪时纯黑屏 */
-        #game-skeleton {
-            position: absolute;
-            inset: 0;
-            z-index: 5;
-            background: radial-gradient(ellipse at center, #2a2a45 0%, #1a1a2e 65%, #151522 100%);
-            overflow: hidden;
-        }
-        #game-skeleton::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                rgba(255,255,255,0.03) 0px,
-                rgba(255,255,255,0.03) 1px,
-                transparent 1px,
-                transparent 12px
-            );
-            opacity: .6;
-        }
-        #game-skeleton .hint {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            color: #cbd5e1;
-            font-size: 14px;
-            letter-spacing: 1px;
-            text-shadow: 0 1px 0 rgba(0,0,0,.4);
         }
         #loading-overlay {
             position: fixed;
@@ -147,6 +491,44 @@
             text-overflow: ellipsis;
             line-height: 1.2;
         }
+        #office-plaque-dom {
+            position: absolute;
+            left: 50%;
+            bottom: 14px;
+            transform: translateX(-50%);
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            padding: 6px 12px;
+            border: 2px solid #3e2723;
+            background: #5d4037;
+            color: #ffd700;
+            font-family: 'ArkPixel', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1;
+            text-shadow: 0 1px 0 #000, 0 0 1px #000;
+            z-index: 35;
+            pointer-events: auto;
+            white-space: nowrap;
+            cursor: text;
+        }
+        #office-plaque-text {
+            font-size: 13px;
+            line-height: 1;
+            color: #ffd700;
+            outline: none;
+            min-width: 120px;
+            text-align: center;
+        }
+        #office-plaque-text.editing {
+            padding: 1px 4px;
+            background: rgba(0, 0, 0, 0.28);
+            box-shadow: 0 0 0 1px rgba(255, 215, 0, 0.45) inset;
+        }
+        .office-plaque-star {
+            font-size: 13px;
+            line-height: 1;
+        }
         /* 状态控制栏 */
         #control-bar {
             position: relative;
@@ -168,10 +550,10 @@
             inset: 0;
             pointer-events: none;
             background-image:
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f);
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc),
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc),
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc),
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc);
             background-repeat: no-repeat;
             background-size:
                 calc(50% - 14px) 2px, calc(50% - 14px) 2px,
@@ -190,10 +572,10 @@
             inset: 0;
             pointer-events: none;
             background-image:
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f);
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc),
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc),
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc),
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc);
             background-repeat: no-repeat;
             background-size:
                 9px 4px, 4px 9px,
@@ -233,67 +615,74 @@
             font-weight: 700;
         }
 
-        #asset-drawer-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000005;
-            display: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-        #asset-drawer-backdrop.open {
-            display: block;
-        }
-
         #asset-drawer {
             position: fixed;
-            top: 0;
-            right: -100vw;
-            width: 320px;
-            max-width: 92vw;
-            height: 100vh;
-            height: 100dvh;
+            top: 84px;
+            left: 50%;
+            right: auto;
+            width: 420px;
+            max-width: none;
+            height: 760px;
             background: #111827;
-            border-left: 2px solid #22c55e;
-            box-shadow: -8px 0 24px rgba(0,0,0,0.45);
-            transition: right 0.25s ease;
+            border: 2px solid #22c55e;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+            transform: translateX(-50%);
+            transition: opacity 0.18s ease;
             z-index: 1000010;
-            display: flex;
+            display: none;
             flex-direction: column;
-            overscroll-behavior: contain;
+            opacity: 0;
+            pointer-events: none;
         }
-        #asset-drawer.open { right: 0; }
+        #asset-drawer.open {
+            display: flex;
+            opacity: 1;
+            pointer-events: auto;
+        }
         #asset-drawer-header {
             color: #ecfdf5;
             font-size: 15px;
             padding: 12px;
-            border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+            border-bottom: 1px solid #374151;
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: #0b1220;
+            cursor: move;
+            user-select: none;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
         }
         #asset-drawer-body {
             padding: 10px;
+            padding-bottom: 150px;
             overflow: auto;
             color: #e5e7eb;
             font-size: 12px;
             position: relative;
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
+        }
+        #asset-drawer-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: 1000009;
+            display: none;
+        }
+        #asset-drawer-backdrop.open {
+            display: block;
         }
         .asset-toolbar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:10px; }
-        .asset-toolbar input { flex:1; min-width: 150px; padding:6px 8px; border-radius:6px; border:1px solid rgba(148, 163, 184, 0.22); background:#1f2937; color:#fff; }
-        .asset-toolbar button, #asset-drawer-header button { cursor:pointer; border:1px solid rgba(148, 163, 184, 0.24); background:#1f2937; color:#fff; border-radius:6px; padding:6px 8px; font-family:'ArkPixel', monospace; }
-        .asset-toolbar button:hover, #asset-drawer-header button:hover { border-color:#64748b; }
+        .asset-toolbar input { flex:1; min-width: 150px; padding:6px 8px; border-radius:6px; border:1px solid #374151; background:#1f2937; color:#fff; }
+        .asset-toolbar button, #asset-drawer-header button { cursor:pointer; border:1px solid #4b5563; background:#1f2937; color:#fff; border-radius:6px; padding:6px 8px; font-family:'ArkPixel', monospace; }
+        .asset-toolbar button:hover, #asset-drawer-header button:hover { border-color:#22c55e; }
         #asset-list {
             display:flex;
             flex-direction:column;
             gap:6px;
             flex: 1 1 auto;
             min-height: 120px;
-            max-height: none;
+            max-height: 40vh;
             overflow-y: auto;
             padding-right: 2px;
             scrollbar-color: #1f2937 #0b1220;
@@ -304,49 +693,21 @@
         #asset-list::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 0; border: 1px solid #111827; }
         #asset-upload-panel {
             position: sticky;
-            left: 8px;
-            right: 8px;
-            width: auto;
-            max-width: none;
-            box-sizing: border-box;
-            margin-top: 10px;
-            margin-bottom: 0;
             bottom: 8px;
-            background: rgba(11, 18, 32, 0.96);
-            border: 1px solid rgba(71, 85, 105, 0.75);
-            border-radius: 10px;
-            padding: 10px;
-            z-index: 1000030;
+            margin-top: 10px;
+            background: #0b1220;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 8px;
+            z-index: 50;
             display: none;
-            box-shadow: 0 12px 30px rgba(0,0,0,.45);
-            backdrop-filter: blur(2px);
+            box-shadow: 0 -4px 12px rgba(0,0,0,.35);
         }
         #asset-upload-panel.active {
             display: block;
         }
-        .asset-upload-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-        .asset-upload-grid > button {
-            width: 100%;
-            min-height: 36px;
-            padding: 6px 8px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            background: #111827;
-            color: #e5e7eb;
-            border: 1px solid #334155;
-        }
-        .asset-upload-grid > button:hover {
-            background: #1f2937;
-            border-color: #475569;
-            color: #f8fafc;
-        }
         .asset-item {
-            border: 1px solid rgba(148, 163, 184, 0.16);
+            border: 1px solid #374151;
             background: #0f172a;
             border-radius: 8px;
             padding: 8px;
@@ -355,24 +716,22 @@
             gap: 8px;
             align-items: center;
             cursor: pointer;
-            transition: border-color .12s ease, background-color .12s ease;
         }
-        .asset-item:hover { border-color: rgba(148, 163, 184, 0.34); background:#111b2f; }
-        .asset-item.active { border-color: #22c55e; box-shadow: 0 0 0 1px rgba(34,197,94,.55) inset; }
+        .asset-item.active { border-color: #22c55e; box-shadow: 0 0 0 1px #22c55e inset; }
         .asset-vis-btn {
             min-width: 34px;
             height: 28px;
             padding: 2px 4px;
-            border: 1px solid rgba(148, 163, 184, 0.16);
-            background: rgba(15, 23, 42, 0.66);
+            border: 1px solid #4b5563;
+            background: #111827;
             color: #d1d5db;
-            border-radius: 999px;
+            border-radius: 6px;
             font-size: 14px;
             cursor: pointer;
             font-family:'ArkPixel', monospace;
         }
-        .asset-vis-btn:hover { border-color:rgba(148, 163, 184, 0.38); color:#ecfccb; background:rgba(30,41,59,.92); }
-        .asset-thumb { width:56px; height:56px; object-fit: contain; background:#0b1220; border:1px solid rgba(148, 163, 184, 0.16); border-radius:6px; }
+        .asset-vis-btn:hover { border-color:#22c55e; color:#ecfccb; }
+        .asset-thumb { width:56px; height:56px; object-fit: contain; background:#0b1220; border:1px solid #374151; border-radius:6px; }
         .asset-meta { line-height: 1.45; }
         .asset-path { color:#d1fae5; word-break: break-all; }
         .asset-sub { color:#9ca3af; font-size:11px; }
@@ -381,68 +740,29 @@
         #asset-upload-result .hint-p:last-child { margin-bottom: 0; }
         .asset-plus-box { width:100%; height:92px; border:2px dashed #4b5563; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#9ca3af; font-size:34px; cursor:pointer; user-select:none; }
         .asset-plus-box:hover { border-color:#22c55e; color:#22c55e; }
-        .asset-preview-box { border:1px solid rgba(148, 163, 184, 0.10); border-radius:8px; padding:6px; background:#0b1220; margin-bottom:8px; }
+        .asset-preview-box { border:1px solid #374151; border-radius:8px; padding:6px; background:#0b1220; margin-bottom:8px; }
         .asset-preview-title { color:#9ca3af; font-size:11px; margin-bottom:4px; }
-        #asset-auth-gate {
-            border: 0;
-            border-bottom: 1px solid rgba(148, 163, 184, 0.18);
-            border-radius: 0;
-            padding: 0 0 10px;
-            margin-bottom: 10px;
-            background: transparent;
-        }
-        #asset-home-favorites {
-            border: 0;
-            border-top: 1px solid rgba(148, 163, 184, 0.16);
-            border-radius: 0;
-            background: transparent;
-            padding: 6px 0 4px;
-            margin: 0;
-        }
-        #asset-home-favorites-title {
-            font-size: 12px;
-            line-height: 1.35;
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            min-height: 20px;
-        }
-        .asset-preview-img { width:100%; height:92px; object-fit:contain; background:#111827; border:1px solid rgba(148, 163, 184, 0.14); border-radius:6px; }
+        .asset-preview-img { width:100%; height:92px; object-fit:contain; background:#111827; border:1px solid #1f2937; border-radius:6px; }
         .home-fav-list { display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; }
-        .home-fav-item { min-width:126px; max-width:126px; border:0; border-radius:8px; background:#111827; padding:6px; box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12); }
-        .home-fav-item img { width:100%; height:70px; object-fit:cover; border:1px solid rgba(148, 163, 184, 0.14); border-radius:6px; image-rendering:pixelated; }
+        .home-fav-item { min-width:126px; max-width:126px; border:1px solid #334155; border-radius:8px; background:#111827; padding:6px; }
+        .home-fav-item img { width:100%; height:70px; object-fit:cover; border:1px solid #1f2937; border-radius:6px; image-rendering:pixelated; }
         .home-fav-meta { color:#9ca3af; font-size:10px; margin-top:4px; line-height:1.3; min-height:24px; }
-        .home-fav-item button { width:100%; margin-top:4px; border:1px solid rgba(148, 163, 184, 0.20); background:#1f2937; color:#fff; border-radius:6px; padding:4px 6px; font-family:'ArkPixel', monospace; cursor:pointer; }
-        .home-fav-item button:hover { border-color:#64748b; }
-        .home-fav-del { background:#2a1416 !important; border-color: rgba(248,113,113,.35) !important; color:#fecaca !important; }
-        .home-fav-del:hover { border-color: rgba(248,113,113,.55) !important; }
+        .home-fav-item button { width:100%; margin-top:4px; border:1px solid #4b5563; background:#1f2937; color:#fff; border-radius:6px; padding:4px 6px; font-family:'ArkPixel', monospace; cursor:pointer; }
+        .home-fav-item button:hover { border-color:#22c55e; }
         #gemini-api-doc-link { color:#86efac; text-decoration: underline; text-underline-offset: 2px; }
         #gemini-api-doc-link:hover { color:#bbf7d0; }
 
 
-        #asset-move-panel { border:0; background:transparent; border-radius:0; padding:6px 0 8px; margin-bottom:6px; border-bottom: 1px solid rgba(148, 163, 184, 0.18); display:flex; flex-direction:column; justify-content:center; gap:6px; min-height:132px; }
-        #asset-home-actions-panel { border:0; background:transparent; border-radius:0; padding:6px 0 8px; border-bottom: 1px solid rgba(148, 163, 184, 0.18); }
-        #asset-manual-panel {
-            border-top: 0;
-            padding-top: 6px;
-            margin-top: 6px;
-        }
-        #asset-home-actions-panel .asset-toolbar,
-        #asset-move-row,
-        #asset-broker-row {
-            display:grid;
-            grid-template-columns: 1fr 1fr;
-            gap:8px;
-            margin:0;
-            align-items:center;
-        }
-        #asset-home-actions-panel .asset-toolbar > button { width:100%; margin:0; min-height:42px; }
+        #asset-move-panel { border:1px solid #334155; background:#0b1220; border-radius:10px; padding:10px; margin-bottom:10px; }
+        #asset-home-actions-panel { border:1px solid #334155; background:#0b1220; border-radius:10px; padding:10px; }
+        #asset-home-actions-panel .asset-toolbar { display:grid; grid-template-columns: 1fr 1fr; gap:8px; }
+        #asset-home-actions-panel .asset-toolbar > button { width:100%; margin:0; }
+        #asset-move-row { justify-content: center; gap:12px; margin-bottom:0; }
         #asset-move-row .btn-move,
         #asset-move-row .btn-home,
         #asset-broker-row .btn-broker,
         #asset-broker-row .btn-diy {
-            width:100%;
-            min-width:0;
+            width:122px;
             height:42px;
             padding:8px 8px 0;
             border:none;
@@ -473,6 +793,7 @@
         #asset-move-row .btn-home {
             background-image:url('/static/btn-back-home-sprite.png?v={{VERSION_TIMESTAMP}}');
         }
+        #asset-broker-row { justify-content:center; gap:12px; margin-top:8px; margin-bottom:0; }
         #asset-broker-row .btn-broker {
             background-image:url('/static/btn-broker-sprite.png?v={{VERSION_TIMESTAMP}}');
         }
@@ -599,11 +920,6 @@
             pointer-events: auto;
             border-radius: 10px;
         }
-        #lang-toggle-group,
-        #lang-toggle-group button {
-            position: relative;
-            z-index: 1000002 !important;
-        }
         .room-loading-inner {
             display: flex;
             flex-direction: column;
@@ -681,6 +997,26 @@
             padding-bottom: 0;
             filter: brightness(0.97);
         }
+        /* Desktop shell: keep 2x2 buttons centered and pressed-state offset visible */
+        body.desktop-shell #control-bar #btn-state-idle,
+        body.desktop-shell #control-bar #btn-state-writing,
+        body.desktop-shell #control-bar #btn-state-syncing,
+        body.desktop-shell #control-bar #btn-state-error {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 40px !important;
+            padding: 0 8px 8px !important;
+            line-height: 1 !important;
+        }
+        body.desktop-shell #control-bar #btn-state-idle:active,
+        body.desktop-shell #control-bar #btn-state-writing:active,
+        body.desktop-shell #control-bar #btn-state-syncing:active,
+        body.desktop-shell #control-bar #btn-state-error:active {
+            padding-top: 5px !important;
+            padding-bottom: 3px !important;
+        }
         /* 装修房间按钮使用像素精灵皮肤 */
         #control-bar #btn-open-drawer {
             background-image: url('/static/btn-open-drawer-sprite.png?v={{VERSION_TIMESTAMP}}') !important;
@@ -732,10 +1068,10 @@
             inset: 0;
             pointer-events: none;
             background-image:
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f);
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc),
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc),
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc),
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc);
             background-repeat: no-repeat;
             background-size:
                 calc(50% - 14px) 2px, calc(50% - 14px) 2px,
@@ -754,10 +1090,10 @@
             inset: 0;
             pointer-events: none;
             background-image:
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f);
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc),
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc),
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc),
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc);
             background-repeat: no-repeat;
             background-size:
                 9px 4px, 4px 9px,
@@ -855,10 +1191,10 @@
             inset: 0;
             pointer-events: none;
             background-image:
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f);
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc),
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc),
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc),
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc);
             background-repeat: no-repeat;
             background-size:
                 calc(50% - 14px) 2px, calc(50% - 14px) 2px,
@@ -877,10 +1213,10 @@
             inset: 0;
             pointer-events: none;
             background-image:
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f),
-                linear-gradient(#1a1b2f, #1a1b2f), linear-gradient(#1a1b2f, #1a1b2f);
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc),
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc),
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc),
+                linear-gradient(#8fa0bc, #8fa0bc), linear-gradient(#8fa0bc, #8fa0bc);
             background-repeat: no-repeat;
             background-size:
                 9px 4px, 4px 9px,
@@ -898,7 +1234,7 @@
             background-color: #111827;
         }
         #memo-title {
-            color: #1a1b2f;
+            color: #1b192e;
             font-size: 16px;
             font-weight: bold;
             margin-bottom: 6px;
@@ -953,6 +1289,146 @@
             color: #555;
             font-size: 10px;
             flex-shrink: 0;
+        }
+        .panel-collapsible {
+            transition: height 0.2s ease, min-height 0.2s ease;
+        }
+        .panel-collapsible.collapsed {
+            height: 48px !important;
+            min-height: 48px !important;
+            overflow: hidden;
+        }
+        .panel-collapsible.collapsed > :not(.panel-toggle-title) {
+            display: none !important;
+        }
+        body.desktop-shell .panel-collapsible {
+            border-radius: 0;
+            border: none !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+        body.desktop-shell .panel-toggle-title {
+            height: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #0B1117;
+            color: rgb(246, 208, 6) !important;
+            border-radius: 0;
+            border: 2px solid #6f84a2;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+            margin: 0;
+            padding: 0 12px;
+            line-height: 1;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            text-shadow: none;
+            transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+        }
+        body.desktop-shell .panel-toggle-title:hover {
+            background: #0B1117;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28);
+            transform: translateY(-1px);
+        }
+        body.desktop-shell .panel-toggle-title:active {
+            transform: translateY(0);
+        }
+        body.desktop-shell #memo-title,
+        body.desktop-shell #control-bar-title,
+        body.desktop-shell #guest-agent-panel-title {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            height: 44px !important;
+            min-height: 44px !important;
+            margin: 0 !important;
+            padding: 0 12px !important;
+            border: 2px solid #6f84a2 !important;
+            border-bottom: 2px solid #6f84a2 !important;
+            border-radius: 0 !important;
+            background: #0B1117 !important;
+            color: rgb(246, 208, 6) !important;
+            font-size: 13px !important;
+            font-weight: 400 !important;
+            line-height: 1 !important;
+            letter-spacing: 0.5px !important;
+            text-shadow: none !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22) !important;
+            position: relative !important;
+            top: 0 !important;
+            left: 0 !important;
+        }
+        body.desktop-shell .panel-collapsible.collapsed {
+            pointer-events: auto;
+            padding: 6px 8px !important;
+        }
+        body.desktop-shell .panel-collapsible.collapsed .panel-toggle-title {
+            pointer-events: auto;
+            margin: 0;
+        }
+        body.desktop-shell #memo-panel.collapsed::before,
+        body.desktop-shell #memo-panel.collapsed::after,
+        body.desktop-shell #control-bar.collapsed::before,
+        body.desktop-shell #control-bar.collapsed::after,
+        body.desktop-shell #guest-agent-panel.collapsed::before,
+        body.desktop-shell #guest-agent-panel.collapsed::after {
+            display: none !important;
+        }
+        /* memo 展开时只保留底图，不叠加线条装饰 */
+        body.desktop-shell #memo-panel:not(.collapsed)::before,
+        body.desktop-shell #memo-panel:not(.collapsed)::after {
+            display: none !important;
+        }
+        body.desktop-shell .panel-collapsible:not(.collapsed) {
+            padding: 6px 8px 8px !important;
+        }
+        body.desktop-shell #memo-panel:not(.collapsed) {
+            background-image: url('/static/memo-bg.webp?v={{VERSION_TIMESTAMP}}') !important;
+            background-size: contain !important;
+            /* 下移背景图，让主体落在折叠/展开标题条下方 */
+            background-position: center 52px !important;
+            background-repeat: no-repeat !important;
+            min-height: 240px !important;
+            height: 240px !important;
+        }
+        body.desktop-shell #control-bar:not(.collapsed),
+        body.desktop-shell #guest-agent-panel:not(.collapsed) {
+            background: transparent !important;
+            border: none !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+        body.desktop-shell #guest-agent-list::-webkit-scrollbar-track {
+            background: rgba(250, 244, 207, 0.65);
+        }
+        body.desktop-shell #guest-agent-list::-webkit-scrollbar-thumb {
+            background: rgba(93, 64, 55, 0.55);
+        }
+        body.desktop-shell .guest-agent-item {
+            background: rgba(250, 244, 207, 0.9) !important;
+            border: 1px solid #edd690 !important;
+        }
+        body.desktop-shell .guest-agent-name,
+        body.desktop-shell #guest-agent-panel [style*="color:#cbd5e1"] {
+            color: #5d4037 !important;
+        }
+        body.desktop-shell #control-bar button,
+        body.desktop-shell .guest-agent-buttons button {
+            border: 1px solid #edd690;
+            background: rgba(250, 244, 207, 0.92);
+            color: #5d4037 !important;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        body.desktop-shell #control-bar button:hover,
+        body.desktop-shell .guest-agent-buttons button:hover {
+            border-color: #faf4cf;
+            background: rgba(237, 214, 144, 0.96);
+        }
+        .panel-toggle-title {
+            cursor: pointer;
+            user-select: none;
         }
 
         /* 手机端专属适配（不影响桌面） */
@@ -1078,24 +1554,12 @@
                 padding: 6px 8px !important;
             }
 
-            body.drawer-open {
-                overflow: hidden !important;
-                position: fixed;
-                width: 100%;
-                touch-action: none;
-            }
-
             #asset-drawer {
                 width: 92vw;
                 max-width: 92vw;
-                height: 100vh;
-                height: 100dvh;
+                max-height: 84vh;
             }
-            #asset-drawer-body {
-                padding: 8px;
-                -webkit-overflow-scrolling: touch;
-                overscroll-behavior: contain;
-            }
+            #asset-drawer-body { padding: 8px; }
             #asset-list {
                 display: flex;
                 flex-direction: column;
@@ -1110,27 +1574,31 @@
             .asset-path { font-size: 11px; line-height: 1.3; }
             .asset-sub { font-size: 10px; }
             #asset-upload-panel {
-                left: 8px;
-                right: 8px;
-                width: auto;
-                max-width: none;
-                bottom: 8px;
+                position: sticky;
+                bottom: 0;
                 padding: 8px;
             }
-            .asset-upload-grid {
+            #asset-upload-panel .asset-toolbar {
                 gap: 6px;
+                margin-bottom: 6px;
             }
             #asset-upload-panel input {
                 min-width: 0;
                 flex: 1 1 42%;
             }
             #asset-upload-panel button {
-                min-height: 36px;
+                min-height: 38px;
             }
         }
     </style>
 </head>
 <body>
+    <div id="window-controls">
+        <button id="btn-close" class="traffic-btn close" title="关闭"></button>
+        <button id="btn-minimize-mode" class="traffic-btn min" title="最小化模式"></button>
+        <button id="btn-open-frontend" class="traffic-btn max" title="回到前端界面"></button>
+    </div>
+    <div id="status-fab">加载中...</div>
     <!-- 加载遮罩 -->
     <div id="loading-overlay">
         <div id="loading-text">Loading Star’s pixel office...</div>
@@ -1141,8 +1609,12 @@
     
     <div id="main-stage">
         <div id="game-container">
-            <div id="game-skeleton"><div class="hint">正在进入像素办公室…</div></div>
             <div id="status-text">加载中...</div>
+            <div id="office-plaque-dom">
+                <span class="office-plaque-star">⭐</span>
+                <span id="office-plaque-text">wangmiaozero 的办公室</span>
+                <span class="office-plaque-star">⭐</span>
+            </div>
         </div>
     
     <!-- 底部面板容器 -->
@@ -1162,11 +1634,11 @@
         <div id="control-bar">
             <div id="control-bar-title">Star 状态</div>
             <div id="control-buttons">
-                <button id="btn-state-idle" onclick="setState('idle','待命')">待命</button>
-                <button id="btn-state-writing" onclick="setState('writing','工作中')">工作</button>
-                <button id="btn-state-syncing" onclick="setState('syncing','同步中')">同步</button>
-                <button id="btn-state-error" onclick="setState('error','报警中')">报警</button>
-                <button id="btn-open-drawer" onclick="toggleAssetDrawer()">装修房间</button>
+                <button id="btn-state-idle" onclick="setState('idle', getStateDetailByState('idle'))">待命</button>
+                <button id="btn-state-writing" onclick="setState('writing', getStateDetailByState('writing'))">工作</button>
+                <button id="btn-state-syncing" onclick="setState('syncing', getStateDetailByState('syncing'))">同步</button>
+                <button id="btn-state-error" onclick="setState('error', getStateDetailByState('error'))">报警</button>
+                <button id="btn-open-drawer" onclick="openAssetWindowFromMain()">装修房间</button>
             </div>
         </div>
 
@@ -1189,8 +1661,8 @@
     </div>
 
     <div id="asset-drawer-backdrop" onclick="toggleAssetDrawer(false)"></div>
-    <aside id="asset-drawer">
-        <div id="asset-drawer-header">
+    <aside id="asset-drawer" data-no-window-drag="1">
+        <div id="asset-drawer-header" data-no-window-drag="1">
             <span>装修房间 · 资产侧边栏</span>
             <button id="btn-close-drawer" onclick="toggleAssetDrawer(false)">关闭</button>
         </div>
@@ -1223,7 +1695,7 @@
                             <button id="speed-fast-btn" type="button" onclick="setSpeedMode('fast')" style="background:#22c55e;color:#052e16;border-color:#16a34a;">🍌2</button>
                             <button id="speed-quality-btn" type="button" onclick="setSpeedMode('quality')" style="background:#334155;color:#e5e7eb;border-color:#475569;">🍌Pro</button>
                         </div>
-                        <details id="asset-gemini-panel" style="margin-top:6px; border:0; border-top:1px solid rgba(148,163,184,.18); border-radius:0; padding:8px 0 0; background:transparent;">
+                        <details id="asset-gemini-panel" style="margin-top:6px; border:1px dashed #334155; border-radius:8px; padding:8px; background:#0b1220;">
                             <summary id="gemini-panel-summary" style="cursor:pointer; color:#cbd5e1;">🔐 API 设置（可折叠）</summary>
                             <div id="asset-gemini-config" style="display:block; margin-top:6px;">
                                 <div id="gemini-config-hint" class="asset-sub" style="margin-bottom:4px;">可选：填写你的生图 API Key（留空不影响基础功能）</div>
@@ -1247,24 +1719,26 @@
                         <button id="btn-back-last-bg" class="btn-home" onclick="restoreLastGeneratedBackground()">↩️ 回上一个家</button>
                         <button id="btn-favorite-home" class="btn-home" onclick="saveCurrentHomeFavorite()">⭐ 收藏这个家</button>
                     </div>
-                    <details id="asset-home-favorites" style="margin:0;">
-                        <summary id="asset-home-favorites-title" class="asset-preview-title">🏠 收藏的家</summary>
+                    <div id="asset-home-favorites" class="asset-preview-box" style="margin:0;">
+                        <div id="asset-home-favorites-title" class="asset-preview-title">🏠 收藏的家</div>
                         <div id="asset-home-favorites-list" class="home-fav-list"></div>
-                    </details>
+                    </div>
                 </div>
 
-                <div id="asset-manual-panel" style="display:flex; flex-direction:column; flex:1; min-height:0;">
+                <div id="asset-manual-panel">
                     <div class="asset-toolbar">
                         <input id="asset-search" placeholder="搜索资产名（如 desk / sofa / star）" oninput="renderAssetDrawerList()" />
                     </div>
                     <div id="asset-list"></div>
                     <div id="asset-upload-panel">
                         <input id="asset-upload-file" type="file" accept="image/*" style="display:none;" />
-                        <div class="asset-upload-grid" style="margin-top:0; margin-bottom:6px; gap:8px;">
-                            <button id="asset-choose-btn" onclick="openInlineAssetUploader()">上传素材</button>
-                            <button id="asset-commit-refresh-btn" onclick="commitAndRefresh()" disabled style="opacity:.55;">确认刷新</button>
-                            <button id="asset-reset-default-btn" onclick="resetSelectedAssetToDefault()" disabled style="opacity:.55;">重置默认</button>
-                            <button id="asset-restore-prev-btn" onclick="restoreSelectedAssetPrev()" disabled style="opacity:.55;">恢复上版</button>
+                        <div class="asset-toolbar" style="margin-top:0; margin-bottom:6px; gap:8px;">
+                            <button id="asset-choose-btn" onclick="openInlineAssetUploader()">上传替换素材</button>
+                            <button id="asset-commit-refresh-btn" onclick="commitAndRefresh()" disabled style="opacity:.55;">确认并刷新</button>
+                        </div>
+                        <div class="asset-toolbar" style="margin-top:0; margin-bottom:6px; gap:8px;">
+                            <button id="asset-reset-default-btn" onclick="resetSelectedAssetToDefault()" disabled style="opacity:.55;">重置为默认资产</button>
+                            <button id="asset-restore-prev-btn" onclick="restoreSelectedAssetPrev()" disabled style="opacity:.55;">用上一版</button>
                         </div>
                         <div id="asset-upload-result" class="asset-sub"></div>
                     </div>
@@ -1281,16 +1755,18 @@
     <button id="pan-toggle" style="position:fixed; top:calc(env(safe-area-inset-top, 0px) + 12px); left:12px; z-index:999999; padding:8px 10px; font-family:ArkPixel,monospace; font-size:13px; cursor:pointer; border:2px solid #333; border-radius:5px; background:#333; color:#fff;">
         移动视野
     </button>
-    <div id="lang-toggle-group" style="position:fixed; top:calc(env(safe-area-inset-top, 0px) + 52px); left:12px; z-index:1000002; display:flex; gap:2px; align-items:center;">
-        <button id="lang-btn-en" onclick="setUILanguage('en')" style="padding:8px 10px; font-family:ArkPixel,monospace; font-size:13px; cursor:pointer; border:2px solid #333; border-radius:5px; background:#333; color:#fff;">EN</button>
-        <button id="lang-btn-jp" onclick="setUILanguage('ja')" style="padding:8px 10px; font-family:ArkPixel,monospace; font-size:13px; cursor:pointer; border:2px solid #333; border-radius:5px; background:#333; color:#fff;">JP</button>
-        <button id="lang-btn-cn" onclick="setUILanguage('zh')" style="padding:8px 10px; font-family:ArkPixel,monospace; font-size:13px; cursor:pointer; border:2px solid #333; border-radius:5px; background:#333; color:#fff;">CN</button>
+    <div id="lang-toggle-group" style="position:fixed; top:calc(env(safe-area-inset-top, 0px) + 52px); left:12px; z-index:999999; display:flex; align-items:center;">
+        <button id="lang-btn-en" onclick="setUILanguage('en')" style="cursor:pointer;">EN</button>
+        <button id="lang-btn-jp" onclick="setUILanguage('ja')" style="cursor:pointer;">JP</button>
+        <button id="lang-btn-cn" onclick="setUILanguage('zh')" style="cursor:pointer;">CN</button>
     </div>
 
-    <script src="/static/vendor/phaser-3.80.1.min.js?v={{VERSION_TIMESTAMP}}"></script>
+    <script src="/static/vendor/phaser-3.80.1.min.js"></script>
     <script>
         // 简易中英文切换
         let uiLang = localStorage.getItem('uiLang') || 'en';
+        const OFFICE_PLAQUE_STORAGE_KEY = 'officePlaqueTitle';
+        let officePlaqueCustomTitle = (localStorage.getItem(OFFICE_PLAQUE_STORAGE_KEY) || '').trim();
         const I18N = {
             zh: {
                 controlTitle: 'Star 状态',
@@ -1302,7 +1778,7 @@
                 assetHide: '隐藏', assetShow: '显示',
                 resetToDefault: '重置为默认资产', restorePrevAsset: '用上一版',
                 btnMove: '📦 搬新家', btnHome: '🐚 回老家', btnHomeLast: '↩️ 回上一个家', btnHomeFavorite: '⭐ 收藏这个家', btnBroker: '🤝 找中介', btnDIY: '🪚 自己装', btnBrokerGo: '听中介的',
-                homeFavTitle: '🏠 收藏的家', homeFavEmpty: '还没有收藏，先点“⭐ 收藏这个家”', homeFavApply: '替换到当前地图', homeFavDelete: '删除', homeFavSaved: '✅ 已收藏当前地图', homeFavApplied: '✅ 已替换为收藏地图', homeFavDeleted: '🗑️ 已删除收藏',
+                homeFavTitle: '🏠 收藏的家', homeFavEmpty: '还没有收藏，先点“⭐ 收藏这个家”', homeFavApply: '替换到当前地图', homeFavSaved: '✅ 已收藏当前地图', homeFavApplied: '✅ 已替换为收藏地图',
                 brokerHint: '你会给龙虾推荐什么样的房子',
                 brokerPromptPh: '例如：故宫主题、莫奈风格、地牢主题、兵马俑主题……',
                 brokerNeedPrompt: '请先输入中介方案描述',
@@ -1313,12 +1789,18 @@
                 geminiPanelTitle: '🔐 API 设置（可折叠）', geminiHint: '可选：填写你的生图 API Key（留空不影响基础功能）', geminiApiDoc: '📘 如何申请 Google API Key', geminiInputPh: '粘贴 GEMINI_API_KEY（不会回显）', geminiSaveKey: '保存 Key', geminiMaskNoKey: '当前状态：未配置 Key', geminiMaskHasKey: '当前已配置：',
                 speedModeLabel: '生成模式', speedFast: '🍌2', speedQuality: '🍌Pro',
                 searchPlaceholder: '搜索资产名（如 desk / sofa / star）', loaded: '已加载', allAssets: '全部资产',
-                chooseImage: '上传素材', confirmUpload: '确认刷新', resetToDefault: '重置默认', restorePrevAsset: '恢复上版', uploadPending: '待上传', uploadTarget: '目标',
+                chooseImage: '上传替换素材', confirmUpload: '确认并刷新', uploadPending: '待上传', uploadTarget: '目标',
                 assetHintNotInScene: '当前场景未检测到此对象，仍可替换文件（刷新后生效）',
                 assetHintDefault: '通用素材：建议保持原图尺寸、透明通道与视觉重心一致，避免错位或失真',
                 showCoords: '显示坐标', hideCoords: '隐藏坐标', moveView: '移动视野', lockView: '锁定视野',
                 memoTitle: '昨 日 小 记', guestTitle: '访 客 列 表', officeTitle: 'wangmiaozero 的办公室',
-                loadingOffice: '正在加载 Star 的像素办公室...'
+                loadingOffice: '正在加载 Star 的像素办公室...',
+                panelExpand: '展开', panelCollapse: '收起',
+                hiddenTag: '已隐藏', assetListLoaded: '已加载资产', sceneCaptured: '场景抓取', assetListLoadFailed: '资产加载失败，请点“刷新”重试',
+                authNeedInput: '请输入验证码', authPassOk: '验证通过', authPassWrong: '验证码错误',
+                stateDetailIdle: '待命', stateDetailWriting: '整理文档', stateDetailResearching: '搜索信息', stateDetailExecuting: '执行任务', stateDetailSyncing: '同步备份', stateDetailError: '出错了',
+                stateLabelIdle: '待命', stateLabelWriting: '整理文档', stateLabelResearching: '搜索信息', stateLabelExecuting: '执行任务', stateLabelSyncing: '同步备份', stateLabelError: '出错了',
+                statusBrokerDecorating: '正在处理中介装修方案', statusMovingHome: '正在搬新家', statusRestoreHome: '正在回老家', statusRestoreLastBg: '正在回退到上一次背景', statusApplyFavorite: '正在替换收藏地图'
             },
             en: {
                 controlTitle: 'Star Status',
@@ -1330,7 +1812,7 @@
                 assetHide: 'Hide', assetShow: 'Show',
                 resetToDefault: 'Reset to Default', restorePrevAsset: 'Use Previous',
                 btnMove: '📦 New Home', btnHome: '🐚 Go Home', btnHomeLast: '↩️ Last One', btnHomeFavorite: '⭐ Save This Home', btnBroker: '🤝 Broker', btnDIY: '🪚 DIY', btnBrokerGo: 'Follow Broker',
-                homeFavTitle: '🏠 Saved Homes', homeFavEmpty: 'No saved homes yet. Tap “⭐ Save This Home” first.', homeFavApply: 'Apply to Current Map', homeFavDelete: 'Delete', homeFavSaved: '✅ Current map saved', homeFavApplied: '✅ Applied saved home', homeFavDeleted: '🗑️ Saved home deleted',
+                homeFavTitle: '🏠 Saved Homes', homeFavEmpty: 'No saved homes yet. Tap “⭐ Save This Home” first.', homeFavApply: 'Apply to Current Map', homeFavSaved: '✅ Current map saved', homeFavApplied: '✅ Applied saved home',
                 brokerHint: 'What kind of house would you recommend for Lobster?',
                 brokerPromptPh: 'e.g. Forbidden City theme, Monet style, dungeon theme, Terracotta Warriors theme...',
                 brokerNeedPrompt: 'Please enter broker style prompt first',
@@ -1341,12 +1823,18 @@
                 geminiPanelTitle: '🔐 API Settings (collapsible)', geminiHint: 'Optional: set your image API key (base features work without it)', geminiApiDoc: '📘 How to get a Google API Key', geminiInputPh: 'Paste GEMINI_API_KEY (input hidden)', geminiSaveKey: 'Save Key', geminiMaskNoKey: 'Current: no key configured', geminiMaskHasKey: 'Configured key:',
                 speedModeLabel: 'Render Mode', speedFast: '🍌2', speedQuality: '🍌Pro',
                 searchPlaceholder: 'Search assets (desk / sofa / star)', loaded: 'Loaded', allAssets: 'All Assets',
-                chooseImage: 'Upload Asset', confirmUpload: 'Apply Refresh', resetToDefault: 'Reset Default', restorePrevAsset: 'Restore Prev', uploadPending: 'Pending Upload', uploadTarget: 'Target',
+                chooseImage: 'Upload Replacement Asset', confirmUpload: 'Confirm & Refresh', uploadPending: 'Pending Upload', uploadTarget: 'Target',
                 assetHintNotInScene: 'This object is not detected in current scene; you can still replace file (effective after refresh)',
                 assetHintDefault: 'Generic asset: keep source size, alpha channel, and visual anchor to avoid drift/distortion',
                 showCoords: 'Show Coords', hideCoords: 'Hide Coords', moveView: 'Pan View', lockView: 'Lock View',
                 memoTitle: 'YESTERDAY NOTES', guestTitle: 'VISITOR LIST', officeTitle: 'Haixin Lobster Office',
-                loadingOffice: 'Loading Star’s pixel office...'
+                loadingOffice: 'Loading Star’s pixel office...',
+                panelExpand: 'Expand', panelCollapse: 'Collapse',
+                hiddenTag: 'Hidden', assetListLoaded: 'Assets loaded', sceneCaptured: 'Scene captured', assetListLoadFailed: 'Failed to load assets. Click Refresh and retry',
+                authNeedInput: 'Please enter passcode', authPassOk: 'Passcode verified', authPassWrong: 'Wrong passcode',
+                stateDetailIdle: 'Standby', stateDetailWriting: 'Organizing Docs', stateDetailResearching: 'Researching', stateDetailExecuting: 'Executing Tasks', stateDetailSyncing: 'Syncing Backup', stateDetailError: 'Error',
+                stateLabelIdle: 'Standby', stateLabelWriting: 'Organizing Docs', stateLabelResearching: 'Researching', stateLabelExecuting: 'Executing Tasks', stateLabelSyncing: 'Syncing Backup', stateLabelError: 'Error',
+                statusBrokerDecorating: 'Applying broker decoration plan', statusMovingHome: 'Moving to a new home', statusRestoreHome: 'Restoring home background', statusRestoreLastBg: 'Restoring previous generated background', statusApplyFavorite: 'Applying favorite map'
             },
             ja: {
                 controlTitle: 'Star ステータス',
@@ -1358,7 +1846,7 @@
                 assetHide: '非表示', assetShow: '表示',
                 resetToDefault: 'デフォルトへ戻す', restorePrevAsset: '前の版へ戻す',
                 btnMove: '📦 引っ越し', btnHome: '🐚 実家に戻る', btnHomeLast: '↩️ ひとつ前へ', btnHomeFavorite: '⭐ この家を保存', btnBroker: '🤝 仲介', btnDIY: '🪚 自分で装飾', btnBrokerGo: '仲介に任せる',
-                homeFavTitle: '🏠 保存した家', homeFavEmpty: 'まだ保存がありません。先に「⭐ この家を保存」を押してください。', homeFavApply: '現在のマップに適用', homeFavDelete: '削除', homeFavSaved: '✅ 現在のマップを保存しました', homeFavApplied: '✅ 保存した家を適用しました', homeFavDeleted: '🗑️ 保存した家を削除しました',
+                homeFavTitle: '🏠 保存した家', homeFavEmpty: 'まだ保存がありません。先に「⭐ この家を保存」を押してください。', homeFavApply: '現在のマップに適用', homeFavSaved: '✅ 現在のマップを保存しました', homeFavApplied: '✅ 保存した家を適用しました',
                 brokerHint: 'ロブスターにはどんな家をおすすめしますか',
                 brokerPromptPh: '例：故宮テーマ、モネ風、ダンジョン風、兵馬俑テーマ…',
                 brokerNeedPrompt: '先に仲介プランの説明を入力してください',
@@ -1369,22 +1857,115 @@
                 geminiPanelTitle: '🔐 API設定（折りたたみ）', geminiHint: '任意：画像生成APIキーを設定（未設定でも基本機能は利用可）', geminiApiDoc: '📘 Google API Keyの取得方法', geminiInputPh: 'GEMINI_API_KEY を貼り付け（入力は非表示）', geminiSaveKey: 'Keyを保存', geminiMaskNoKey: '現在：キー未設定', geminiMaskHasKey: '設定済みキー：',
                 speedModeLabel: '生成モード', speedFast: '🍌2', speedQuality: '🍌Pro',
                 searchPlaceholder: 'アセット検索（desk / sofa / star）', loaded: '読み込み済み', allAssets: '全アセット',
-                chooseImage: '素材アップロード', confirmUpload: '確定して更新', resetToDefault: '初期に戻す', restorePrevAsset: '前版に戻す', uploadPending: 'アップロード待ち', uploadTarget: '対象',
+                chooseImage: '差し替え素材をアップロード', confirmUpload: '確定して更新', uploadPending: 'アップロード待ち', uploadTarget: '対象',
                 assetHintNotInScene: '現在のシーンでこのオブジェクトは未検出です。ファイル差し替えは可能（更新後に反映）',
                 assetHintDefault: '汎用素材：元サイズ・透過・視覚アンカーを維持し、ズレや崩れを防いでください',
                 showCoords: '座標表示', hideCoords: '座標非表示', moveView: '視点移動', lockView: '視点固定',
                 memoTitle: '昨日のメモ', guestTitle: '訪問者リスト', officeTitle: 'ハイシン・ロブスターのオフィス',
-                loadingOffice: 'Star のピクセルオフィスを読み込み中...'
+                loadingOffice: 'Star のピクセルオフィスを読み込み中...',
+                panelExpand: '展開', panelCollapse: '折りたたむ',
+                hiddenTag: '非表示', assetListLoaded: 'アセット読み込み', sceneCaptured: 'シーン取得', assetListLoadFailed: 'アセット読み込み失敗。更新して再試行してください',
+                authNeedInput: 'パスコードを入力してください', authPassOk: '認証に成功しました', authPassWrong: 'パスコードが正しくありません',
+                stateDetailIdle: '待機', stateDetailWriting: '文書整理', stateDetailResearching: '情報検索', stateDetailExecuting: 'タスク実行', stateDetailSyncing: '同期バックアップ', stateDetailError: 'エラー発生',
+                stateLabelIdle: '待機', stateLabelWriting: '文書整理', stateLabelResearching: '情報検索', stateLabelExecuting: 'タスク実行', stateLabelSyncing: '同期バックアップ', stateLabelError: 'エラー発生',
+                statusBrokerDecorating: '仲介の装飾プランを処理中', statusMovingHome: '引っ越し中', statusRestoreHome: 'ホーム背景を復元中', statusRestoreLastBg: '前回背景へ復元中', statusApplyFavorite: '保存したマップを適用中'
             }
         };
 
         function t(key) { return (I18N[uiLang] && I18N[uiLang][key]) || key; }
+        function getOfficePlaqueTitle() {
+            return (window.officeNameFromServer || officePlaqueCustomTitle || t('officeTitle'));
+        }
+        function refreshOfficePlaqueTitle() {
+            const el = document.getElementById('office-plaque-text');
+            if (!el || el.dataset.editing === '1') return;
+            el.textContent = getOfficePlaqueTitle();
+        }
+        function saveOfficePlaqueTitle(raw) {
+            const next = (raw || '').trim();
+            officePlaqueCustomTitle = next;
+            if (next) localStorage.setItem(OFFICE_PLAQUE_STORAGE_KEY, next);
+            else localStorage.removeItem(OFFICE_PLAQUE_STORAGE_KEY);
+        }
+        function initOfficePlaqueEditor() {
+            const plaque = document.getElementById('office-plaque-dom');
+            const textEl = document.getElementById('office-plaque-text');
+            if (!plaque || !textEl) return;
+
+            const beginEdit = () => {
+                if (textEl.dataset.editing === '1') return;
+                textEl.dataset.editing = '1';
+                textEl.contentEditable = 'true';
+                textEl.spellcheck = false;
+                textEl.classList.add('editing');
+                textEl.focus();
+                const sel = window.getSelection();
+                if (sel) {
+                    const range = document.createRange();
+                    range.selectNodeContents(textEl);
+                    range.collapse(false);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+            };
+
+            const finishEdit = (shouldSave) => {
+                if (textEl.dataset.editing !== '1') return;
+                textEl.contentEditable = 'false';
+                textEl.dataset.editing = '0';
+                textEl.classList.remove('editing');
+                if (shouldSave) saveOfficePlaqueTitle(textEl.textContent || '');
+                refreshOfficePlaqueTitle();
+            };
+
+            plaque.addEventListener('click', () => beginEdit());
+            textEl.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    finishEdit(true);
+                } else if (e.key === 'Escape') {
+                    e.preventDefault();
+                    textEl.textContent = getOfficePlaqueTitle();
+                    finishEdit(false);
+                }
+            });
+            textEl.addEventListener('blur', () => finishEdit(true));
+            refreshOfficePlaqueTitle();
+        }
         function renderBootLoadingText(percent) {
             const loadingEl = document.getElementById('loading-text');
             if (!loadingEl) return;
             const base = t('loadingOffice');
             const p = Number.isFinite(percent) ? ` ${Math.max(0, Math.min(100, Math.round(percent)))}%` : '';
             loadingEl.textContent = `${base}${p}`;
+        }
+
+        function getStateDetailByState(state) {
+            const keyMap = {
+                idle: 'stateDetailIdle',
+                writing: 'stateDetailWriting',
+                researching: 'stateDetailResearching',
+                executing: 'stateDetailExecuting',
+                syncing: 'stateDetailSyncing',
+                error: 'stateDetailError'
+            };
+            return t(keyMap[state] || 'stateDetailIdle');
+        }
+
+        function getStateLabelByState(state) {
+            if (state === 'syncing') return t('stateLabelSyncing');
+            if (state === 'error') return t('stateLabelError');
+            if (state === 'researching') return t('stateLabelResearching');
+            if (state === 'executing') return t('stateLabelExecuting');
+            if (state === 'writing') return t('stateLabelWriting');
+            return t('stateLabelIdle');
+        }
+
+        async function syncDesktopUiLanguage() {
+            if (!DESKTOP_MODE || !window.__TAURI__ || !window.__TAURI__.core) return;
+            try {
+                await window.__TAURI__.core.invoke('set_ui_lang', { lang: uiLang });
+            } catch (_) {}
         }
 
         function ensureMemoBgVisible() {
@@ -1413,9 +1994,7 @@
                 const el = document.getElementById(id);
                 if (!el) return;
                 const active = (uiLang === lang);
-                el.style.background = active ? '#22c55e' : '#333';
-                el.style.borderColor = active ? '#22c55e' : '#333';
-                el.style.color = '#fff';
+                el.classList.toggle('lang-active', active);
             });
 
             const drawerTitle = document.querySelector('#asset-drawer-header span');
@@ -1452,17 +2031,22 @@
 
             setText('asset-choose-btn', 'chooseImage');
             setText('asset-commit-refresh-btn', 'confirmUpload');
-            setText('asset-reset-default-btn', 'resetToDefault');
-            setText('asset-restore-prev-btn', 'restorePrevAsset');
 
             const memoTitle = document.getElementById('memo-title');
-            if (memoTitle) memoTitle.textContent = t('memoTitle');
-            const guestTitle = document.getElementById('guest-agent-panel-title');
-            if (guestTitle) guestTitle.textContent = t('guestTitle');
-            const plaqueTitle = (typeof window.officeNameFromServer !== 'undefined' && window.officeNameFromServer) || t('officeTitle');
-            if (window.officePlaqueText && window.officePlaqueText.setText) {
-                window.officePlaqueText.setText(plaqueTitle);
+            if (memoTitle) {
+                memoTitle.textContent = t('memoTitle');
+                memoTitle.dataset.baseTitle = t('memoTitle');
             }
+            const controlTitle = document.getElementById('control-bar-title');
+            if (controlTitle) controlTitle.dataset.baseTitle = t('controlTitle');
+            const guestTitle = document.getElementById('guest-agent-panel-title');
+            if (guestTitle) {
+                guestTitle.textContent = t('guestTitle');
+                guestTitle.dataset.baseTitle = t('guestTitle');
+            }
+            refreshOfficePlaqueTitle();
+
+            refreshCollapsiblePanelTitles();
 
             const coordsBtn = document.getElementById('coords-toggle');
             if (coordsBtn) coordsBtn.textContent = showCoords ? t('hideCoords') : t('showCoords');
@@ -1473,6 +2057,7 @@
             }
             ensureMemoBgVisible();
             renderBootLoadingText(Number(loadingProgressBar?.style?.width?.replace('%','') || 0));
+            syncDesktopUiLanguage();
         }
 
         function setUILanguage(lang) {
@@ -1523,7 +2108,242 @@
             });
         }
 
+        const PAGE_PARAMS = new URLSearchParams(window.location.search);
+        const ELECTRON_MODE = !!window.__ELECTRON__;
+        const DESKTOP_MODE = !!window.__TAURI__ || PAGE_PARAMS.get('desktop') === '1';
+        const ASSET_WINDOW_MODE = PAGE_PARAMS.get('assetWindow') === '1';
+        if (DESKTOP_MODE) {
+            document.body.classList.add('desktop-shell');
+        }
+        if (ASSET_WINDOW_MODE) {
+            document.body.classList.add('asset-window-mode');
+            const drawer = document.getElementById('asset-drawer');
+            const drawerHeader = document.getElementById('asset-drawer-header');
+            if (drawer) drawer.removeAttribute('data-no-window-drag');
+            if (drawerHeader) drawerHeader.removeAttribute('data-no-window-drag');
+        }
+        if (ELECTRON_MODE) {
+            document.body.classList.add('electron-shell');
+            if (!ASSET_WINDOW_MODE) {
+                const drawer = document.getElementById('asset-drawer');
+                const backdrop = document.getElementById('asset-drawer-backdrop');
+                if (drawer) drawer.style.display = 'none';
+                if (backdrop) backdrop.style.display = 'none';
+            }
+        }
+
+        function initDesktopWindowDrag() {
+            if (!DESKTOP_MODE || !window.__TAURI__ || !window.__TAURI__.window) return;
+            const appWindow = window.__TAURI__.window.getCurrentWindow();
+            let dragStart = null;
+            let dragTriggered = false;
+            const DRAG_THRESHOLD = 8;
+
+            const shouldIgnoreTarget = (target) => {
+                if (!target || !(target instanceof Element)) return false;
+                return !!target.closest('button, a, input, textarea, select, [contenteditable], [data-no-window-drag]');
+            };
+
+            document.addEventListener('pointerdown', (e) => {
+                if (e.button !== 0) return;
+                if (shouldIgnoreTarget(e.target)) return;
+                dragStart = { x: e.clientX, y: e.clientY };
+                dragTriggered = false;
+            });
+
+            document.addEventListener('pointermove', async (e) => {
+                if (!dragStart || dragTriggered) return;
+                const dx = e.clientX - dragStart.x;
+                const dy = e.clientY - dragStart.y;
+                const moved = Math.hypot(dx, dy);
+                if (moved < DRAG_THRESHOLD) return;
+                dragTriggered = true;
+                try {
+                    await appWindow.startDragging();
+                } catch (_) {
+                    // ignore drag API errors
+                } finally {
+                    dragStart = null;
+                }
+            });
+
+            const clearDrag = () => {
+                dragStart = null;
+                dragTriggered = false;
+            };
+            document.addEventListener('pointerup', clearDrag);
+            document.addEventListener('pointercancel', clearDrag);
+        }
+        initDesktopWindowDrag();
+
+        function initWindowControls() {
+            if (!DESKTOP_MODE || !window.__TAURI__ || !window.__TAURI__.core) return;
+            const core = window.__TAURI__.core;
+            const closeBtn = document.getElementById('btn-close');
+            const miniBtn = document.getElementById('btn-minimize-mode');
+            const maxBtn = document.getElementById('btn-open-frontend');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    try { await core.invoke('close_app'); } catch (_) {}
+                });
+            }
+            if (miniBtn) {
+                miniBtn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    try { await core.invoke('enter_minimize_mode'); } catch (_) {}
+                });
+            }
+            if (maxBtn) {
+                maxBtn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    try {
+                        const url = new URL('/', window.location.origin).toString();
+                        if (core && core.invoke) {
+                            await core.invoke('open_external_url', { url });
+                        } else {
+                            window.open(url.toString(), '_blank', 'noopener,noreferrer');
+                        }
+                    } catch (_) {
+                        window.open('http://127.0.0.1:19000/', '_blank', 'noopener,noreferrer');
+                    }
+                });
+            }
+        }
+        initWindowControls();
+
+        function initMainWindowAssetRefreshSync() {
+            if (ASSET_WINDOW_MODE) return;
+            if (!ELECTRON_MODE || !window.__TAURI__ || !window.__TAURI__.event) return;
+            window.__TAURI__.event.listen('main-window-asset-refresh', async (evt) => {
+                const payload = (evt && evt.payload) ? evt.payload : {};
+                const kind = String(payload.kind || 'asset');
+                const path = String(payload.path || '');
+                try {
+                    if (kind === 'asset_action') {
+                        const action = String(payload.action || '');
+                        if (action === 'preview_asset' && path) {
+                            applyScenePreview(path);
+                        } else if (action === 'clear_preview') {
+                            clearAssetSelectionUI();
+                        } else if (action === 'set_visibility' && path) {
+                            const visible = !!payload.visible;
+                            setAssetVisible(path, visible);
+                            if (selectedAssetInfo && selectedAssetInfo.path === path) {
+                                if (visible) applyScenePreview(path);
+                                else clearAssetSelectionUI();
+                            }
+                        }
+                    } else if (kind === 'office_bg') {
+                        await refreshOfficeBackgroundOnly();
+                    } else if (path) {
+                        await refreshSceneObjectByAssetPath(path);
+                    } else {
+                        await refreshOfficeBackgroundOnly();
+                    }
+                    if (assetDrawerOpen && assetDrawerAuthed) {
+                        await refreshAssetDrawerList();
+                        await renderHomeFavorites(false);
+                    }
+                } catch (_) {}
+            });
+        }
+        initMainWindowAssetRefreshSync();
+
+        function refreshCollapsiblePanelTitles() {
+            const defs = [
+                { panelId: 'memo-panel', titleId: 'memo-title' },
+                { panelId: 'control-bar', titleId: 'control-bar-title' },
+                { panelId: 'guest-agent-panel', titleId: 'guest-agent-panel-title' }
+            ];
+            defs.forEach(({ panelId, titleId }) => {
+                const panel = document.getElementById(panelId);
+                const title = document.getElementById(titleId);
+                if (!panel || !title) return;
+                const base = (title.textContent || '').replace(/\s*\[[^\]]+\]\s*$/, '').trim();
+                title.dataset.baseTitle = base;
+                const collapsed = panel.classList.contains('collapsed');
+                title.textContent = `${base} [${collapsed ? t('panelExpand') : t('panelCollapse')}]`;
+            });
+        }
+
+        function initCollapsiblePanels() {
+            const defs = [
+                { panelId: 'memo-panel', titleId: 'memo-title' },
+                { panelId: 'control-bar', titleId: 'control-bar-title' },
+                { panelId: 'guest-agent-panel', titleId: 'guest-agent-panel-title' }
+            ];
+
+            defs.forEach(({ panelId, titleId }) => {
+                const panel = document.getElementById(panelId);
+                const title = document.getElementById(titleId);
+                if (!panel || !title) return;
+
+                const baseTitle = (title.textContent || '').replace(/\s*\[[^\]]+\]\s*$/, '').trim();
+                title.dataset.baseTitle = baseTitle;
+                title.classList.add('panel-toggle-title');
+                panel.classList.add('panel-collapsible');
+
+                const updateTitle = () => {
+                    const collapsed = panel.classList.contains('collapsed');
+                    title.textContent = `${title.dataset.baseTitle} [${collapsed ? t('panelExpand') : t('panelCollapse')}]`;
+                };
+
+                const syncElectronWindowMode = async () => {
+                    // asset window must NEVER resize main window.
+                    if (ASSET_WINDOW_MODE) return;
+                    if (!ELECTRON_MODE || !window.__TAURI__ || !window.__TAURI__.core) return;
+                    const expanded = !!document.querySelector('.panel-collapsible:not(.collapsed)');
+                    try {
+                        await window.__TAURI__.core.invoke('set_main_window_mode', { expanded });
+                    } catch (_) {}
+                };
+
+                title.addEventListener('click', () => {
+                    panel.classList.toggle('collapsed');
+                    updateTitle();
+                    queueDesktopResize();
+                    syncElectronWindowMode();
+                    setTimeout(queueDesktopResize, 260);
+                    setTimeout(syncElectronWindowMode, 260);
+                });
+
+                panel.classList.add('collapsed');
+                updateTitle();
+                syncElectronWindowMode();
+            });
+        }
+
+        let resizeTimer = null;
+        async function syncDesktopWindowSize() {
+            if (!DESKTOP_MODE || !window.__TAURI__ || !window.__TAURI__.core) return;
+            const expanded = !!document.querySelector('.panel-collapsible:not(.collapsed)');
+            try {
+                await window.__TAURI__.core.invoke('set_main_window_mode', { expanded });
+            } catch (_) {}
+        }
+        function queueDesktopResize() {
+            if (resizeTimer) clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => { syncDesktopWindowSize(); }, 40);
+        }
+
+        initCollapsiblePanels();
+        queueDesktopResize();
+        window.addEventListener('resize', () => { if (DESKTOP_MODE) queueDesktopResize(); });
+        window.addEventListener('load', () => { if (DESKTOP_MODE) queueDesktopResize(); });
+        if (DESKTOP_MODE && document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(() => {
+                queueDesktopResize();
+                setTimeout(queueDesktopResize, 120);
+            }).catch(() => {});
+        }
+
         const IS_TOUCH_DEVICE = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || window.matchMedia('(pointer: coarse)').matches;
+        // Desktop-only fill zoom to crop decorative side bands and make main room occupy more width.
+        const DESKTOP_FILL_ZOOM = 1.14;
 
         const config = {
             type: Phaser.AUTO,
@@ -1583,24 +2403,13 @@
         function hideLoadingOverlay() {
             setTimeout(() => {
                 if (loadingOverlay) {
-                    loadingOverlay.style.transition = 'opacity 0.35s ease';
+                    loadingOverlay.style.transition = 'opacity 0.5s ease';
                     loadingOverlay.style.opacity = '0';
                     setTimeout(() => {
                         loadingOverlay.style.display = 'none';
-                    }, 360);
+                    }, 500);
                 }
-            }, 80);
-        }
-
-        // Phaser 就绪后，移除首屏骨架，避免黑屏感
-        function hideGameSkeleton() {
-            const sk = document.getElementById('game-skeleton');
-            if (!sk) return;
-            sk.style.transition = 'opacity 0.25s ease';
-            sk.style.opacity = '0';
-            setTimeout(() => {
-                if (sk && sk.parentNode) sk.parentNode.removeChild(sk);
-            }, 260);
+            }, 300);
         }
 
         // 兜底：某些移动网络/CDN 抖动时，避免一直卡在“加载中”遮罩
@@ -1711,7 +2520,7 @@
         let guestTweens = {};  // agentId -> {move, name}
         let hiddenDemoNames = new Set();
         const DEMO_MODE = new URLSearchParams(window.location.search).get('demo') === '1';
-        const FETCH_INTERVAL = 1000;
+        const FETCH_INTERVAL = 2000;
         const GUEST_AGENTS_FETCH_INTERVAL = 3500;
         const BLINK_INTERVAL = 2500;
         const BUBBLE_INTERVAL = 8000;
@@ -1759,7 +2568,7 @@
             const msg = document.getElementById('asset-auth-msg');
             const val = (input?.value || '').trim();
             if (!val) {
-                if (msg) msg.textContent = '❌ 请输入验证码';
+                if (msg) msg.textContent = `❌ ${t('authNeedInput')}`;
                 return;
             }
             try {
@@ -1771,14 +2580,14 @@
                 const data = await res.json();
                 if (data && data.ok) {
                     assetDrawerAuthed = true;
-                    if (msg) msg.textContent = '✅ 验证通过';
+                    if (msg) msg.textContent = `✅ ${t('authPassOk')}`;
                     updateAssetAuthUI();
                     await refreshAssetDrawerList();
                     await renderHomeFavorites(false);
                     bindDrawerFileMeta();
                 } else {
                     assetDrawerAuthed = false;
-                    if (msg) msg.textContent = '❌ 验证码错误';
+                    if (msg) msg.textContent = `❌ ${t('authPassWrong')}`;
                 }
             } catch (e) {
                 assetDrawerAuthed = false;
@@ -2222,6 +3031,7 @@
             selectedAssetInfo = null;
             updateActiveAssetItem('');
             clearAssetSelectionUI();
+            if (ASSET_WINDOW_MODE) notifyMainWindowAssetAction('clear_preview');
             const out = document.getElementById('asset-upload-result');
             if (out) out.textContent = '';
 
@@ -2264,6 +3074,7 @@
             selectedAssetInfo = assetListData.find(x => x.path === path) || null;
             updateActiveAssetItem(path);
             const ok = applyScenePreview(path);
+            if (ASSET_WINDOW_MODE) notifyMainWindowAssetAction('preview_asset', path);
             renderSelectedAssetGuidance(path, ok);
             updateAssetConfirmButtonState();
         }
@@ -2402,9 +3213,10 @@
             if (!p) return;
             const nextVisible = isAssetHidden(p);
             setAssetVisible(p, nextVisible);
+            if (ASSET_WINDOW_MODE) notifyMainWindowAssetAction('set_visibility', p, { visible: !!nextVisible });
             renderAssetDrawerList();
             const out = document.getElementById('asset-upload-result');
-            if (out) out.textContent = nextVisible ? `✅ 已显示：${p}` : `🙈 已隐藏：${p}`;
+            if (out) out.textContent = nextVisible ? `✅ ${t('assetShow')}：${p}` : `🙈 ${t('assetHide')}：${p}`;
             if (selectedAssetInfo && selectedAssetInfo.path === p) {
                 if (!nextVisible) clearAssetSelectionUI();
                 else applyScenePreview(p);
@@ -2462,7 +3274,7 @@
                     <canvas id="${thumbId}" class="asset-thumb" width="56" height="56"></canvas>
                     <div class="asset-meta">
                         <div class="asset-path">${it.path}</div>
-                        <div class="asset-sub">${displayName} ｜ ${reso}${hidden ? ' ｜ 已隐藏' : ''}</div>
+                        <div class="asset-sub">${displayName} ｜ ${reso}${hidden ? ` ｜ ${t('hiddenTag')}` : ''}</div>
                     </div>
                     <button class="asset-vis-btn" onclick="toggleAssetVisibility('${(it.path || '').replace(/'/g, "\\'")}', event)">${visEmoji}</button>
                 </div>`;
@@ -2503,7 +3315,7 @@
                 }
 
                 renderAssetDrawerList();
-                if (out) out.textContent = `已加载资产：${assetListData.length} ｜ 场景抓取：${sceneAssetItems.length}`;
+                if (out) out.textContent = `${t('assetListLoaded')}：${assetListData.length} ｜ ${t('sceneCaptured')}：${sceneAssetItems.length}`;
 
                 if (selectedPath) {
                     updateActiveAssetItem(selectedPath);
@@ -2511,7 +3323,7 @@
                 }
             } catch (e) {
                 console.error('加载资产列表失败', e);
-                if (out) out.textContent = '❌ 资产加载失败，请点“刷新”重试';
+                if (out) out.textContent = `❌ ${t('assetListLoadFailed')}`;
             }
         }
 
@@ -2566,6 +3378,74 @@
                 if (keep) return;
                 clearAssetSelection(true);
             });
+        }
+
+        let assetDrawerDragInited = false;
+        function initAssetDrawerFloatingWindow() {
+            if (assetDrawerDragInited) return;
+            if (ASSET_WINDOW_MODE) return;
+            const drawer = document.getElementById('asset-drawer');
+            const header = document.getElementById('asset-drawer-header');
+            if (!drawer || !header) return;
+            assetDrawerDragInited = true;
+
+            const centerDrawer = () => {
+                const left = (window.innerWidth - drawer.offsetWidth) / 2;
+                const top = Math.max(14, (window.innerHeight - drawer.offsetHeight) / 2);
+                drawer.style.left = `${left}px`;
+                drawer.style.top = `${top}px`;
+                drawer.style.transform = 'none';
+            };
+
+            let dragging = false;
+            let startX = 0;
+            let startY = 0;
+            let startLeft = 0;
+            let startTop = 0;
+
+            header.addEventListener('pointerdown', (e) => {
+                if (e.button !== 0) return;
+                if (e.target && e.target.closest('button, input, textarea, select, a, [contenteditable]')) return;
+                dragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                startLeft = parseFloat(drawer.style.left) || drawer.getBoundingClientRect().left;
+                startTop = parseFloat(drawer.style.top) || drawer.getBoundingClientRect().top;
+                if (typeof header.setPointerCapture === 'function') {
+                    try { header.setPointerCapture(e.pointerId); } catch (_) {}
+                }
+                e.preventDefault();
+            });
+
+            header.addEventListener('pointermove', (e) => {
+                if (!dragging) return;
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                drawer.style.left = `${startLeft + dx}px`;
+                drawer.style.top = `${startTop + dy}px`;
+                drawer.style.transform = 'none';
+            });
+
+            const endDrag = (e) => {
+                if (!dragging) return;
+                dragging = false;
+                if (e && typeof header.releasePointerCapture === 'function') {
+                    try { header.releasePointerCapture(e.pointerId); } catch (_) {}
+                }
+            };
+            header.addEventListener('pointerup', endDrag);
+            header.addEventListener('pointercancel', endDrag);
+
+            window.addEventListener('resize', () => {
+                if (!assetDrawerOpen) return;
+                const left = parseFloat(drawer.style.left) || drawer.getBoundingClientRect().left;
+                const top = parseFloat(drawer.style.top) || drawer.getBoundingClientRect().top;
+                drawer.style.left = `${left}px`;
+                drawer.style.top = `${top}px`;
+                drawer.style.transform = 'none';
+            });
+
+            centerDrawer();
         }
 
         function openInlineAssetUploader() {
@@ -2678,6 +3558,7 @@
             const out = document.getElementById('asset-upload-result');
             const fi = document.getElementById('asset-upload-file');
             const hasFile = !!(fi && fi.files && fi.files.length > 0);
+            const path = (selectedAssetInfo && selectedAssetInfo.path) ? selectedAssetInfo.path : '';
 
             const okUpload = await commitAssetUpdate();
             if (!okUpload) return;
@@ -2691,6 +3572,9 @@
             assetDrawerOpen = false;
             const drawer = document.getElementById('asset-drawer');
             if (drawer) drawer.classList.remove('open');
+            const backdrop = document.getElementById('asset-drawer-backdrop');
+            if (backdrop) backdrop.classList.remove('open');
+            if (path) await notifyMainWindowAssetRefresh('asset_path', path);
 
             setTimeout(() => window.location.reload(), 400);
         }
@@ -2835,6 +3719,23 @@ function toggleBrokerPanel() {
         async function refreshOfficeBackgroundOnly() {
             return await refreshSceneObjectByAssetPath('office_bg_small.webp');
         }
+        async function notifyMainWindowAssetRefresh(kind, path = '') {
+            if (!ASSET_WINDOW_MODE || !ELECTRON_MODE || !window.__TAURI__ || !window.__TAURI__.core) return;
+            try {
+                await window.__TAURI__.core.invoke('notify_main_window_asset_refresh', { kind, path });
+            } catch (_) {}
+        }
+        async function notifyMainWindowAssetAction(action, path = '', extra = {}) {
+            if (!ASSET_WINDOW_MODE || !ELECTRON_MODE || !window.__TAURI__ || !window.__TAURI__.core) return;
+            try {
+                await window.__TAURI__.core.invoke('notify_main_window_asset_refresh', {
+                    kind: 'asset_action',
+                    action,
+                    path,
+                    ...extra
+                });
+            } catch (_) {}
+        }
 
         function markMoveSuccess(outEl, btnEl = null) {
             if (outEl) outEl.textContent = t('moveSuccess');
@@ -2842,7 +3743,7 @@ function toggleBrokerPanel() {
             try { setState('idle', t('moveSuccess').replace('✅ ', '')); } catch (e) {}
         }
 
-        function setWorkingStatus(detail = '工作中') {
+        function setWorkingStatus(detail = t('stateDetailWriting')) {
             try { setState('writing', detail); } catch (e) {}
         }
 
@@ -2914,82 +3815,45 @@ function toggleBrokerPanel() {
             setTimeout(() => el.classList.remove('is-done'), holdMs);
         }
 
-        // Async generation: start task then poll for result (avoids Cloudflare 524 timeout)
-        async function _startAndPollGeneration(body, out, progressMsg) {
-            const res = await fetch('/assets/generate-rpg-background', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body)
-            });
-            const data = await res.json();
-            if (!data.ok) return data;
-            if (!data.async || !data.task_id) return data; // sync fallback (shouldn't happen)
-
-            // Poll for completion
-            const taskId = data.task_id;
-            const maxPollTime = 300000; // 5 minutes max
-            const pollInterval = 3000;  // 3 seconds
-            const startTime = Date.now();
-            let dots = 0;
-
-            while (Date.now() - startTime < maxPollTime) {
-                await new Promise(r => setTimeout(r, pollInterval));
-                dots = (dots + 1) % 4;
-                const elapsed = Math.round((Date.now() - startTime) / 1000);
-                out.textContent = progressMsg + '（已等待 ' + elapsed + '秒）' + '.'.repeat(dots);
-                try {
-                    const pollRes = await fetch('/assets/generate-rpg-background/poll?task_id=' + encodeURIComponent(taskId));
-                    const pollData = await pollRes.json();
-                    if (pollData.status === 'pending') continue;
-                    return pollData; // done or error
-                } catch (pollErr) {
-                    // Network error during poll, keep trying
-                    continue;
-                }
-            }
-            return { ok: false, msg: '生图超时（超过5分钟），请重试' };
-        }
-
-        function _handleGenError(data, out) {
-            if (data.code === 'MISSING_API_KEY') {
-                out.textContent = t('brokerMissingKey');
-                const box = document.getElementById('asset-gemini-config');
-                if (box) box.style.display = 'block';
-            } else if (data.code === 'API_KEY_REVOKED_OR_LEAKED') {
-                out.textContent = '❌ 当前 API Key 已失效/疑似泄露，请更换新 Key 后重试';
-                const box = document.getElementById('asset-gemini-config');
-                if (box) box.style.display = 'block';
-            } else if (data.code === 'MODEL_NOT_AVAILABLE') {
-                out.textContent = '❌ 当前模型在此通道不可用，请切换可用模型后重试' + (data.detail ? ('\n\n详情：' + data.detail) : '');
-            } else {
-                out.textContent = `❌ 生成失败：${data.msg || 'unknown error'}`;
-            }
-        }
-
         async function generateCustomRpgBackground() {
             const brokerBtn = document.querySelector('#asset-broker-row .btn-broker');
             flashButtonActive(brokerBtn);
-            setWorkingStatus('正在处理中介装修方案');
+            setWorkingStatus(t('statusBrokerDecorating'));
             const out = document.getElementById('asset-move-result') || document.getElementById('asset-upload-result');
             const prompt = (document.getElementById('asset-broker-prompt')?.value || '').trim();
             if (!prompt) {
                 out.textContent = t('brokerNeedPrompt');
                 return;
             }
+            // 点击即刻显示遮罩，先于任何网络调用
             showRoomLoadingOverlay();
             out.textContent = t('brokerGenerating');
             try {
-                const data = await _startAndPollGeneration(
-                    { prompt, speed_mode: speedMode },
-                    out,
-                    '🏘️ 正在按中介方案生成底图'
-                );
+                const res = await fetch('/assets/generate-rpg-background', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt, speed_mode: speedMode })
+                });
+                const data = await res.json();
                 if (!data.ok) {
-                    _handleGenError(data, out);
+                    if (data.code === 'MISSING_API_KEY') {
+                        out.textContent = t('brokerMissingKey');
+                        const box = document.getElementById('asset-gemini-config');
+                        if (box) box.style.display = 'block';
+                    } else if (data.code === 'API_KEY_REVOKED_OR_LEAKED') {
+                        out.textContent = '❌ 当前 API Key 已失效/疑似泄露，请更换新 Key 后重试';
+                        const box = document.getElementById('asset-gemini-config');
+                        if (box) box.style.display = 'block';
+                    } else if (data.code === 'MODEL_NOT_AVAILABLE') {
+                        out.textContent = '❌ 当前模型在此通道不可用，请切换可用模型后重试';
+                    } else {
+                        out.textContent = `❌ 生成失败：${data.msg || res.status}`;
+                    }
                     return;
                 }
                 out.textContent = t('brokerDone');
                 const ok = await refreshOfficeBackgroundOnly();
+                await notifyMainWindowAssetRefresh('office_bg', 'office_bg_small.webp');
                 if (ok) {
                     markMoveSuccess(out, brokerBtn);
                 } else {
@@ -3005,22 +3869,37 @@ function toggleBrokerPanel() {
         async function generateRpgBackground() {
             const moveBtn = document.getElementById('btn-move-house');
             flashButtonActive(moveBtn);
-            setWorkingStatus('正在搬新家');
+            setWorkingStatus(t('statusMovingHome'));
             const out = document.getElementById('asset-move-result') || document.getElementById('asset-upload-result');
+            // 点击即刻显示遮罩，先于任何网络调用
             showRoomLoadingOverlay();
-            out.textContent = '🧳 正在打包行李，请稍后（约30~120秒）';
+            out.textContent = '🧳 正在打包行李，请稍后（约30~60秒）';
             try {
-                const data = await _startAndPollGeneration(
-                    { speed_mode: speedMode },
-                    out,
-                    '🧳 正在生成新房间'
-                );
+                const res = await fetch('/assets/generate-rpg-background', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ speed_mode: speedMode })
+                });
+                const data = await res.json();
                 if (!data.ok) {
-                    _handleGenError(data, out);
+                    if (data.code === 'MISSING_API_KEY') {
+                        out.textContent = t('brokerMissingKey');
+                        const box = document.getElementById('asset-gemini-config');
+                        if (box) box.style.display = 'block';
+                    } else if (data.code === 'API_KEY_REVOKED_OR_LEAKED') {
+                        out.textContent = '❌ 当前 API Key 已失效/疑似泄露，请更换新 Key 后重试';
+                        const box = document.getElementById('asset-gemini-config');
+                        if (box) box.style.display = 'block';
+                    } else if (data.code === 'MODEL_NOT_AVAILABLE') {
+                        out.textContent = '❌ 当前模型在此通道不可用，请切换可用模型后重试';
+                    } else {
+                        out.textContent = `❌ 生成失败：${data.msg || res.status}`;
+                    }
                     return;
                 }
                 out.textContent = '✅ 已生成并替换底图，正在刷新房间...';
                 const ok = await refreshOfficeBackgroundOnly();
+                await notifyMainWindowAssetRefresh('office_bg', 'office_bg_small.webp');
                 if (ok) {
                     markMoveSuccess(out, moveBtn);
                 } else {
@@ -3044,7 +3923,7 @@ function toggleBrokerPanel() {
                 return;
             }
 
-            setWorkingStatus('正在回老家');
+            setWorkingStatus(t('statusRestoreHome'));
             // 点击即刻显示遮罩，先于任何网络调用
             showRoomLoadingOverlay();
             out.textContent = '🏡 正在回老家（恢复初始底图）...';
@@ -3057,6 +3936,7 @@ function toggleBrokerPanel() {
                 }
                 out.textContent = '✅ 已恢复初始底图';
                 const ok = await refreshOfficeBackgroundOnly();
+                await notifyMainWindowAssetRefresh('office_bg', 'office_bg_small.webp');
                 if (ok) {
                     markMoveSuccess(out, homeBtn);
                 } else {
@@ -3080,7 +3960,7 @@ function toggleBrokerPanel() {
                 return;
             }
 
-            setWorkingStatus('正在回退到上一次背景');
+            setWorkingStatus(t('statusRestoreLastBg'));
             showRoomLoadingOverlay();
             out.textContent = '↩️ 正在回退到最近一次生成底图...';
             try {
@@ -3091,6 +3971,7 @@ function toggleBrokerPanel() {
                     return;
                 }
                 const ok = await refreshOfficeBackgroundOnly();
+                await notifyMainWindowAssetRefresh('office_bg', 'office_bg_small.webp');
                 if (ok) {
                     out.textContent = '✅ 已回退到上一次背景';
                 } else {
@@ -3147,7 +4028,6 @@ function toggleBrokerPanel() {
                     <img src="${thumb}" loading="lazy" alt="favorite-home" />
                     <div class="home-fav-meta">${time}</div>
                     <button onclick="applyHomeFavorite('${id}')">${t('homeFavApply')}</button>
-                    <button class="home-fav-del" onclick="deleteHomeFavorite('${id}')">${t('homeFavDelete')}</button>
                 </div>`;
             }).join('');
         }
@@ -3173,7 +4053,7 @@ function toggleBrokerPanel() {
             const out = document.getElementById('asset-move-result') || document.getElementById('asset-upload-result');
             if (!id) return;
             showRoomLoadingOverlay();
-            setWorkingStatus('正在替换收藏地图');
+            setWorkingStatus(t('statusApplyFavorite'));
             try {
                 const data = await fetchJsonSafe('/assets/home-favorites/apply', {
                     method: 'POST',
@@ -3185,33 +4065,13 @@ function toggleBrokerPanel() {
                     return;
                 }
                 const ok = await refreshOfficeBackgroundOnly();
+                await notifyMainWindowAssetRefresh('office_bg', 'office_bg_small.webp');
                 out.textContent = ok ? t('homeFavApplied') : `${t('homeFavApplied')}（局部刷新失败，可手动刷新页面）`;
                 try { setState('idle', '已应用收藏地图'); } catch (e) {}
             } catch (e) {
                 out.textContent = `❌ 替换失败：${e.message || e}`;
             } finally {
                 hideRoomLoadingOverlay();
-            }
-        }
-
-        async function deleteHomeFavorite(id) {
-            const out = document.getElementById('asset-move-result') || document.getElementById('asset-upload-result');
-            if (!id) return;
-            if (!window.confirm('确定删除这个收藏吗？删除后不可恢复。')) return;
-            try {
-                const data = await fetchJsonSafe('/assets/home-favorites/delete', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id })
-                });
-                if (!data.ok) {
-                    out.textContent = `❌ 删除失败：${data.msg || 'unknown error'}`;
-                    return;
-                }
-                out.textContent = t('homeFavDeleted');
-                await renderHomeFavorites(true);
-            } catch (e) {
-                out.textContent = `❌ 删除失败：${e.message || e}`;
             }
         }
 
@@ -3235,6 +4095,7 @@ function toggleBrokerPanel() {
                     return;
                 }
                 await refreshSceneObjectByAssetPath(path);
+                await notifyMainWindowAssetRefresh('asset_path', path);
                 if (out) out.textContent = `✅ 已重置为默认资产：${path}`;
             } catch (e) {
                 if (out) out.textContent = `❌ 重置失败：${e}`;
@@ -3261,32 +4122,82 @@ function toggleBrokerPanel() {
                     return;
                 }
                 await refreshSceneObjectByAssetPath(path);
+                await notifyMainWindowAssetRefresh('asset_path', path);
                 if (out) out.textContent = `✅ 已回退到上一版：${path}`;
             } catch (e) {
                 if (out) out.textContent = `❌ 回退失败：${e}`;
             }
         }
 
-        // 记录 body scroll 位置，drawer 关闭时恢复
-        let _drawerScrollY = 0;
+        async function openAssetWindowFromMain() {
+            if (ASSET_WINDOW_MODE) return;
+            if (!ELECTRON_MODE || !window.__TAURI__ || !window.__TAURI__.core) return;
+            try {
+                await window.__TAURI__.core.invoke('open_asset_window');
+            } catch (_) {
+                // ignore and allow retry
+            }
+        }
 
         async function toggleAssetDrawer(force) {
             const drawer = document.getElementById('asset-drawer');
             const backdrop = document.getElementById('asset-drawer-backdrop');
+
+            if (!ASSET_WINDOW_MODE && ELECTRON_MODE) {
+                // Electron main window never toggles in-page drawer anymore.
+                // Keep state closed to avoid any open/close flicker, and always use dedicated asset window.
+                assetDrawerOpen = false;
+                if (drawer) drawer.classList.remove('open');
+                if (backdrop) backdrop.classList.remove('open');
+                document.body.classList.remove('drawer-open');
+
+                if (force === false) return;
+                try {
+                    if (window.__TAURI__ && window.__TAURI__.core) {
+                        await window.__TAURI__.core.invoke('open_asset_window');
+                    }
+                } catch (_) {}
+                return;
+            }
+
+            if (ASSET_WINDOW_MODE) {
+                if (force === false) {
+                    try {
+                        if (window.__TAURI__ && window.__TAURI__.core) {
+                            await window.__TAURI__.core.invoke('close_asset_window');
+                        } else {
+                            window.close();
+                        }
+                    } catch (_) {
+                        window.close();
+                    }
+                    return;
+                }
+
+                assetDrawerOpen = true;
+                if (drawer) drawer.classList.add('open');
+                if (backdrop) backdrop.classList.remove('open');
+                assetManualPanelOpen = false;
+                updateAssetAuthUI();
+                bindAssetDrawerBackgroundDeselect();
+                await ensureGeminiConfigLoaded();
+                if (assetDrawerAuthed) {
+                    await applySavedPositionOverrides();
+                    await refreshAssetDrawerList();
+                    await renderHomeFavorites(false);
+                    bindDrawerFileMeta();
+                } else {
+                    const msg = document.getElementById('asset-auth-msg');
+                    if (msg) msg.textContent = t('authDefaultPassHint');
+                }
+                return;
+            }
+
             const next = (typeof force === 'boolean') ? force : !assetDrawerOpen;
             assetDrawerOpen = next;
             drawer.classList.toggle('open', next);
             if (backdrop) backdrop.classList.toggle('open', next);
-            // 移动端 body 锁定：打开时冻结滚动位置，关闭时恢复
-            if (next) {
-                _drawerScrollY = window.scrollY;
-                document.body.style.top = `-${_drawerScrollY}px`;
-            }
-            document.body.classList.toggle('drawer-open', next);
-            if (!next) {
-                document.body.style.top = '';
-                window.scrollTo(0, _drawerScrollY);
-            }
+            document.body.classList.remove('drawer-open');
 
             const openBtn = document.getElementById('btn-open-drawer');
             if (openBtn) {
@@ -3296,6 +4207,7 @@ function toggleBrokerPanel() {
             const closeBtn = document.getElementById('btn-close-drawer');
             if (closeBtn) closeBtn.textContent = t('drawerClose');
             if (next) {
+                initAssetDrawerFloatingWindow();
                 assetManualPanelOpen = false;
                 updateAssetAuthUI();
                 bindAssetDrawerBackgroundDeselect();
@@ -3494,32 +4406,17 @@ function toggleBrokerPanel() {
                 breakroom: [
                     { x: 511, y: 262 },
                     { x: 841, y: 621 },
-                    { x: 690, y: 470 },
-                    { x: 600, y: 340 },
-                    { x: 770, y: 540 },
-                    { x: 550, y: 420 },
-                    { x: 720, y: 310 },
-                    { x: 650, y: 580 }
+                    { x: 690, y: 470 }
                 ],
                 writing: [
                     { x: 190, y: 526 },
                     { x: 380, y: 683 },
-                    { x: 300, y: 610 },
-                    { x: 240, y: 570 },
-                    { x: 350, y: 640 },
-                    { x: 160, y: 600 },
-                    { x: 420, y: 560 },
-                    { x: 280, y: 660 }
+                    { x: 300, y: 610 }
                 ],
                 error: [
                     { x: 932, y: 275 },
                     { x: 1109, y: 327 },
-                    { x: 1020, y: 305 },
-                    { x: 960, y: 340 },
-                    { x: 1070, y: 280 },
-                    { x: 990, y: 260 },
-                    { x: 1050, y: 350 },
-                    { x: 940, y: 310 }
+                    { x: 1020, y: 305 }
                 ]
             };
             const arr = map[area] || map.breakroom;
@@ -3707,8 +4604,8 @@ function toggleBrokerPanel() {
             const isDemoGuest = (demoVisitor && demoVisitor.isDemo) || (id === 'demo_nika' || id === 'demo_mercury');
             const nameH = (g.nameText && g.nameText.height) ? g.nameText.height : 16;
             const by = isDemoGuest ? (g.sprite.y - 90) : ((g.nameText ? g.nameText.y : (g.sprite.y - 150)) - (nameH / 2) - 22);
-            const fontSize = IS_TOUCH_DEVICE ? 14 : 12;
-            const bg = game.add.rectangle(bx, by, text.length * 10 + 24, 28, 0xffffff, 0.95);
+            const fontSize = IS_TOUCH_DEVICE ? 16 : 14;
+            const bg = game.add.rectangle(bx, by, text.length * 11 + 30, 34, 0xffffff, 0.95);
             bg.setStrokeStyle(2, 0x000000);
             const txt = game.add.text(bx, by, text, { fontFamily: 'ArkPixel, monospace', fontSize: fontSize + 'px', fill: '#000' }).setOrigin(0.5);
             const bubble = game.add.container(0, 0, [bg, txt]);
@@ -3815,8 +4712,8 @@ function toggleBrokerPanel() {
                                 }
                                 const bx = g.sprite.x;
                                 const by = g.sprite.y - 90;
-                                const fontSize = IS_TOUCH_DEVICE ? 14 : 12;
-                                const bg = game.add.rectangle(bx, by, text.length * 10 + 24, 28, 0xffffff, 0.95);
+                                const fontSize = IS_TOUCH_DEVICE ? 16 : 14;
+                                const bg = game.add.rectangle(bx, by, text.length * 11 + 30, 34, 0xffffff, 0.95);
                                 bg.setStrokeStyle(2, 0x000000);
                                 const txt = game.add.text(bx, by, text, { fontFamily: 'ArkPixel, monospace', fontSize: fontSize + 'px', fill: '#000' }).setOrigin(0.5);
                                 const bubble = game.add.container(0, 0, [bg, txt]);
@@ -3912,38 +4809,35 @@ function toggleBrokerPanel() {
                     supportsWebP = false;
                 }
             }
-
+            
             console.log('WebP 支持:', supportsWebP);
+            initOfficePlaqueEditor();
             applyLanguage();
             updateSpeedModeUI();
 
-
-            // 直接启动 Phaser，避免首屏被额外接口阻塞
-
-            new Phaser.Game(config);
-
-            // 非关键初始化延后到首屏之后，提升首开速度
-            setTimeout(async () => {
-                // 动态探测 flowers 精灵表帧规格（避免写死 65x65 导致显示比例异常）
-                try {
-                    const res = await fetch('/assets/list?t=' + Date.now(), { cache: 'no-store' });
-                    const data = await res.json();
-                    if (data && data.ok && Array.isArray(data.items)) {
-                        const flowerItem = data.items.find(it => (it.path || '').toLowerCase().includes('flowers-bloom-v2'));
-                        if (flowerItem && Number(flowerItem.width) > 0 && Number(flowerItem.height) > 0) {
-                            // 固定规则：花朵单帧 128x128，4x4
-                            FLOWERS_FRAME_W = 128;
-                            FLOWERS_FRAME_H = 128;
-                            FLOWERS_FRAME_COLS = 4;
-                            FLOWERS_FRAME_ROWS = 4;
-                        }
+            // 动态探测 flowers 精灵表帧规格（避免写死 65x65 导致显示比例异常）
+            try {
+                const res = await fetch('/assets/list?t=' + Date.now(), { cache: 'no-store' });
+                const data = await res.json();
+                if (data && data.ok && Array.isArray(data.items)) {
+                    const flowerItem = data.items.find(it => (it.path || '').toLowerCase().includes('flowers-bloom-v2'));
+                    if (flowerItem && Number(flowerItem.width) > 0 && Number(flowerItem.height) > 0) {
+                        const w = Number(flowerItem.width);
+                        const h = Number(flowerItem.height);
+                        // 固定规则：花朵单帧 128x128，4x4
+                        FLOWERS_FRAME_W = 128;
+                        FLOWERS_FRAME_H = 128;
+                        FLOWERS_FRAME_COLS = 4;
+                        FLOWERS_FRAME_ROWS = 4;
                     }
-                } catch (e) {
-                    console.warn('flowers 规格探测失败，使用默认 65x65', e);
                 }
-
-                // Only fetch /assets/positions and /assets/defaults when user is authed,
-                // to avoid 401 Unauthorized on first load for new visitors (issue #54).
+            } catch (e) {
+                console.warn('flowers 规格探测失败，使用默认 65x65', e);
+            }
+            
+            // 启动 Phaser 游戏
+            new Phaser.Game(config);
+            setTimeout(async () => {
                 try {
                     const authRes = await fetch('/assets/auth/status', { cache: 'no-store' });
                     const authData = await authRes.json();
@@ -4027,8 +4921,11 @@ function toggleBrokerPanel() {
 
         function create() {
             game = this;
-            hideGameSkeleton();
             officeBgSprite = this.add.image(640, 360, 'office_bg');
+            // Electron standalone: force room background to fill the full 16:9 stage width.
+            if (officeBgSprite && officeBgSprite.setDisplaySize) {
+                officeBgSprite.setDisplaySize(1280, 720);
+            }
 
             // Place furniture: Sofa
             // NOTE: coordinates are interpreted as the TOP-LEFT corner of the sprite
@@ -4079,27 +4976,6 @@ function toggleBrokerPanel() {
             // Sofa stays static when idle (no longer the main idle animation)
             sofa.anims.stop();
             sofa.setTexture('sofa_idle');
-
-            // 加像素风小牌匾：wangmiaozero 的办公室
-            const plaqueX = config.width / 2;
-            const plaqueY = config.height - 36;
-            const plaqueBg = game.add.rectangle(plaqueX, plaqueY, 420, 44, 0x5d4037);
-            plaqueBg.setStrokeStyle(3, 0x3e2723);
-            const plaqueText = game.add.text(plaqueX, plaqueY, t('officeTitle'), {
-                fontFamily: 'ArkPixel, monospace',
-                fontSize: '18px',
-                fill: '#ffd700',
-                fontWeight: '900',
-                fontStyle: 'bold',
-                stroke: '#000',
-                strokeThickness: 3,
-                wordWrap: { width: 400 },
-                align: 'center'
-            }).setOrigin(0.5);
-            // 牌匾两边加个小装饰（跟随牌匾居中）
-            game.add.text(plaqueX - 190, plaqueY, '⭐', { fontFamily: 'ArkPixel, monospace', fontSize: '20px' }).setOrigin(0.5);
-            game.add.text(plaqueX + 190, plaqueY, '⭐', { fontFamily: 'ArkPixel, monospace', fontSize: '20px' }).setOrigin(0.5);
-            window.officePlaqueText = plaqueText;
 
             // Random plant at (565,178) (frame 0-15, 160x160 each)
             const plantFrameCount = 16;
@@ -4279,6 +5155,9 @@ function toggleBrokerPanel() {
             window.starSprite = star;
 
             statusText = document.getElementById('status-text');
+            if (DESKTOP_MODE) {
+                statusText = document.getElementById('status-fab') || statusText;
+            }
             placeOverlayAndStatusAtCanvasBottomLeft();
             window.addEventListener('resize', placeOverlayAndStatusAtCanvasBottomLeft);
             window.addEventListener('scroll', placeOverlayAndStatusAtCanvasBottomLeft, { passive: true });
@@ -4360,6 +5239,9 @@ function toggleBrokerPanel() {
 
             camera.setBounds(0, 0, MAP_W, MAP_H);
             clampCameraScroll();
+            if (DESKTOP_MODE && !isTouchDevice) {
+                camera.centerOn(MAP_W / 2, MAP_H / 2);
+            }
 
             function setPanEnabled(on) {
                 panEnabled = on;
@@ -4371,7 +5253,7 @@ function toggleBrokerPanel() {
                 game.input.setDefaultCursor(on ? 'grab' : 'default');
                 if (isTouchDevice && statusText) {
                     const info = on ? '视野拖动已开启（可左右拖动画布）' : '视野拖动已关闭（点击左上角“移动视野”可开启）';
-                    statusText.textContent = `状态：[${(STATES[currentState] && STATES[currentState].name) || '待命'}] ${info}`;
+                    statusText.textContent = `[${getStateLabelByState(currentState)}] ${info}`;
                 }
             }
 
@@ -4587,81 +5469,6 @@ function toggleBrokerPanel() {
             return s;
         }
 
-        function applyVisualState(nextState) {
-            // Idle: show Star idle animation (main character)
-            if (nextState === 'idle') {
-                sofa.anims.stop();
-                sofa.setTexture('sofa_idle');
-
-                if (window.starWorking) {
-                    window.starWorking.setVisible(false);
-                    window.starWorking.anims.stop();
-                }
-
-                star.setVisible(true);
-                star.setScale(IDLE_STAR_SCALE);
-                star.anims.play('star_idle', true);
-                star.setPosition(IDLE_SOFA_ANCHOR.x, IDLE_SOFA_ANCHOR.y);
-            } else if (nextState === 'error') {
-                // Error: no working animation at desk
-                sofa.anims.stop();
-                sofa.setTexture('sofa_idle');
-                star.setVisible(false);
-                star.anims.stop();
-                if (window.starWorking) {
-                    window.starWorking.setVisible(false);
-                    window.starWorking.anims.stop();
-                }
-            } else if (nextState === 'syncing') {
-                // Syncing: also no working animation at desk
-                sofa.anims.stop();
-                sofa.setTexture('sofa_idle');
-                star.setVisible(false);
-                star.anims.stop();
-                if (window.starWorking) {
-                    window.starWorking.setVisible(false);
-                    window.starWorking.anims.stop();
-                }
-            } else {
-                // Non-idle non-error: starWorking animation at desk
-                sofa.anims.stop();
-                sofa.setTexture('sofa_idle');
-                // Hide moving star, show desk star
-                star.setVisible(false);
-                star.anims.stop();
-                if (window.starWorking) {
-                    window.starWorking.setVisible(true);
-                    window.starWorking.anims.play('star_working', true);
-                }
-            }
-
-            // Server room logic
-            if (serverroom) {
-                if (nextState === 'idle') {
-                    serverroom.anims.stop();
-                    serverroom.setFrame(0);
-                } else {
-                    serverroom.anims.play('serverroom_on', true);
-                }
-            }
-
-            // Sync animation logic: default frame0; syncing play loop
-            if (syncAnimSprite) {
-                if (nextState === 'syncing') {
-                    if (syncAnimPlayable && syncAnimSprite.anims && syncAnimSprite.anims.play && syncAnimSprite.scene?.anims?.exists('sync_anim')) {
-                        if (!syncAnimSprite.anims.isPlaying || syncAnimSprite.anims.currentAnim?.key !== 'sync_anim') {
-                            syncAnimSprite.anims.play('sync_anim', true);
-                        }
-                    } else {
-                        syncAnimSprite.setFrame(0);
-                    }
-                } else {
-                    if (syncAnimSprite.anims && syncAnimSprite.anims.isPlaying) syncAnimSprite.anims.stop();
-                    syncAnimSprite.setFrame(0);
-                }
-            }
-        }
-
         function fetchStatus() {
             return fetch('/status', { cache: 'no-store' })
                 .then(response => response.json())
@@ -4669,32 +5476,102 @@ function toggleBrokerPanel() {
                     try {
                         if (data.officeName) {
                             window.officeNameFromServer = data.officeName;
-                            if (window.officePlaqueText && window.officePlaqueText.setText) {
-                                window.officePlaqueText.setText(data.officeName);
+                            refreshOfficePlaqueTitle();
+                        }
+                    const nextState = normalizeState(data.state);
+                    const stateInfo = STATES[nextState] || STATES.idle;
+                    // If we're mid-transition, don't restart the path every poll
+                    const changed = (pendingDesiredState === null) && (nextState !== currentState);
+                    const nextLine = '[' + getStateLabelByState(nextState) + '] ' + (data.detail || getStateDetailByState(nextState));
+                    if (changed) {
+                        typewriterTarget = nextLine;
+                        typewriterText = '';
+                        typewriterIndex = 0;
+
+                        // Set state immediately (no waypoints/path movement)
+                        pendingDesiredState = null;
+                        currentState = nextState;
+
+                            // Idle: show Star idle animation (main character)
+                        if (nextState === 'idle') {
+                                sofa.anims.stop();
+                                sofa.setTexture('sofa_idle');
+
+                            if (window.starWorking) {
+                                window.starWorking.setVisible(false);
+                                window.starWorking.anims.stop();
+                            }
+
+                                star.setVisible(true);
+                                star.setScale(IDLE_STAR_SCALE);
+                                star.anims.play('star_idle', true);
+                                star.setPosition(IDLE_SOFA_ANCHOR.x, IDLE_SOFA_ANCHOR.y);
+                        } else if (nextState === 'error') {
+                            // Error: no working animation at desk
+                            sofa.anims.stop();
+                            sofa.setTexture('sofa_idle');
+                            star.setVisible(false);
+                            star.anims.stop();
+                            if (window.starWorking) {
+                                window.starWorking.setVisible(false);
+                                window.starWorking.anims.stop();
+                            }
+                        } else if (nextState === 'syncing') {
+                            // Syncing: also no working animation at desk
+                            sofa.anims.stop();
+                            sofa.setTexture('sofa_idle');
+                            star.setVisible(false);
+                            star.anims.stop();
+                            if (window.starWorking) {
+                                window.starWorking.setVisible(false);
+                                window.starWorking.anims.stop();
+                            }
+                        } else {
+                            // Non-idle non-error: starWorking animation at desk
+                            sofa.anims.stop();
+                            sofa.setTexture('sofa_idle');
+                            // Hide moving star, show desk star
+                            star.setVisible(false);
+                            star.anims.stop();
+                            if (window.starWorking) {
+                                window.starWorking.setVisible(true);
+                                window.starWorking.anims.play('star_working', true);
                             }
                         }
-                        const nextState = normalizeState(data.state);
-                        const stateInfo = STATES[nextState] || STATES.idle;
-                        // If we're mid-transition, don't restart the path every poll
-                        const changed = (pendingDesiredState === null) && (nextState !== currentState);
-                        const nextLine = '[' + stateInfo.name + '] ' + (data.detail || '...');
-                        // 不论 changed 与否，都按服务端最新状态强制一次视觉同步，避免动画卡旧状态
-                        pendingDesiredState = null;
-                        if (currentState !== nextState) {
-                            currentState = nextState;
-                        }
-                        applyVisualState(nextState);
 
-                        if (changed) {
+                        // Server room logic:
+                        if (serverroom) {
+                            if (nextState === 'idle') {
+                                serverroom.anims.stop();
+                                serverroom.setFrame(0);
+                            } else {
+                                serverroom.anims.play('serverroom_on', true);
+                            }
+                        }
+
+                        // Sync animation logic:
+                        // default: frame 0
+                        // state=syncing: play from frame 1
+                        if (syncAnimSprite) {
+                            if (nextState === 'syncing') {
+                                    if (syncAnimPlayable && syncAnimSprite.anims && syncAnimSprite.anims.play && syncAnimSprite.scene?.anims?.exists('sync_anim')) {
+                                if (!syncAnimSprite.anims.isPlaying || syncAnimSprite.anims.currentAnim?.key !== 'sync_anim') {
+                                    syncAnimSprite.anims.play('sync_anim', true);
+                                }
+                            } else {
+                                        syncAnimSprite.setFrame(0);
+                                    }
+                                } else {
+                                    if (syncAnimSprite.anims && syncAnimSprite.anims.isPlaying) syncAnimSprite.anims.stop();
+                                syncAnimSprite.setFrame(0);
+                            }
+                        }
+                    } else {
+                        if (!typewriterTarget || typewriterTarget !== nextLine) {
                             typewriterTarget = nextLine;
                             typewriterText = '';
                             typewriterIndex = 0;
-                        } else {
-                            if (!typewriterTarget || typewriterTarget !== nextLine) {
-                                typewriterTarget = nextLine;
-                                typewriterText = '';
-                                typewriterIndex = 0;
-                            }
+                        }
                         }
                     } catch (err) {
                         console.error('fetchStatus apply error', err);
@@ -4856,8 +5733,8 @@ function toggleBrokerPanel() {
 
             // 只做手机端稍微调大一点，避免发糊
             const isTouch = IS_TOUCH_DEVICE;
-            const fontSize = isTouch ? 14 : 12;
-            const bg = game.add.rectangle(anchorX, bubbleY, text.length * 10 + 20, 28, 0xffffff, 0.95);
+            const fontSize = isTouch ? 16 : 14;
+            const bg = game.add.rectangle(anchorX, bubbleY, text.length * 11 + 28, 34, 0xffffff, 0.95);
             bg.setStrokeStyle(2, 0x000000);
             const txt = game.add.text(anchorX, bubbleY, text, { fontFamily: 'ArkPixel, monospace', fontSize: fontSize + 'px', fill: '#000', align: 'center' }).setOrigin(0.5);
             bubble = game.add.container(0, 0, [bg, txt]);
@@ -4872,9 +5749,9 @@ function toggleBrokerPanel() {
             const text = texts[Math.floor(Math.random() * texts.length)];
             const anchorX = window.catSprite.x;
             const anchorY = window.catSprite.y - 60;
-            const bg = game.add.rectangle(anchorX, anchorY, text.length * 10 + 20, 24, 0xfffbeb, 0.95);
+            const bg = game.add.rectangle(anchorX, anchorY, text.length * 11 + 24, 28, 0xfffbeb, 0.95);
             bg.setStrokeStyle(2, 0xd4a574);
-            const txt = game.add.text(anchorX, anchorY, text, { fontFamily: 'ArkPixel, monospace', fontSize: '11px', fill: '#8b6914', align: 'center' }).setOrigin(0.5);
+            const txt = game.add.text(anchorX, anchorY, text, { fontFamily: 'ArkPixel, monospace', fontSize: '13px', fill: '#8b6914', align: 'center' }).setOrigin(0.5);
             window.catBubble = game.add.container(0, 0, [bg, txt]);
             window.catBubble.setDepth(2100); // top layer above cat
             setTimeout(() => { if (window.catBubble) { window.catBubble.destroy(); window.catBubble = null; } }, 4000);
@@ -4882,8 +5759,14 @@ function toggleBrokerPanel() {
 
         // 假 Agent 气泡逻辑已移除，统一以真实 /agents 数据为准
 
-        // 启动游戏
-        initGame();
+        // 启动页面
+        if (ASSET_WINDOW_MODE) {
+            applyLanguage();
+            updateSpeedModeUI();
+            toggleAssetDrawer(true);
+        } else {
+            initGame();
+        }
     </script>
 </body>
 </html>

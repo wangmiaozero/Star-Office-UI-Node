@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+require("./scripts/enforce-runtime");
 
 const fs = require("fs");
 const path = require("path");

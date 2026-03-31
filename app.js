@@ -1,23 +1,55 @@
 #!/usr/bin/env node
+require("./scripts/enforce-runtime");
 /* Star Office UI - Node.js Backend State Service */
 
 const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
+const multer = require("multer");
+const { spawn } = require("child_process");
+const { registerAgentRoutes } = require("./src/routes/agents");
+const { registerAssetRoutes } = require("./src/routes/assets");
 
 const ROOT_DIR = __dirname;
 const MEMORY_DIR = path.join(path.dirname(ROOT_DIR), "memory");
 const FRONTEND_DIR = path.join(ROOT_DIR, "frontend");
+const FRONTEND_INDEX_FILE = path.join(FRONTEND_DIR, "index.html");
+const FRONTEND_ELECTRON_STANDALONE_FILE = path.join(FRONTEND_DIR, "electron-standalone.html");
 const STATE_FILE = path.join(ROOT_DIR, "state.json");
 const AGENTS_STATE_FILE = path.join(ROOT_DIR, "agents-state.json");
 const JOIN_KEYS_FILE = path.join(ROOT_DIR, "join-keys.json");
-
+const ASSET_POSITIONS_FILE = path.join(ROOT_DIR, "asset-positions.json");
+const ASSET_DEFAULTS_FILE = path.join(ROOT_DIR, "asset-defaults.json");
+const RUNTIME_CONFIG_FILE = path.join(ROOT_DIR, "runtime-config.json");
+const ASSET_TEMPLATE_ZIP = path.join(ROOT_DIR, "assets-replace-template.zip");
+const BG_HISTORY_DIR = path.join(ROOT_DIR, "assets", "bg-history");
+const HOME_FAVORITES_DIR = path.join(ROOT_DIR, "assets", "home-favorites");
+const HOME_FAVORITES_INDEX_FILE = path.join(HOME_FAVORITES_DIR, "index.json");
+const ROOM_REFERENCE_WEBP = path.join(ROOT_DIR, "assets", "room-reference.webp");
+const ROOM_REFERENCE_PNG = path.join(ROOT_DIR, "assets", "room-reference.png");
+const ROOM_REFERENCE_IMAGE = fs.existsSync(ROOM_REFERENCE_WEBP) ? ROOM_REFERENCE_WEBP : ROOM_REFERENCE_PNG;
+const WORKSPACE_DIR = path.dirname(ROOT_DIR);
+const GEMINI_SCRIPT = path.join(WORKSPACE_DIR, "skills", "gemini-image-generate", "scripts", "gemini_image_generate.py");
+const GEMINI_PYTHON = path.join(WORKSPACE_DIR, "skills", "gemini-image-generate", ".venv", "bin", "python");
+const HOME_FAVORITES_MAX = 30;
+const ASSET_ALLOWED_EXTS = new Set([".png", ".webp", ".jpg", ".jpeg", ".gif", ".svg", ".avif"]);
+const VALID_AGENT_STATES = new Set(["idle", "writing", "researching", "executing", "syncing", "error"]);
 const VERSION_TIMESTAMP = new Date().toISOString().replace(/[-:T.Z]/g, "").slice(0, 15);
+const ASSET_DRAWER_PASS = process.env.ASSET_DRAWER_PASS || "1234";
+const ASSET_EDITOR_TTL_MS = 12 * 60 * 60 * 1000;
+
+const uploadTmpDir = path.join(ROOT_DIR, ".tmp-uploads");
+fs.mkdirSync(uploadTmpDir, { recursive: true });
+const upload = multer({ dest: uploadTmpDir });
 
 const app = express();
-app.use(cors());
+app.use(cors({ credentials: true, origin: true }));
 app.use(express.json({ limit: "1mb" }));
+
+const assetEditorSessions = new Map();
+const bgTasks = new Map();
 
 app.use((req, res, next) => {
   res.set("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
@@ -56,20 +88,6 @@ const DEFAULT_AGENTS = [
     authStatus: "approved",
     authExpiresAt: null,
     lastPushAt: null
-  },
-  {
-    agentId: "npc1",
-    name: "NPC 1",
-    isMain: false,
-    state: "writing",
-    detail: "在整理热点日报...",
-    updated_at: new Date().toISOString(),
-    area: "writing",
-    source: "demo",
-    joinKey: null,
-    authStatus: "approved",
-    authExpiresAt: null,
-    lastPushAt: null
   }
 ];
 
@@ -84,7 +102,10 @@ function readJsonSafe(filePath, fallback) {
 }
 
 function writeJson(filePath, data) {
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  const tmp = `${filePath}.tmp-${process.pid}-${Date.now()}`;
+  fs.writeFileSync(tmp, JSON.stringify(data, null, 2), "utf-8");
+  fs.renameSync(tmp, filePath);
 }
 
 function normalizeAgentState(s) {
@@ -157,6 +178,109 @@ function loadJoinKeys() {
 
 function saveJoinKeys(data) {
   writeJson(JOIN_KEYS_FILE, data);
+}
+
+function parseCookies(req) {
+  const header = req.headers.cookie || "";
+  const out = {};
+  for (const part of header.split(";")) {
+    const idx = part.indexOf("=");
+    if (idx <= 0) continue;
+    const k = part.slice(0, idx).trim();
+    const v = part.slice(idx + 1).trim();
+    out[k] = decodeURIComponent(v);
+  }
+  return out;
+}
+
+function isAssetEditorAuthed(req) {
+  const token = parseCookies(req).asset_editor_token;
+  if (!token) return false;
+  const exp = assetEditorSessions.get(token);
+  if (!exp || Date.now() > exp) {
+    assetEditorSessions.delete(token);
+    return false;
+  }
+  return true;
+}
+
+function requireAssetEditorAuth(req, res) {
+  if (isAssetEditorAuthed(req)) return true;
+  res.status(401).json({ ok: false, code: "UNAUTHORIZED", msg: "Asset editor auth required" });
+  return false;
+}
+
+function safeFrontendPath(relPath) {
+  const target = path.resolve(FRONTEND_DIR, relPath);
+  const root = path.resolve(FRONTEND_DIR) + path.sep;
+  if (!(target + path.sep).startsWith(root) && target !== path.resolve(FRONTEND_DIR)) {
+    return null;
+  }
+  return target;
+}
+
+function loadAssetPositions() {
+  const data = readJsonSafe(ASSET_POSITIONS_FILE, null);
+  return data && typeof data === "object" && !Array.isArray(data) ? data : {};
+}
+
+function saveAssetPositions(data) {
+  writeJson(ASSET_POSITIONS_FILE, data);
+}
+
+function loadAssetDefaults() {
+  const data = readJsonSafe(ASSET_DEFAULTS_FILE, null);
+  return data && typeof data === "object" && !Array.isArray(data) ? data : {};
+}
+
+function saveAssetDefaults(data) {
+  writeJson(ASSET_DEFAULTS_FILE, data);
+}
+
+function normalizeUserModel(modelName) {
+  const v = String(modelName || "").trim().toLowerCase();
+  if (!v) return "nanobanana-pro";
+  if (v === "nanobanana-2" || v === "gemini-2.5-flash-image") return "nanobanana-2";
+  return "nanobanana-pro";
+}
+
+function loadRuntimeConfig() {
+  const d = readJsonSafe(RUNTIME_CONFIG_FILE, null);
+  if (!d || typeof d !== "object" || Array.isArray(d)) {
+    return { gemini_model: "nanobanana-pro", gemini_api_key: "" };
+  }
+  return {
+    gemini_model: normalizeUserModel(d.gemini_model),
+    gemini_api_key: String(d.gemini_api_key || "").trim()
+  };
+}
+
+function saveRuntimeConfig(data) {
+  const current = loadRuntimeConfig();
+  const next = {
+    gemini_model: normalizeUserModel(data.gemini_model || current.gemini_model),
+    gemini_api_key: String(data.gemini_api_key || current.gemini_api_key || "").trim()
+  };
+  writeJson(RUNTIME_CONFIG_FILE, next);
+}
+
+function ensureHomeFavoritesIndex() {
+  fs.mkdirSync(HOME_FAVORITES_DIR, { recursive: true });
+  if (!fs.existsSync(HOME_FAVORITES_INDEX_FILE)) {
+    writeJson(HOME_FAVORITES_INDEX_FILE, { items: [] });
+  }
+}
+
+function loadHomeFavoritesIndex() {
+  ensureHomeFavoritesIndex();
+  const d = readJsonSafe(HOME_FAVORITES_INDEX_FILE, null);
+  if (d && typeof d === "object" && Array.isArray(d.items)) return d;
+  return { items: [] };
+}
+
+function saveHomeFavoritesIndex(data) {
+  ensureHomeFavoritesIndex();
+  writeJson(HOME_FAVORITES_INDEX_FILE, data);
 }
 
 function sanitizeContent(text) {
@@ -233,7 +357,115 @@ function extractMemoFromFile(filePath) {
 function ensureFiles() {
   if (!fs.existsSync(STATE_FILE)) saveState({ ...DEFAULT_STATE });
   if (!fs.existsSync(AGENTS_STATE_FILE)) saveAgentsState([...DEFAULT_AGENTS]);
-  if (!fs.existsSync(JOIN_KEYS_FILE)) saveJoinKeys({ keys: [] });
+  if (!fs.existsSync(JOIN_KEYS_FILE)) {
+    const samplePath = path.join(ROOT_DIR, "join-keys.sample.json");
+    if (fs.existsSync(samplePath)) {
+      const sample = readJsonSafe(samplePath, null);
+      saveJoinKeys(sample && typeof sample === "object" ? sample : { keys: [] });
+    } else {
+      saveJoinKeys({ keys: [] });
+    }
+  }
+  ensureHomeFavoritesIndex();
+}
+
+function ensureElectronStandaloneSnapshot() {
+  if (fs.existsSync(FRONTEND_ELECTRON_STANDALONE_FILE)) return;
+  if (fs.existsSync(FRONTEND_INDEX_FILE)) {
+    fs.copyFileSync(FRONTEND_INDEX_FILE, FRONTEND_ELECTRON_STANDALONE_FILE);
+  }
+}
+
+function maskApiKey(key) {
+  if (!key) return "";
+  if (key.length <= 4) return "*".repeat(key.length);
+  return "*".repeat(key.length - 4) + key.slice(-4);
+}
+
+function createBgTask(customPrompt, speedMode) {
+  const taskId = `gen_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+  bgTasks.set(taskId, { status: "pending", created_at: nowIso() });
+
+  const target = path.join(FRONTEND_DIR, "office_bg_small.webp");
+  const cfg = loadRuntimeConfig();
+  const apiKey = cfg.gemini_api_key;
+
+  if (!apiKey) {
+    bgTasks.set(taskId, { status: "error", result: { ok: false, code: "MISSING_API_KEY", msg: "Missing GEMINI_API_KEY or GOOGLE_API_KEY" } });
+    return taskId;
+  }
+  if (!fs.existsSync(GEMINI_PYTHON) || !fs.existsSync(GEMINI_SCRIPT)) {
+    bgTasks.set(taskId, { status: "error", result: { ok: false, msg: "生图脚本环境缺失：gemini-image-generate 未安装" } });
+    return taskId;
+  }
+  if (!fs.existsSync(target)) {
+    bgTasks.set(taskId, { status: "error", result: { ok: false, msg: "office_bg_small.webp 不存在" } });
+    return taskId;
+  }
+
+  const bak = `${target}.bak`;
+  try {
+    fs.copyFileSync(target, bak);
+  } catch (_) {}
+
+  const prompt = String(customPrompt || "").trim() || "8-bit cozy office interior";
+  const model = normalizeUserModel(speedMode === "fast" ? "nanobanana-2" : cfg.gemini_model);
+  const outDir = fs.mkdtempSync(path.join(uploadTmpDir, "gen-"));
+  const args = [
+    GEMINI_SCRIPT,
+    "--prompt", prompt,
+    "--model", model,
+    "--out-dir", outDir,
+    "--cleanup"
+  ];
+  if (fs.existsSync(ROOM_REFERENCE_IMAGE)) {
+    args.push("--reference-image", ROOM_REFERENCE_IMAGE);
+  }
+
+  const child = spawn(GEMINI_PYTHON, args, {
+    env: { ...process.env, GEMINI_API_KEY: apiKey, GEMINI_MODEL: model, GOOGLE_API_KEY: "" },
+    stdio: ["ignore", "pipe", "pipe"]
+  });
+
+  let stdout = "";
+  let stderr = "";
+  child.stdout.on("data", (d) => {
+    stdout += String(d);
+  });
+  child.stderr.on("data", (d) => {
+    stderr += String(d);
+  });
+
+  child.on("close", (code) => {
+    try {
+      if (code !== 0) {
+        bgTasks.set(taskId, { status: "error", result: { ok: false, msg: `生图失败: ${(stderr || stdout).trim() || `exit ${code}`}` } });
+        return;
+      }
+      const lines = stdout.trim().split("\n").filter(Boolean);
+      const last = lines[lines.length - 1] || "{}";
+      const result = JSON.parse(last);
+      const files = Array.isArray(result.files) ? result.files : [];
+      const genFile = files[0];
+      if (!genFile || !fs.existsSync(genFile)) {
+        bgTasks.set(taskId, { status: "error", result: { ok: false, msg: "生图未返回有效文件" } });
+        return;
+      }
+      fs.copyFileSync(genFile, target);
+      fs.mkdirSync(BG_HISTORY_DIR, { recursive: true });
+      const hist = path.join(BG_HISTORY_DIR, `office_bg_small-${new Date().toISOString().replace(/[-:T.Z]/g, "").slice(0, 14)}.webp`);
+      fs.copyFileSync(target, hist);
+      const st = fs.statSync(target);
+      bgTasks.set(taskId, {
+        status: "done",
+        result: { ok: true, path: "office_bg_small.webp", size: st.size, history: path.relative(ROOT_DIR, hist), speed_mode: speedMode, msg: "已生成并替换 RPG 房间底图（已自动归档）" }
+      });
+    } catch (err) {
+      bgTasks.set(taskId, { status: "error", result: { ok: false, msg: `生图结果解析失败: ${err.message}` } });
+    }
+  });
+
+  return taskId;
 }
 
 function randomAvatar() {
@@ -254,6 +486,13 @@ function ageSeconds(iso) {
 
 app.get("/", (req, res) => {
   const html = fs.readFileSync(path.join(FRONTEND_DIR, "index.html"), "utf-8");
+  res.type("html").send(html.replaceAll("{{VERSION_TIMESTAMP}}", VERSION_TIMESTAMP));
+});
+
+app.get("/electron-standalone", (req, res) => {
+  ensureElectronStandaloneSnapshot();
+  const p = fs.existsSync(FRONTEND_ELECTRON_STANDALONE_FILE) ? FRONTEND_ELECTRON_STANDALONE_FILE : FRONTEND_INDEX_FILE;
+  const html = fs.readFileSync(p, "utf-8");
   res.type("html").send(html.replaceAll("{{VERSION_TIMESTAMP}}", VERSION_TIMESTAMP));
 });
 
@@ -295,288 +534,18 @@ app.post("/set_state", (req, res) => {
   }
 });
 
-app.get("/agents", (req, res) => {
-  const agents = loadAgentsState();
-  const keysData = loadJoinKeys();
-  const cleanedAgents = [];
-
-  for (const a of agents) {
-    if (a.isMain) {
-      cleanedAgents.push(a);
-      continue;
-    }
-
-    const authStatus = a.authStatus || "pending";
-    const authExpiresAt = a.authExpiresAt;
-
-    if (authStatus === "pending" && authExpiresAt) {
-      const expired = Date.now() > new Date(authExpiresAt).getTime();
-      if (expired) {
-        const key = a.joinKey;
-        if (key) {
-          const keyItem = keysData.keys.find((k) => k.key === key);
-          if (keyItem) {
-            keyItem.used = false;
-            keyItem.usedBy = null;
-            keyItem.usedByAgentId = null;
-            keyItem.usedAt = null;
-          }
-        }
-        continue;
-      }
-    }
-
-    if (authStatus === "approved" && a.lastPushAt) {
-      const age = ageSeconds(a.lastPushAt);
-      if (age !== null && age > 300) a.authStatus = "offline";
-    }
-
-    cleanedAgents.push(a);
-  }
-
-  saveAgentsState(cleanedAgents);
-  saveJoinKeys(keysData);
-  res.json(cleanedAgents);
+registerAgentRoutes(app, {
+  loadAgentsState,
+  saveAgentsState,
+  loadJoinKeys,
+  saveJoinKeys,
+  normalizeAgentState,
+  stateToArea,
+  ageSeconds,
+  nowIso,
+  randomAvatar
 });
 
-app.post("/agent-approve", (req, res) => {
-  try {
-    const agentId = String(req.body?.agentId || "").trim();
-    if (!agentId) return res.status(400).json({ ok: false, msg: "缺少 agentId" });
-
-    const agents = loadAgentsState();
-    const target = agents.find((a) => a.agentId === agentId && !a.isMain);
-    if (!target) return res.status(404).json({ ok: false, msg: "未找到 agent" });
-
-    target.authStatus = "approved";
-    target.authApprovedAt = nowIso();
-    target.authExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
-    saveAgentsState(agents);
-
-    res.json({ ok: true, agentId, authStatus: "approved" });
-  } catch (err) {
-    res.status(500).json({ ok: false, msg: err.message });
-  }
-});
-
-app.post("/agent-reject", (req, res) => {
-  try {
-    const agentId = String(req.body?.agentId || "").trim();
-    if (!agentId) return res.status(400).json({ ok: false, msg: "缺少 agentId" });
-
-    let agents = loadAgentsState();
-    const target = agents.find((a) => a.agentId === agentId && !a.isMain);
-    if (!target) return res.status(404).json({ ok: false, msg: "未找到 agent" });
-
-    target.authStatus = "rejected";
-    target.authRejectedAt = nowIso();
-
-    const keysData = loadJoinKeys();
-    if (target.joinKey) {
-      const keyItem = keysData.keys.find((k) => k.key === target.joinKey);
-      if (keyItem) {
-        keyItem.used = false;
-        keyItem.usedBy = null;
-        keyItem.usedByAgentId = null;
-        keyItem.usedAt = null;
-      }
-    }
-
-    agents = agents.filter((a) => a.isMain || a.agentId !== agentId);
-    saveAgentsState(agents);
-    saveJoinKeys(keysData);
-
-    res.json({ ok: true, agentId, authStatus: "rejected" });
-  } catch (err) {
-    res.status(500).json({ ok: false, msg: err.message });
-  }
-});
-
-app.post("/join-agent", (req, res) => {
-  try {
-    const data = req.body;
-    if (!data || typeof data !== "object" || !String(data.name || "").trim()) {
-      return res.status(400).json({ ok: false, msg: "请提供名字" });
-    }
-
-    const name = String(data.name).trim();
-    const state = normalizeAgentState(data.state || "idle");
-    const detail = String(data.detail || "");
-    const joinKey = String(data.joinKey || "").trim();
-    if (!joinKey) return res.status(400).json({ ok: false, msg: "请提供接入密钥" });
-
-    const keysData = loadJoinKeys();
-    const keyItem = keysData.keys.find((k) => k.key === joinKey);
-    if (!keyItem) return res.status(403).json({ ok: false, msg: "接入密钥无效" });
-
-    const agents = loadAgentsState();
-    const now = Date.now();
-
-    const existing = agents.find((a) => a.name === name && !a.isMain);
-    const existingId = existing?.agentId;
-
-    for (const a of agents) {
-      if (a.isMain) continue;
-      if (a.authStatus !== "approved") continue;
-      const age = ageSeconds(a.lastPushAt) ?? ageSeconds(a.updated_at);
-      if (age !== null && age > 300) a.authStatus = "offline";
-    }
-
-    const maxConcurrent = Number.parseInt(keyItem.maxConcurrent ?? 3, 10);
-    let activeCount = 0;
-    for (const a of agents) {
-      if (a.isMain) continue;
-      if (a.agentId === existingId) continue;
-      if (a.joinKey !== joinKey) continue;
-      if (a.authStatus !== "approved") continue;
-      const age = ageSeconds(a.lastPushAt) ?? ageSeconds(a.updated_at);
-      if (age === null || age <= 300) activeCount += 1;
-    }
-
-    if (activeCount >= maxConcurrent) {
-      saveAgentsState(agents);
-      return res.status(429).json({
-        ok: false,
-        msg: `该接入密钥当前并发已达上限（${maxConcurrent}），请稍后或换另一个 key`
-      });
-    }
-
-    let agentId;
-    if (existing) {
-      existing.state = state;
-      existing.detail = detail;
-      existing.updated_at = nowIso();
-      existing.area = stateToArea(state);
-      existing.source = "remote-openclaw";
-      existing.joinKey = joinKey;
-      existing.authStatus = "approved";
-      existing.authApprovedAt = nowIso();
-      existing.authExpiresAt = new Date(now + 24 * 60 * 60 * 1000).toISOString();
-      existing.lastPushAt = nowIso();
-      if (!existing.avatar) existing.avatar = randomAvatar();
-      agentId = existing.agentId;
-    } else {
-      const suffix = Math.random().toString(36).slice(2, 6);
-      agentId = `agent_${Date.now()}_${suffix}`;
-      agents.push({
-        agentId,
-        name,
-        isMain: false,
-        state,
-        detail,
-        updated_at: nowIso(),
-        area: stateToArea(state),
-        source: "remote-openclaw",
-        joinKey,
-        authStatus: "approved",
-        authApprovedAt: nowIso(),
-        authExpiresAt: new Date(now + 24 * 60 * 60 * 1000).toISOString(),
-        lastPushAt: nowIso(),
-        avatar: randomAvatar()
-      });
-    }
-
-    keyItem.used = true;
-    keyItem.usedBy = name;
-    keyItem.usedByAgentId = agentId;
-    keyItem.usedAt = nowIso();
-    keyItem.reusable = true;
-
-    saveAgentsState(agents);
-    saveJoinKeys(keysData);
-    res.json({ ok: true, agentId, authStatus: "approved", nextStep: "已自动批准，立即开始推送状态" });
-  } catch (err) {
-    res.status(500).json({ ok: false, msg: err.message });
-  }
-});
-
-app.post("/leave-agent", (req, res) => {
-  try {
-    const data = req.body;
-    if (!data || typeof data !== "object") return res.status(400).json({ ok: false, msg: "invalid json" });
-
-    const agentId = String(data.agentId || "").trim();
-    const name = String(data.name || "").trim();
-    if (!agentId && !name) return res.status(400).json({ ok: false, msg: "请提供 agentId 或名字" });
-
-    const agents = loadAgentsState();
-    let target = null;
-    if (agentId) target = agents.find((a) => a.agentId === agentId && !a.isMain) || null;
-    if (!target && name) target = agents.find((a) => a.name === name && !a.isMain) || null;
-    if (!target) return res.status(404).json({ ok: false, msg: "没有找到要离开的 agent" });
-
-    const joinKey = target.joinKey;
-    const newAgents = agents.filter((a) => a.isMain || a.agentId !== target.agentId);
-
-    const keysData = loadJoinKeys();
-    if (joinKey) {
-      const keyItem = keysData.keys.find((k) => k.key === joinKey);
-      if (keyItem) {
-        keyItem.used = false;
-        keyItem.usedBy = null;
-        keyItem.usedByAgentId = null;
-        keyItem.usedAt = null;
-      }
-    }
-
-    saveAgentsState(newAgents);
-    saveJoinKeys(keysData);
-    res.json({ ok: true });
-  } catch (err) {
-    res.status(500).json({ ok: false, msg: err.message });
-  }
-});
-
-app.post("/agent-push", (req, res) => {
-  try {
-    const data = req.body;
-    if (!data || typeof data !== "object") return res.status(400).json({ ok: false, msg: "invalid json" });
-
-    const agentId = String(data.agentId || "").trim();
-    const joinKey = String(data.joinKey || "").trim();
-    const stateIn = String(data.state || "").trim();
-    const detail = String(data.detail || "").trim();
-    const name = String(data.name || "").trim();
-
-    if (!agentId || !joinKey || !stateIn) {
-      return res.status(400).json({ ok: false, msg: "缺少 agentId/joinKey/state" });
-    }
-
-    const state = normalizeAgentState(stateIn);
-    const keysData = loadJoinKeys();
-    const keyItem = keysData.keys.find((k) => k.key === joinKey);
-    if (!keyItem) return res.status(403).json({ ok: false, msg: "joinKey 无效" });
-
-    const agents = loadAgentsState();
-    const target = agents.find((a) => a.agentId === agentId && !a.isMain);
-    if (!target) return res.status(404).json({ ok: false, msg: "agent 未注册，请先 join" });
-
-    const authStatus = target.authStatus || "pending";
-    if (!["approved", "offline"].includes(authStatus)) {
-      return res.status(403).json({ ok: false, msg: "agent 未获授权，请等待主人批准" });
-    }
-    if (authStatus === "offline") {
-      target.authStatus = "approved";
-      target.authApprovedAt = nowIso();
-      target.authExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
-    }
-
-    if (target.joinKey !== joinKey) return res.status(403).json({ ok: false, msg: "joinKey 不匹配" });
-
-    target.state = state;
-    target.detail = detail;
-    if (name) target.name = name;
-    target.updated_at = nowIso();
-    target.area = stateToArea(state);
-    target.source = "remote-openclaw";
-    target.lastPushAt = nowIso();
-
-    saveAgentsState(agents);
-    res.json({ ok: true, agentId, area: target.area });
-  } catch (err) {
-    res.status(500).json({ ok: false, msg: err.message });
-  }
-});
 
 app.get("/yesterday-memo", (req, res) => {
   try {
@@ -616,15 +585,62 @@ app.get("/yesterday-memo", (req, res) => {
     return res.status(500).json({ success: false, msg: err.message });
   }
 });
+app.post("/assets/auth", (req, res) => {
+  const pwd = String(req.body?.password || "").trim();
+  if (!pwd || pwd !== ASSET_DRAWER_PASS) {
+    return res.status(401).json({ ok: false, msg: "验证码错误" });
+  }
+  const token = crypto.randomBytes(24).toString("hex");
+  assetEditorSessions.set(token, Date.now() + ASSET_EDITOR_TTL_MS);
+  res.setHeader("Set-Cookie", `asset_editor_token=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${ASSET_EDITOR_TTL_MS / 1000}`);
+  return res.json({ ok: true, msg: "认证成功" });
+});
+
+app.get("/assets/auth/status", (req, res) => {
+  return res.json({ ok: true, authed: isAssetEditorAuthed(req), drawer_default_pass: ASSET_DRAWER_PASS === "1234" });
+});
+
+registerAssetRoutes(app, {
+  fs,
+  path,
+  upload,
+  ROOT_DIR,
+  FRONTEND_DIR,
+  HOME_FAVORITES_DIR,
+  BG_HISTORY_DIR,
+  ROOM_REFERENCE_IMAGE,
+  ASSET_TEMPLATE_ZIP,
+  ASSET_ALLOWED_EXTS,
+  HOME_FAVORITES_MAX,
+  bgTasks,
+  requireAssetEditorAuth,
+  loadAssetPositions,
+  saveAssetPositions,
+  loadAssetDefaults,
+  saveAssetDefaults,
+  loadRuntimeConfig,
+  saveRuntimeConfig,
+  maskApiKey,
+  normalizeUserModel,
+  createBgTask,
+  loadHomeFavoritesIndex,
+  saveHomeFavoritesIndex,
+  ensureHomeFavoritesIndex,
+  safeFrontendPath
+});
 
 ensureFiles();
+ensureElectronStandaloneSnapshot();
 
-const PORT = Number(process.env.PORT || 18791);
+const rawPort = process.env.STAR_BACKEND_PORT || process.env.PORT || "19000";
+let PORT = Number(rawPort);
+if (!Number.isFinite(PORT) || PORT <= 0) PORT = 19000;
 app.listen(PORT, "0.0.0.0", () => {
   console.log("=".repeat(50));
   console.log("Star Office UI - Node Backend State Service");
   console.log("=".repeat(50));
   console.log(`State file: ${STATE_FILE}`);
   console.log(`Listening on: http://0.0.0.0:${PORT}`);
+  if (PORT !== 19000) console.log(`(Port override active: ${rawPort})`);
   console.log("=".repeat(50));
 });
