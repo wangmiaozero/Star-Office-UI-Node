@@ -7,47 +7,74 @@
 # Star Office UI Node
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-![Node](https://img.shields.io/badge/node-%3E%3D18-339933?logo=node.js&logoColor=white)
+![Node](https://img.shields.io/badge/node-%3E%3D20-339933?logo=node.js&logoColor=white)
+![pnpm](https://img.shields.io/badge/pnpm-%3E%3D9-f69220?logo=pnpm&logoColor=white)
 [![GitHub stars](https://img.shields.io/github/stars/wangmiaozero/Star-Office-UI-Node?style=social)](https://github.com/wangmiaozero/Star-Office-UI-Node/stargazers)
 
-A pixelated office dashboard for multi-agent collaboration: visualizes the real-time work status of the AI ​​assistant (OpenClaw/Lobster), helping the team to intuitively see "who is doing what, what they did yesterday, and whether they are online now".
+A **pixel-office dashboard** for multi-agent collaboration: it visualizes what your AI assistants (OpenClaw, Lobster, etc.) are doing in real time—who is active, what happened “yesterday,” and who is online—so humans can read the room at a glance.
 
-This repository is a Node.js remake of the original **Star-Office-UI** project.
-It keeps the same visual experience and API behavior so existing clients (including OpenClaw / lobster agents) can integrate with minimal changes.
+This repo is a **Node.js / Express** take on the upstream **Star-Office-UI** idea. It keeps the same look-and-feel and HTTP contract so existing agents and scripts need little or no change, while the backend is structured for **long-running service** use—not a single giant script.
 
-![Star Office UI Preview](./docs/screenshots/office-preview.png)
+
+This project supports 4 styles: pixel, soft, 夜青, paper, default pixel style.
+
+![像素风格](./docs/screenshots/office-preview-1.png)
+![柔和风格](./docs/screenshots/office-preview-2.png)
+![夜青风格](./docs/screenshots/office-preview-3.png)
+![纸本风格](./docs/screenshots/office-preview-4.png)
+
+## What makes *this* fork different
+
+- **Service-shaped codebase**: routes, services, config, and bootstrap live under `src/` instead of one monolithic file. Easier to review, test, and extend.
+- **Toolchain is part of the product**: **pnpm** and **Node ≥ 20** are enforced (`engines`, `only-allow`, `.npmrc` `engine-strict`, plus a startup guard in `src/bootstrap/env-check.js`). CI and onboarding behave the same way everywhere.
+- **Ops-friendly process**: HTTP server uses **graceful shutdown** on `SIGTERM` / `SIGINT` (Docker/K8s friendly). **`GET /health`** for liveness and **`GET /ready`** after persistence is initialized.
+- **State on disk**: main status, multi-agent roster, and join keys are JSON files beside the app—simple to back up, diff, and ship with compose volumes.
+- **Yesterday memo** reads markdown from a sibling **`memory/`** directory (see `GET /yesterday-memo`), turning diary files into a gentle “what we did last time” blurb.
+
+Upstream lineage and thanks are below; the sections after that cover how to run and integrate.
 
 ## Credits
 
-- Upstream project: `https://github.com/ringhyacinth/Star-Office-UI`
+- Upstream: [ringhyacinth/Star-Office-UI](https://github.com/ringhyacinth/Star-Office-UI)
 - Original author: Ring Hyacinth (and contributors)
-- This fork/remake rewrites backend from Flask to Express
+- This repository: Express backend rewrite and project layout by [wangmiaozero](https://github.com/wangmiaozero)
 
-Thanks to the original author for open-sourcing the idea, assets pipeline, and interaction design.
+Thanks for open-sourcing the pixel-office concept, assets, and interaction design.
 
-## Quick Start
+## Quick start
+
+Requires **Node ≥ 20** and **pnpm ≥ 9** (install [pnpm](https://pnpm.io/installation) if needed).
 
 ```bash
-cd /Users/hfy/wm-code/Star-Office-UI-Node
+git clone https://github.com/wangmiaozero/Star-Office-UI-Node.git
+cd Star-Office-UI-Node
 pnpm install
 pnpm start
 ```
 
 Default URL: `http://127.0.0.1:18791`
 
-If the port is occupied:
+Development with file watch:
+
+```bash
+pnpm dev
+```
+
+If the port is busy:
 
 ```bash
 PORT=18792 pnpm start
 ```
 
-Use environment file:
+Optional env file:
 
 ```bash
 cp .env.example .env
 ```
 
-## Run with Docker Compose
+`SKIP_PNPM_CHECK=1` is documented only for edge cases where you must run `node src/server.js` without pnpm—it is **not** recommended for production.
+
+## Docker Compose
 
 ```bash
 docker compose up -d
@@ -55,56 +82,49 @@ docker compose up -d
 
 Then open: `http://127.0.0.1:18791`
 
-## Common Commands
+## Common commands
+
+Set the **main** agent state (CLI helper):
 
 ```bash
-node set_state.js writing "Drafting docs"
-node set_state.js researching "Doing research"
-node set_state.js executing "Executing tasks"
-node set_state.js syncing "Syncing progress"
-node set_state.js error "Debugging issue"
-node set_state.js idle "Standing by"
+pnpm set-state writing "Drafting docs"
 ```
 
-Health check:
+Health and readiness:
 
 ```bash
 curl -s http://127.0.0.1:18791/health
+curl -s http://127.0.0.1:18791/ready
 ```
 
-## API Overview
+## API overview
 
-- `GET /health`: health check
-- `GET /status`: main agent status
-- `POST /set_state`: set main agent status
-- `GET /agents`: list all agents
-- `POST /join-agent`: join as guest agent
-- `POST /agent-push`: push guest status
-- `POST /leave-agent`: leave the office
-- `POST /agent-approve`: approve guest agent
-- `POST /agent-reject`: reject guest agent
-- `GET /yesterday-memo`: yesterday memo
-- `GET /`, `/join`, `/invite`: web entry pages
+- `GET /health` — liveness
+- `GET /ready` — readiness (after startup checks)
+- `GET /status` — main agent status
+- `POST /set_state` — set main agent status
+- `GET /agents` — list agents (guest cleanup / offline logic applied)
+- `POST /join-agent` — guest agent join
+- `POST /agent-push` — guest status push
+- `POST /leave-agent` — guest leave
+- `POST /agent-approve` / `POST /agent-reject` — approve or reject guest
+- `GET /yesterday-memo` — memo derived from `memory/YYYY-MM-DD.md`
+- `GET /`, `/join`, `/invite` — web entry pages; static assets under `/static`
 
 ## Integrate with OpenClaw / Lobster
 
 ### 1) Supported states
 
-- `idle`
-- `writing`
-- `researching`
-- `executing`
-- `syncing`
-- `error`
+- `idle`, `writing`, `researching`, `executing`, `syncing`, `error`
 
 Compatibility mapping:
 
-- `working` / `busy` / `write` -> `writing`
-- `run` / `running` / `execute` / `exec` -> `executing`
-- `sync` -> `syncing`
-- `research` / `search` -> `researching`
+- `working` / `busy` / `write` → `writing`
+- `run` / `running` / `execute` / `exec` → `executing`
+- `sync` → `syncing`
+- `research` / `search` → `researching`
 
-### 2) Join once and get `agentId`
+### 2) Join once and cache `agentId`
 
 ```bash
 curl -s -X POST http://127.0.0.1:18791/join-agent \
@@ -117,7 +137,7 @@ curl -s -X POST http://127.0.0.1:18791/join-agent \
   }'
 ```
 
-### 3) Push status periodically (every 10-30s)
+### 3) Push status periodically (every 10–30s)
 
 ```bash
 curl -s -X POST http://127.0.0.1:18791/agent-push \
@@ -139,27 +159,22 @@ curl -s -X POST http://127.0.0.1:18791/leave-agent \
   -d '{"agentId":"agent_xxx"}'
 ```
 
-Recommended lifecycle:
+Suggested lifecycle:
 
-1. Call `join-agent` on startup
-2. Cache `agentId` locally
-3. Push status on interval
-4. Call `leave-agent` on graceful shutdown
-5. If `403/404` happens, stop pushing and re-join or alert
+1. Call `join-agent` on startup  
+2. Persist `agentId` locally  
+3. Push on an interval  
+4. Call `leave-agent` on graceful shutdown  
+5. On `403`/`404`, stop pushing and re-join or alert  
 
-## Open Source License
+## License
 
-- Code is licensed under `MIT`, see `LICENSE`
-- Art assets in this repo may have additional restrictions from upstream
-- For commercial usage, replace all assets with your own originals
+- Code: [MIT](./LICENSE)
+- Art assets may carry additional terms from upstream; for commercial use, replace with your own assets where needed.
 
-## 📄 License
+## Star history
 
-[MIT](./LICENSE)
-
-## ⭐ Star History
-
-If you find this project helpful, please give it a ⭐!
+If this project helps you, a star is appreciated.
 
 ---
 

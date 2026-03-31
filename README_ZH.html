@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Star Office UI Node</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <!-- markdownlint-disable MD033 MD041 -->
+<p align="center">
+  <strong>简体中文</strong> | <a href="./README.html">English</a>
+</p>
+<!-- markdownlint-enable MD033 MD041 -->
+<h1 id="star-office-ui-node">Star Office UI Node</h1>
+<p><a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
+<img src="https://img.shields.io/badge/node-%3E%3D20-339933?logo=node.js&amp;logoColor=white" alt="Node">
+<img src="https://img.shields.io/badge/pnpm-%3E%3D9-f69220?logo=pnpm&amp;logoColor=white" alt="pnpm">
+<a href="https://github.com/wangmiaozero/Star-Office-UI-Node/stargazers"><img src="https://img.shields.io/github/stars/wangmiaozero/Star-Office-UI-Node?style=social" alt="GitHub stars"></a></p>
+<p><strong>像素风「办公室」看板</strong>：把多路 AI 助手（OpenClaw、龙虾等）的工作状态实时铺在一屏上——谁在写、谁在查、谁在跑任务、谁在线，以及「昨天」留下了什么痕迹，让人一眼读懂协作现场。</p>
+<p>本仓库是上游 <strong><a href="https://github.com/ringhyacinth/Star-Office-UI">Star-Office-UI</a></strong> 的 <strong>Node / Express</strong> 实现：保留同款画面与 HTTP 行为，方便已有 Agent 与脚本几乎零改动接入；后端按<strong>可长期运行的服务</strong>来拆层，而不是单文件堆逻辑。</p>
+<p>本项目支持4种风格：像素、柔和、夜青、纸本，默认像素风格。</p>
+<p><img src="file:////Users/wangmiao/code/Star-Office-UI-Node/docs/screenshots/office-preview-1.png" alt="像素风格">
+<img src="file:////Users/wangmiao/code/Star-Office-UI-Node/docs/screenshots/office-preview-2.png" alt="柔和风格">
+<img src="file:////Users/wangmiao/code/Star-Office-UI-Node/docs/screenshots/office-preview-3.png" alt="夜青风格">
+<img src="file:////Users/wangmiao/code/Star-Office-UI-Node/docs/screenshots/office-preview-4.png" alt="纸本风格"></p>
+<h2 id="本项目的特色和又一个复刻不一样在哪">本项目的特色（和「又一个复刻」不一样在哪）</h2>
+<ul>
+<li><strong>工程化分层</strong>：路由、业务服务、配置、启动校验分在 <code>src/</code> 下，可读、可测、可迭代，而不是所有代码挤在一个入口文件里。</li>
+<li><strong>工具链写进规范</strong>：强制 <strong>pnpm</strong> 与 <strong>Node ≥ 20</strong>（<code>engines</code>、<code>only-allow</code>、<code>.npmrc</code> 的 <code>engine-strict</code>，以及 <code>src/bootstrap/env-check.js</code> 运行时校验），减少「我本地能跑、CI 不能跑」的摩擦。</li>
+<li><strong>面向部署的进程模型</strong>：支持 <strong><code>SIGTERM</code> / <code>SIGINT</code> 优雅退出</strong>，适合 Docker / K8s 滚动发布；提供 <strong><code>GET /health</code>（存活）</strong> 与 <strong><code>GET /ready</code>（就绪）</strong> 探针。</li>
+<li><strong>状态落盘简单透明</strong>：主状态、多 Agent 列表、接入密钥等以 JSON 文件形式与项目同级存放，备份与卷挂载都很直观。</li>
+<li><strong>昨日小记</strong>：<code>GET /yesterday-memo</code> 会读取与仓库同级的 <strong><code>memory/</code></strong> 目录下按日期命名的 Markdown，把日记提炼成简短展示（具体规则见实现）。</li>
+</ul>
+<p>下面仍保留对上源的致谢与对接说明；运行方式与 API 与英文版 README 同步维护。</p>
+<h2 id="致谢与来源">致谢与来源</h2>
+<ul>
+<li>原项目：<a href="https://github.com/ringhyacinth/Star-Office-UI">ringhyacinth/Star-Office-UI</a></li>
+<li>原作者：Ring Hyacinth（以及贡献者）</li>
+<li>本仓库：由 <a href="https://github.com/wangmiaozero">wangmiaozero</a> 基于原理念用 Express 重写并组织目录结构</li>
+</ul>
+<p>感谢原作者开源像素办公室的设计与素材管线，本仓库在此基础上做 Node 化与运维向增强。</p>
+<h2 id="快速开始">快速开始</h2>
+<p>需 <strong>Node ≥ 20</strong>、<strong>pnpm ≥ 9</strong>（见 <a href="https://pnpm.io/installation">pnpm 安装</a>）。</p>
+<pre><code class="language-bash">git <span class="hljs-built_in">clone</span> https://github.com/wangmiaozero/Star-Office-UI-Node.git
+<span class="hljs-built_in">cd</span> Star-Office-UI-Node
+pnpm install
+pnpm start
+</code></pre>
+<p>默认地址：<code>http://127.0.0.1:18791</code></p>
+<p>开发（文件变更自动重启）：</p>
+<pre><code class="language-bash">pnpm dev
+</code></pre>
+<p>端口占用时：</p>
+<pre><code class="language-bash">PORT=18792 pnpm start
+</code></pre>
+<p>环境变量示例：</p>
+<pre><code class="language-bash"><span class="hljs-built_in">cp</span> .env.example .<span class="hljs-built_in">env</span>
+</code></pre>
+<p>仅在无法用 pnpm 包裹进程时，可使用 <strong><code>SKIP_PNPM_CHECK=1</code></strong> 直接执行 <code>node src/server.js</code>；<strong>生产环境不建议</strong>。</p>
+<h2 id="docker-compose">Docker Compose</h2>
+<pre><code class="language-bash">docker compose up -d
+</code></pre>
+<p>浏览器访问：<code>http://127.0.0.1:18791</code></p>
+<h2 id="常用命令">常用命令</h2>
+<p>切换<strong>主 Agent</strong>状态（命令行小工具）：</p>
+<pre><code class="language-bash">pnpm set-state writing <span class="hljs-string">&quot;正在整理文档&quot;</span>
+pnpm set-state researching <span class="hljs-string">&quot;正在查资料&quot;</span>
+pnpm set-state executing <span class="hljs-string">&quot;正在执行任务&quot;</span>
+pnpm set-state syncing <span class="hljs-string">&quot;同步进度中&quot;</span>
+pnpm set-state error <span class="hljs-string">&quot;发现问题，排查中&quot;</span>
+pnpm set-state idle <span class="hljs-string">&quot;待命中&quot;</span>
+</code></pre>
+<p>健康与就绪：</p>
+<pre><code class="language-bash">curl -s http://127.0.0.1:18791/health
+curl -s http://127.0.0.1:18791/ready
+</code></pre>
+<h2 id="api-概览">API 概览</h2>
+<ul>
+<li><code>GET /health</code>：存活探针</li>
+<li><code>GET /ready</code>：就绪探针（持久化初始化完成后）</li>
+<li><code>GET /status</code>：主 Agent 当前状态</li>
+<li><code>POST /set_state</code>：设置主 Agent 状态</li>
+<li><code>GET /agents</code>：多 Agent 列表（含过期 / 离线清理逻辑）</li>
+<li><code>POST /join-agent</code>：访客 Agent 加入</li>
+<li><code>POST /agent-push</code>：访客 Agent 推送状态</li>
+<li><code>POST /leave-agent</code>：访客 Agent 离开</li>
+<li><code>POST /agent-approve</code> / <code>POST /agent-reject</code>：批准或拒绝访客</li>
+<li><code>GET /yesterday-memo</code>：基于 <code>memory/</code> 目录的昨日小记</li>
+<li><code>GET /</code>、<code>/join</code>、<code>/invite</code>：页面入口；静态资源在 <code>/static</code></li>
+</ul>
+<h2 id="对接-openclaw--龙虾重点">对接 OpenClaw / 龙虾（重点）</h2>
+<h3 id="1-状态枚举">1) 状态枚举</h3>
+<ul>
+<li><code>idle</code>、<code>writing</code>、<code>researching</code>、<code>executing</code>、<code>syncing</code>、<code>error</code></li>
+</ul>
+<p>兼容映射：</p>
+<ul>
+<li><code>working</code> / <code>busy</code> / <code>write</code> → <code>writing</code></li>
+<li><code>run</code> / <code>running</code> / <code>execute</code> / <code>exec</code> → <code>executing</code></li>
+<li><code>sync</code> → <code>syncing</code></li>
+<li><code>research</code> / <code>search</code> → <code>researching</code></li>
+</ul>
+<h3 id="2-首次接入join">2) 首次接入：join</h3>
+<p>先调用 <code>join-agent</code>，拿到并缓存 <code>agentId</code>（后续 <code>agent-push</code> 必带）：</p>
+<pre><code class="language-bash">curl -s -X POST http://127.0.0.1:18791/join-agent \
+  -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
+  -d <span class="hljs-string">&#x27;{
+    &quot;name&quot;: &quot;openclaw-agent-01&quot;,
+    &quot;joinKey&quot;: &quot;ocj_starteam02&quot;,
+    &quot;state&quot;: &quot;idle&quot;,
+    &quot;detail&quot;: &quot;刚刚加入&quot;
+  }&#x27;</span>
+</code></pre>
+<h3 id="3-持续推送agent-push">3) 持续推送：agent-push</h3>
+<p>建议每 10～30 秒推送一次：</p>
+<pre><code class="language-bash">curl -s -X POST http://127.0.0.1:18791/agent-push \
+  -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
+  -d <span class="hljs-string">&#x27;{
+    &quot;agentId&quot;: &quot;agent_xxx&quot;,
+    &quot;joinKey&quot;: &quot;ocj_starteam02&quot;,
+    &quot;name&quot;: &quot;openclaw-agent-01&quot;,
+    &quot;state&quot;: &quot;writing&quot;,
+    &quot;detail&quot;: &quot;正在整理任务上下文&quot;
+  }&#x27;</span>
+</code></pre>
+<h3 id="4-离开房间">4) 离开房间</h3>
+<pre><code class="language-bash">curl -s -X POST http://127.0.0.1:18791/leave-agent \
+  -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
+  -d <span class="hljs-string">&#x27;{&quot;agentId&quot;:&quot;agent_xxx&quot;}&#x27;</span>
+</code></pre>
+<h3 id="5-建议流程">5) 建议流程</h3>
+<ol>
+<li>启动时调用一次 <code>join-agent</code></li>
+<li>将 <code>agentId</code> 持久化到本地</li>
+<li>按固定间隔调用 <code>agent-push</code></li>
+<li>进程退出时调用 <code>leave-agent</code></li>
+<li>若收到 <code>403</code> / <code>404</code>，停止推送并重试 join 或告警</li>
+</ol>
+<h2 id="开源与许可">开源与许可</h2>
+<ul>
+<li>代码以 <a href="./LICENSE">MIT License</a> 发布</li>
+<li>仓库内美术资源可能受上源授权约束，商用请自行替换为自有素材</li>
+</ul>
+<h2 id="star">Star</h2>
+<p>若项目对你有帮助，欢迎点一个 ⭐</p>
+<hr>
+<!-- markdownlint-disable MD033 -->
+<p align="center">
+  Made with ❤️ by <a href="https://github.com/wangmiaozero">wangmiaozero</a>
+</p>
+<!-- markdownlint-enable MD033 -->
+
+            
+            
+        </body>
+        </html>

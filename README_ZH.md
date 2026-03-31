@@ -6,97 +6,135 @@
 
 # Star Office UI Node
 
-一个面向多 Agent 协作的像素办公室看板：把 AI 助手（OpenClaw / 龙虾）的工作状态实时可视化，帮助团队直观看到“谁在做什么、昨天做了什么、现在是否在线”。
-基于原项目 **Star-Office-UI** 的 Node.js 复刻版，目标是保持原有前端体验和 API 兼容，同时让 Node 技术栈用户开箱即用。
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+![Node](https://img.shields.io/badge/node-%3E%3D20-339933?logo=node.js&logoColor=white)
+![pnpm](https://img.shields.io/badge/pnpm-%3E%3D9-f69220?logo=pnpm&logoColor=white)
+[![GitHub stars](https://img.shields.io/github/stars/wangmiaozero/Star-Office-UI-Node?style=social)](https://github.com/wangmiaozero/Star-Office-UI-Node/stargazers)
 
-![Star Office UI 预览](./docs/screenshots/office-preview.png)
+**像素风「办公室」看板**：把多路 AI 助手（OpenClaw、龙虾等）的工作状态实时铺在一屏上——谁在写、谁在查、谁在跑任务、谁在线，以及「昨天」留下了什么痕迹，让人一眼读懂协作现场。
+
+本仓库是上游 **[Star-Office-UI](https://github.com/ringhyacinth/Star-Office-UI)** 的 **Node / Express** 实现：保留同款画面与 HTTP 行为，方便已有 Agent 与脚本几乎零改动接入；后端按**可长期运行的服务**来拆层，而不是单文件堆逻辑。
+
+
+
+本项目支持4种风格：像素、柔和、夜青、纸本，默认像素风格。
+
+![像素风格](./docs/screenshots/office-preview-1.png)
+![柔和风格](./docs/screenshots/office-preview-2.png)
+![夜青风格](./docs/screenshots/office-preview-3.png)
+![纸本风格](./docs/screenshots/office-preview-4.png)
+
+
+
+## 本项目的特色（和「又一个复刻」不一样在哪）
+
+- **工程化分层**：路由、业务服务、配置、启动校验分在 `src/` 下，可读、可测、可迭代，而不是所有代码挤在一个入口文件里。
+- **工具链写进规范**：强制 **pnpm** 与 **Node ≥ 20**（`engines`、`only-allow`、`.npmrc` 的 `engine-strict`，以及 `src/bootstrap/env-check.js` 运行时校验），减少「我本地能跑、CI 不能跑」的摩擦。
+- **面向部署的进程模型**：支持 **`SIGTERM` / `SIGINT` 优雅退出**，适合 Docker / K8s 滚动发布；提供 **`GET /health`（存活）** 与 **`GET /ready`（就绪）** 探针。
+- **状态落盘简单透明**：主状态、多 Agent 列表、接入密钥等以 JSON 文件形式与项目同级存放，备份与卷挂载都很直观。
+- **昨日小记**：`GET /yesterday-memo` 会读取与仓库同级的 **`memory/`** 目录下按日期命名的 Markdown，把日记提炼成简短展示（具体规则见实现）。
+
+下面仍保留对上源的致谢与对接说明；运行方式与 API 与英文版 README 同步维护。
 
 ## 致谢与来源
 
-- 原项目：`https://github.com/ringhyacinth/Star-Office-UI`
+- 原项目：[ringhyacinth/Star-Office-UI](https://github.com/ringhyacinth/Star-Office-UI)
 - 原作者：Ring Hyacinth（以及贡献者）
-- 本仓库基于原项目实现 Node 版本（后端从 Flask 改为 Express）
+- 本仓库：由 [wangmiaozero](https://github.com/wangmiaozero) 基于原理念用 Express 重写并组织目录结构
 
-感谢原作者开源这套像素办公室看板的设计与实现，给了这个 Node 版本落地基础。
-
-## 项目定位
-
-- 复刻原版后端核心能力：状态服务 + 多 Agent 接入 + 昨日小记
-- 保留原前端资源与页面路由
-- API 尽量对齐原版，便于 OpenClaw / 龙虾及已有脚本无痛接入
+感谢原作者开源像素办公室的设计与素材管线，本仓库在此基础上做 Node 化与运维向增强。
 
 ## 快速开始
 
+需 **Node ≥ 20**、**pnpm ≥ 9**（见 [pnpm 安装](https://pnpm.io/installation)）。
+
 ```bash
-cd /Users/hfy/wm-code/Star-Office-UI-Node
+git clone https://github.com/wangmiaozero/Star-Office-UI-Node.git
+cd Star-Office-UI-Node
 pnpm install
 pnpm start
 ```
 
 默认地址：`http://127.0.0.1:18791`
 
-若端口占用：
+开发（文件变更自动重启）：
+
+```bash
+pnpm dev
+```
+
+端口占用时：
 
 ```bash
 PORT=18792 pnpm start
 ```
 
-## 常用命令
-
-切换主 Agent 状态：
+环境变量示例：
 
 ```bash
-node set_state.js writing "正在整理文档"
-node set_state.js researching "正在查资料"
-node set_state.js executing "正在执行任务"
-node set_state.js syncing "同步进度中"
-node set_state.js error "发现问题，排查中"
-node set_state.js idle "待命中"
+cp .env.example .env
 ```
 
-健康检查：
+仅在无法用 pnpm 包裹进程时，可使用 **`SKIP_PNPM_CHECK=1`** 直接执行 `node src/server.js`；**生产环境不建议**。
+
+## Docker Compose
+
+```bash
+docker compose up -d
+```
+
+浏览器访问：`http://127.0.0.1:18791`
+
+## 常用命令
+
+切换**主 Agent**状态（命令行小工具）：
+
+```bash
+pnpm set-state writing "正在整理文档"
+pnpm set-state researching "正在查资料"
+pnpm set-state executing "正在执行任务"
+pnpm set-state syncing "同步进度中"
+pnpm set-state error "发现问题，排查中"
+pnpm set-state idle "待命中"
+```
+
+健康与就绪：
 
 ```bash
 curl -s http://127.0.0.1:18791/health
+curl -s http://127.0.0.1:18791/ready
 ```
 
 ## API 概览
 
-- `GET /health`：健康检查
+- `GET /health`：存活探针
+- `GET /ready`：就绪探针（持久化初始化完成后）
 - `GET /status`：主 Agent 当前状态
 - `POST /set_state`：设置主 Agent 状态
-- `GET /agents`：多 Agent 列表
+- `GET /agents`：多 Agent 列表（含过期 / 离线清理逻辑）
 - `POST /join-agent`：访客 Agent 加入
 - `POST /agent-push`：访客 Agent 推送状态
 - `POST /leave-agent`：访客 Agent 离开
-- `POST /agent-approve`：批准访客（当前配置下拿到 key 通常已自动批准）
-- `POST /agent-reject`：拒绝访客
-- `GET /yesterday-memo`：昨日小记
-- `GET /`、`/join`、`/invite`：页面入口
+- `POST /agent-approve` / `POST /agent-reject`：批准或拒绝访客
+- `GET /yesterday-memo`：基于 `memory/` 目录的昨日小记
+- `GET /`、`/join`、`/invite`：页面入口；静态资源在 `/static`
 
 ## 对接 OpenClaw / 龙虾（重点）
 
 ### 1) 状态枚举
 
-支持状态：
-
-- `idle`
-- `writing`
-- `researching`
-- `executing`
-- `syncing`
-- `error`
+- `idle`、`writing`、`researching`、`executing`、`syncing`、`error`
 
 兼容映射：
 
-- `working` / `busy` / `write` -> `writing`
-- `run` / `running` / `execute` / `exec` -> `executing`
-- `sync` -> `syncing`
-- `research` / `search` -> `researching`
+- `working` / `busy` / `write` → `writing`
+- `run` / `running` / `execute` / `exec` → `executing`
+- `sync` → `syncing`
+- `research` / `search` → `researching`
 
 ### 2) 首次接入：join
 
-先调用 `join-agent`，拿到 `agentId`（后续 push 必带）：
+先调用 `join-agent`，拿到并缓存 `agentId`（后续 `agent-push` 必带）：
 
 ```bash
 curl -s -X POST http://127.0.0.1:18791/join-agent \
@@ -111,7 +149,7 @@ curl -s -X POST http://127.0.0.1:18791/join-agent \
 
 ### 3) 持续推送：agent-push
 
-建议每 10~30 秒推送一次：
+建议每 10～30 秒推送一次：
 
 ```bash
 curl -s -X POST http://127.0.0.1:18791/agent-push \
@@ -133,27 +171,22 @@ curl -s -X POST http://127.0.0.1:18791/leave-agent \
   -d '{"agentId":"agent_xxx"}'
 ```
 
-### 5) OpenClaw 侧建议流程
+### 5) 建议流程
 
 1. 启动时调用一次 `join-agent`
-2. 缓存 `agentId` 到本地文件
+2. 将 `agentId` 持久化到本地
 3. 按固定间隔调用 `agent-push`
 4. 进程退出时调用 `leave-agent`
-5. 若收到 `403/404`，停止推送并重试 join 或告警
+5. 若收到 `403` / `404`，停止推送并重试 join 或告警
 
 ## 开源与许可
 
-- 本仓库代码采用 `MIT License`，见 `LICENSE`
-- 本仓库包含来自原项目的前端美术资源，素材授权范围不等同于 MIT
-- 若用于商用，建议替换为你自己的原创素材
+- 代码以 [MIT License](./LICENSE) 发布
+- 仓库内美术资源可能受上源授权约束，商用请自行替换为自有素材
 
-## 📄 License
+## Star
 
-[MIT](./LICENSE)
-
-## ⭐ Star History
-
-如果你觉得这个项目有帮助，欢迎点一个 ⭐!
+若项目对你有帮助，欢迎点一个 ⭐
 
 ---
 
