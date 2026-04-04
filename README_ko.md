@@ -24,10 +24,10 @@
 
 UI 스타일 4종: 픽셀, 소프트, 미드나잇, 페이퍼 — 기본은 **픽셀**입니다.
 
-![像素风格](./docs/screenshots/office-preview-1.png)
-![柔和风格](./docs/screenshots/office-preview-2.png)
-![夜青风格](./docs/screenshots/office-preview-3.png)
-![纸本风格](./docs/screenshots/office-preview-4.png)
+![像素风格](./docs/screenshots/office-preview-1.jpg) 
+![柔和风格](./docs/screenshots/office-preview-2.jpg)
+![夜青风格](./docs/screenshots/office-preview-3.jpg)
+![纸本风格](./docs/screenshots/office-preview-4.jpg)
 
 ## 이 포크의 특징
 

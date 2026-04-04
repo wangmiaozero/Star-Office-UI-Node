@@ -24,10 +24,10 @@ Ce dépôt est une implémentation **Node.js / Express** de l’idée **Star-Off
 
 Quatre styles d’interface : Pixel, Doux, Nuit bleue et Papier ; **Pixel** par défaut.
 
-![像素风格](./docs/screenshots/office-preview-1.png)
-![柔和风格](./docs/screenshots/office-preview-2.png)
-![夜青风格](./docs/screenshots/office-preview-3.png)
-![纸本风格](./docs/screenshots/office-preview-4.png)
+![像素风格](./docs/screenshots/office-preview-1.jpg)
+![柔和风格](./docs/screenshots/office-preview-2.jpg)
+![夜青风格](./docs/screenshots/office-preview-3.jpg)
+![纸本风格](./docs/screenshots/office-preview-4.jpg)
 
 ## Ce qui distingue ce fork
 

@@ -24,10 +24,10 @@
 
 本專案支援四種介面風格：像素、柔和、夜青、紙本，預設為**像素**。
 
-![像素风格](./docs/screenshots/office-preview-1.png)
-![柔和风格](./docs/screenshots/office-preview-2.png)
-![夜青风格](./docs/screenshots/office-preview-3.png)
-![纸本风格](./docs/screenshots/office-preview-4.png)
+![像素风格](./docs/screenshots/office-preview-1.jpg)
+![柔和风格](./docs/screenshots/office-preview-2.jpg)
+![夜青风格](./docs/screenshots/office-preview-3.jpg)
+![纸本风格](./docs/screenshots/office-preview-4.jpg)
 
 ## 本專案的特色
 
